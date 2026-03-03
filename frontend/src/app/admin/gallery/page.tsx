@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { isAuthenticated, removeToken } from '@/lib/api'
 import { galleryService } from '@/lib/services'
 import { GalleryItem } from '@/lib/api'
+import FileUpload from '@/components/FileUpload'
+
 
 const MEDIA_TYPES = [
     { value: 'PHOTO', label: '🖼️ Rasm' },
@@ -226,23 +228,28 @@ export default function AdminGalleryPage() {
                                     </select>
                                 </div>
                                 <div>
-                                    <label style={labelStyle}>Thumbnail URL</label>
-                                    <input
-                                        value={form.thumbnailUrl}
-                                        onChange={e => setForm(p => ({ ...p, thumbnailUrl: e.target.value }))}
-                                        style={inputStyle}
-                                        placeholder="https://..."
+                                    <label style={labelStyle}>Thumbnail</label>
+                                    <FileUpload
+                                        folder="gallery/thumbnails"
+                                        accept="image/*"
+                                        label="Thumbnail yuklash"
+                                        onUpload={(url) => setForm(p => ({ ...p, thumbnailUrl: url }))}
                                     />
+                                    {form.thumbnailUrl && (
+                                        <img src={form.thumbnailUrl} alt="" style={{ width: '60px', height: '40px', objectFit: 'cover', borderRadius: '4px', marginTop: '4px' }} />
+                                    )}
                                 </div>
                                 <div style={{ gridColumn: '1 / -1' }}>
-                                    <label style={labelStyle}>Fayl URL *</label>
-                                    <input
-                                        value={form.fileUrl}
-                                        onChange={e => setForm(p => ({ ...p, fileUrl: e.target.value }))}
-                                        required
-                                        style={inputStyle}
-                                        placeholder="https://..."
+                                    <label style={labelStyle}>Fayl *</label>
+                                    <FileUpload
+                                        folder="gallery"
+                                        accept={form.mediaType === 'PHOTO' ? 'image/*' : form.mediaType === 'VIDEO' ? 'video/*' : 'audio/*'}
+                                        label="Fayl yuklash"
+                                        onUpload={(url) => setForm(p => ({ ...p, fileUrl: url }))}
                                     />
+                                    {form.fileUrl && (
+                                        <p style={{ fontSize: '12px', color: 'var(--gray-600)', marginTop: '4px', wordBreak: 'break-all' }}>{form.fileUrl}</p>
+                                    )}
                                 </div>
                                 <div style={{ gridColumn: '1 / -1' }}>
                                     <label style={labelStyle}>Tavsif</label>
