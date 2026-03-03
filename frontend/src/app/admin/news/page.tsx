@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { isAuthenticated, removeToken } from '@/lib/api'
 import { newsService } from '@/lib/services'
 import { NewsItem } from '@/lib/api'
+import FileUpload from '@/components/FileUpload'
+
 
 const CATEGORIES = [
     { value: 'KORGAZMA', label: "Ko'rgazma" },
@@ -208,13 +210,19 @@ export default function AdminNewsPage() {
                                     </select>
                                 </div>
                                 <div>
-                                    <label style={labelStyle}>Rasm URL</label>
-                                    <input
-                                        value={form.imageUrl}
-                                        onChange={e => setForm(p => ({ ...p, imageUrl: e.target.value }))}
-                                        style={inputStyle}
-                                        placeholder="https://..."
+                                    <label style={labelStyle}>Rasm</label>
+                                    <FileUpload
+                                        folder="news"
+                                        accept="image/*"
+                                        label="Rasm yuklash"
+                                        onUpload={(url) => setForm(p => ({ ...p, imageUrl: url }))}
                                     />
+                                    {form.imageUrl && (
+                                        <div style={{ marginTop: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                            <img src={form.imageUrl} alt="" style={{ width: '60px', height: '40px', objectFit: 'cover', borderRadius: '4px' }} />
+                                            <span style={{ fontSize: '12px', color: 'var(--gray-600)', wordBreak: 'break-all' }}>{form.imageUrl}</span>
+                                        </div>
+                                    )}
                                 </div>
                                 <div style={{ gridColumn: '1 / -1' }}>
                                     <label style={labelStyle}>Qisqa matn (excerpt)</label>
