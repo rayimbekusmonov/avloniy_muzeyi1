@@ -19,11 +19,4 @@ public class AuthController {
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
-
-    // Birinchi adminni yaratish — deploy qilgandan keyin o'chirib tashlang!
-    @PostMapping("/setup")
-    public ResponseEntity<String> setup() {
-        authService.createAdmin("admin", "Admin@12345");
-        return ResponseEntity.ok("Admin yaratildi!");
-    }
 }
