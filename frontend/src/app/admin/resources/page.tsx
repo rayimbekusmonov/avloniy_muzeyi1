@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { isAuthenticated, removeToken } from '@/lib/api'
 import { resourceService } from '@/lib/services'
 import { ResourceItem } from '@/lib/api'
+import FileUpload from '@/components/FileUpload'
+
 
 const RESOURCE_TYPES = [
     { value: 'EBOOK', label: '📖 E-kitob' },
@@ -277,23 +279,28 @@ export default function AdminResourcesPage() {
                                     />
                                 </div>
                                 <div>
-                                    <label style={labelStyle}>Fayl URL *</label>
-                                    <input
-                                        value={form.fileUrl}
-                                        onChange={e => setForm(p => ({ ...p, fileUrl: e.target.value }))}
-                                        required
-                                        style={inputStyle}
-                                        placeholder="https://..."
+                                    <label style={labelStyle}>Fayl *</label>
+                                    <FileUpload
+                                        folder="resources"
+                                        accept=".pdf,.epub,video/*,audio/*"
+                                        label="Fayl yuklash (PDF, video, audio)"
+                                        onUpload={(url) => setForm(p => ({ ...p, fileUrl: url }))}
                                     />
+                                    {form.fileUrl && (
+                                        <p style={{ fontSize: '12px', color: 'var(--gray-600)', marginTop: '4px', wordBreak: 'break-all' }}>{form.fileUrl}</p>
+                                    )}
                                 </div>
                                 <div>
-                                    <label style={labelStyle}>Muqova URL</label>
-                                    <input
-                                        value={form.coverUrl}
-                                        onChange={e => setForm(p => ({ ...p, coverUrl: e.target.value }))}
-                                        style={inputStyle}
-                                        placeholder="https://..."
+                                    <label style={labelStyle}>Muqova rasmi</label>
+                                    <FileUpload
+                                        folder="resources/covers"
+                                        accept="image/*"
+                                        label="Muqova yuklash"
+                                        onUpload={(url) => setForm(p => ({ ...p, coverUrl: url }))}
                                     />
+                                    {form.coverUrl && (
+                                        <img src={form.coverUrl} alt="" style={{ width: '56px', height: '72px', objectFit: 'cover', borderRadius: '4px', marginTop: '4px' }} />
+                                    )}
                                 </div>
                                 <div>
                                     <label style={labelStyle}>Sahifalar soni</label>
