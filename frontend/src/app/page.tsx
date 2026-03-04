@@ -45,10 +45,10 @@ const sections = [
 
 // ✅ Rasmlarni Supabase ga yuklab, URL larni shu yerga qo'ying
 const SLIDE_IMAGES = [
-    '/hero/slide1.jpg',
-    '/hero/slide2.jpg',
-    '/hero/slide3.jpg',
-    '/hero/slide4.jpg',
+    '/slide1.jpg',
+    '/slide2.jpg',
+    '/slide3.jpg',
+    '/slide4.jpg',
 ]
 
 function HeroSlideshow() {
