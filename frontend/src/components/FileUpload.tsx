@@ -20,22 +20,28 @@ export default function FileUpload({ folder, accept = "*", onUpload, label = "Fa
     setError("");
 
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("folder", folder);
+      const fileName = `${folder}/${crypto.randomUUID()}_${file.name}`;
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-      const token = localStorage.getItem("token");
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/upload`, {
+      const res = await fetch(`${supabaseUrl}/storage/v1/object/media/${fileName}`, {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData,
+        headers: {
+          Authorization: `Bearer ${supabaseKey}`,
+          "Content-Type": file.type,
+        },
+        body: file,
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-      onUpload(data.url);
+      if (!res.ok) {
+        const err = await res.text();
+        throw new Error(err);
+      }
+
+      const publicUrl = `${supabaseUrl}/storage/v1/object/public/media/${fileName}`;
+      onUpload(publicUrl);
     } catch (err: any) {
-      setError(err.message || "Xatolik yuz berdi");
+      setError("Fayl yuklanmadi: " + err.message);
     } finally {
       setLoading(false);
     }
