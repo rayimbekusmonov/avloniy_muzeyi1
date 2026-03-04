@@ -53,48 +53,31 @@ const SLIDE_IMAGES = [
 
 function HeroSlideshow() {
     const [current, setCurrent] = useState(0)
-    const [next, setNext] = useState(1)
-    const [fading, setFading] = useState(false)
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setFading(true)
-            setTimeout(() => {
-                setCurrent(prev => (prev + 1) % SLIDE_IMAGES.length)
-                setNext(prev => (prev + 1) % SLIDE_IMAGES.length)
-                setFading(false)
-            }, 1000)
-        }, 5000)
+            setCurrent(prev => (prev + 1) % SLIDE_IMAGES.length)
+        }, 4000)
         return () => clearInterval(interval)
     }, [])
 
     return (
         <>
-            {/* Current slide */}
+            {SLIDE_IMAGES.map((img, i) => (
+                <div key={i} style={{
+                    position: 'absolute',
+                    inset: 0,
+                    backgroundImage: `url(${img})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    transition: 'opacity 1.5s ease-in-out',
+                    opacity: i === current ? 0.5 : 0,
+                }} />
+            ))}
             <div style={{
                 position: 'absolute',
                 inset: 0,
-                backgroundImage: `url(${SLIDE_IMAGES[current]})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                transition: 'opacity 1s ease',
-                opacity: fading ? 0 : 0.25,
-            }} />
-            {/* Next slide (preload) */}
-            <div style={{
-                position: 'absolute',
-                inset: 0,
-                backgroundImage: `url(${SLIDE_IMAGES[next]})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                transition: 'opacity 1s ease',
-                opacity: fading ? 0 : 0.55,
-            }} />
-            {/* Dark overlay */}
-            <div style={{
-                position: 'absolute',
-                inset: 0,
-                background: 'linear-gradient(135deg, rgba(10,24,41,0.6) 0%, rgba(27,58,107,0.5) 50%, rgba(37,77,143,0.45) 100%)',
+                background: 'linear-gradient(135deg, rgba(10,24,41,0.55) 0%, rgba(27,58,107,0.45) 50%, rgba(37,77,143,0.4) 100%)',
             }} />
         </>
     )
