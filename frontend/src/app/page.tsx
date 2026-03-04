@@ -88,13 +88,13 @@ function HeroSlideshow() {
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 transition: 'opacity 1s ease',
-                opacity: fading ? 0.25 : 0,
+                opacity: fading ? 0 : 0.55,
             }} />
             {/* Dark overlay */}
             <div style={{
                 position: 'absolute',
                 inset: 0,
-                background: 'linear-gradient(135deg, rgba(10,24,41,0.85) 0%, rgba(27,58,107,0.75) 50%, rgba(37,77,143,0.7) 100%)',
+                background: 'linear-gradient(135deg, rgba(10,24,41,0.6) 0%, rgba(27,58,107,0.5) 50%, rgba(37,77,143,0.45) 100%)',
             }} />
         </>
     )
