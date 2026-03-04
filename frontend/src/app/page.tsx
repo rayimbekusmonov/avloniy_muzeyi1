@@ -43,12 +43,70 @@ const sections = [
     },
 ]
 
+// ✅ Rasmlarni Supabase ga yuklab, URL larni shu yerga qo'ying
+const SLIDE_IMAGES = [
+    '/hero/slide1.jpg',
+    '/hero/slide2.jpg',
+    '/hero/slide3.jpg',
+    '/hero/slide4.jpg',
+]
+
+function HeroSlideshow() {
+    const [current, setCurrent] = useState(0)
+    const [next, setNext] = useState(1)
+    const [fading, setFading] = useState(false)
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setFading(true)
+            setTimeout(() => {
+                setCurrent(prev => (prev + 1) % SLIDE_IMAGES.length)
+                setNext(prev => (prev + 1) % SLIDE_IMAGES.length)
+                setFading(false)
+            }, 1000)
+        }, 5000)
+        return () => clearInterval(interval)
+    }, [])
+
+    return (
+        <>
+            {/* Current slide */}
+            <div style={{
+                position: 'absolute',
+                inset: 0,
+                backgroundImage: `url(${SLIDE_IMAGES[current]})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                transition: 'opacity 1s ease',
+                opacity: fading ? 0 : 0.25,
+            }} />
+            {/* Next slide (preload) */}
+            <div style={{
+                position: 'absolute',
+                inset: 0,
+                backgroundImage: `url(${SLIDE_IMAGES[next]})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                transition: 'opacity 1s ease',
+                opacity: fading ? 0.25 : 0,
+            }} />
+            {/* Dark overlay */}
+            <div style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(135deg, rgba(10,24,41,0.85) 0%, rgba(27,58,107,0.75) 50%, rgba(37,77,143,0.7) 100%)',
+            }} />
+        </>
+    )
+}
+
 export default function HomePage() {
     const [latestNews, setLatestNews] = useState<NewsItem[]>([])
 
     useEffect(() => {
         newsService.getAll(0, 3).then(data => setLatestNews(data.content))
     }, [])
+
     return (
         <>
             {/* HERO */}
@@ -61,6 +119,10 @@ export default function HomePage() {
                 overflow: 'hidden',
                 padding: '100px 0',
             }}>
+                {/* Slideshow */}
+                <HeroSlideshow />
+
+                {/* Gold radial glow */}
                 <div style={{
                     position: 'absolute',
                     inset: 0,
@@ -69,9 +131,10 @@ export default function HomePage() {
                         radial-gradient(circle at 20% 80%, rgba(201,168,76,0.06) 0%, transparent 40%)
                     `,
                     pointerEvents: 'none',
+                    zIndex: 1,
                 }} />
 
-                <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+                <div className="container" style={{ position: 'relative', zIndex: 2 }}>
                     <div style={{
                         display: 'flex',
                         flexDirection: 'row',
@@ -80,7 +143,6 @@ export default function HomePage() {
                         justifyContent: 'space-between',
                         gap: '40px',
                     }}>
-
                         {/* Hero Text */}
                         <div style={{ flex: '1 1 500px' }}>
                             <div className="animate-fade-up" style={{
@@ -132,7 +194,7 @@ export default function HomePage() {
                             </div>
                         </div>
 
-                        {/* Hero Quote — flex bilan, absolute emas */}
+                        {/* Hero Quote */}
                         <div className="hero-quote animate-fade-up animate-delay-4" style={{
                             flex: '1 1 300px',
                             maxWidth: '400px',
@@ -175,6 +237,7 @@ export default function HomePage() {
                     fontSize: '10px',
                     letterSpacing: '2px',
                     animation: 'fadeIn 1s ease 1s both',
+                    zIndex: 2,
                 }}>
                     <div>SCROLL</div>
                     <div style={{ width: '1px', height: '32px', background: 'rgba(201,168,76,0.4)' }} />
