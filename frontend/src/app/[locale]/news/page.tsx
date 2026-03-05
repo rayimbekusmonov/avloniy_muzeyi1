@@ -1,29 +1,50 @@
 'use client'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useLocale } from 'next-intl'
 import { newsService } from '@/lib/services'
 import { NewsItem } from '@/lib/api'
 
-const CATEGORIES = [
-    { value: '', label: 'Barchasi' },
-    { value: 'KORGAZMA', label: "Ko'rgazma" },
-    { value: 'TADBIR', label: 'Tadbir' },
-    { value: 'YANGILIK', label: 'Yangilik' },
-    { value: 'BAYRAM', label: 'Bayram' },
-]
-
-function formatDate(dateStr: string) {
+function formatDate(dateStr: string, locale: string) {
     const date = new Date(dateStr)
+    if (locale === 'ru') {
+        const months = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек']
+        return `${date.getDate()} ${months[date.getMonth()]}, ${date.getFullYear()}`
+    } else if (locale === 'en') {
+        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+        return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`
+    }
     const months = ['Yanvar','Fevral','Mart','Aprel','May','Iyun','Iyul','Avgust','Sentabr','Oktabr','Noyabr','Dekabr']
     return `${date.getDate()}-${months[date.getMonth()]}, ${date.getFullYear()}`
 }
 
 export default function NewsPage() {
+    const locale = useLocale()
     const [news, setNews] = useState<NewsItem[]>([])
     const [loading, setLoading] = useState(true)
     const [category, setCategory] = useState('')
     const [page, setPage] = useState(0)
     const [totalPages, setTotalPages] = useState(0)
+
+    const CATEGORIES = [
+        { value: '', label: locale === 'ru' ? 'Все' : locale === 'en' ? 'All' : 'Barchasi' },
+        { value: 'KORGAZMA', label: locale === 'ru' ? 'Выставка' : locale === 'en' ? 'Exhibition' : "Ko'rgazma" },
+        { value: 'TADBIR', label: locale === 'ru' ? 'Мероприятие' : locale === 'en' ? 'Event' : 'Tadbir' },
+        { value: 'YANGILIK', label: locale === 'ru' ? 'Новость' : locale === 'en' ? 'News' : 'Yangilik' },
+        { value: 'BAYRAM', label: locale === 'ru' ? 'Праздник' : locale === 'en' ? 'Holiday' : 'Bayram' },
+    ]
+
+    const t = {
+        label: locale === 'ru' ? 'Последние события' : locale === 'en' ? 'Latest events' : "So'nggi voqealar",
+        h1a: locale === 'ru' ? 'Новости ' : locale === 'en' ? 'Museum ' : 'Muzey ',
+        h1b: locale === 'ru' ? 'музея' : locale === 'en' ? 'News' : 'Yangiliklari',
+        desc: locale === 'ru' ? 'Мероприятия, выставки и новости музея Абдуллы Авлония' : locale === 'en' ? "Events, exhibitions and news of Abdulla Avloniy museum" : "Abdulla Avloniy muzeyi tadbirlari, ko'rgazmalari va yangiliklari",
+        loading: locale === 'ru' ? 'Загрузка...' : locale === 'en' ? 'Loading...' : 'Yuklanmoqda...',
+        empty: locale === 'ru' ? 'В этой категории нет новостей' : locale === 'en' ? 'No news in this category' : "Bu kategoriyada yangiliklar yo'q",
+        readMore: locale === 'ru' ? 'Подробнее →' : locale === 'en' ? 'Read more →' : 'Batafsil →',
+        prev: locale === 'ru' ? '← Назад' : locale === 'en' ? '← Prev' : '← Oldingi',
+        next: locale === 'ru' ? 'Вперёд →' : locale === 'en' ? 'Next →' : 'Keyingi →',
+    }
 
     useEffect(() => {
         fetchNews()
@@ -36,7 +57,7 @@ export default function NewsPage() {
             setNews(data.content)
             setTotalPages(data.totalPages)
         } catch {
-            console.error('Yangiliklar yuklanmadi')
+            console.error('News load failed')
         } finally {
             setLoading(false)
         }
@@ -52,12 +73,11 @@ export default function NewsPage() {
 
     return (
         <>
-            {/* Page Header */}
             <div className="page-header">
                 <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-                    <div className="label"><span>📰</span> So'nggi voqealar</div>
-                    <h1>Muzey <span>Yangiliklari</span></h1>
-                    <p>Abdulla Avloniy muzeyi tadbirlari, ko'rgazmalari va yangiliklari</p>
+                    <div className="label"><span>📰</span> {t.label}</div>
+                    <h1>{t.h1a}<span>{t.h1b}</span></h1>
+                    <p>{t.desc}</p>
                 </div>
             </div>
 
@@ -89,18 +109,18 @@ export default function NewsPage() {
 
                     {loading ? (
                         <div style={{ textAlign: 'center', padding: '80px', color: 'var(--gray-600)' }}>
-                            Yuklanmoqda...
+                            {t.loading}
                         </div>
                     ) : news.length === 0 ? (
                         <div style={{ textAlign: 'center', padding: '80px', color: 'var(--gray-600)' }}>
                             <div style={{ fontSize: '48px', marginBottom: '16px' }}>📭</div>
-                            <p>Bu kategoriyada yangiliklar yo'q</p>
+                            <p>{t.empty}</p>
                         </div>
                     ) : (
                         <>
                             {/* Featured */}
                             {featured && page === 0 && (
-                                <Link href={`/frontend/src/app/%5Blocale%5D/news/${featured.slug}`} style={{ textDecoration: 'none' }}>
+                                <Link href={`/${locale}/news/${featured.slug}`} style={{ textDecoration: 'none' }}>
                                     <div className="card" style={{
                                         display: 'grid',
                                         gridTemplateColumns: '1fr 1fr',
@@ -145,7 +165,7 @@ export default function NewsPage() {
                                                 </p>
                                             )}
                                             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gray-400)' }}>
-                                                {formatDate(featured.createdAt)}
+                                                {formatDate(featured.createdAt, locale)}
                                             </div>
                                         </div>
                                     </div>
@@ -155,7 +175,7 @@ export default function NewsPage() {
                             {/* Grid */}
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
                                 {(page === 0 ? rest : news).map(item => (
-                                    <Link key={item.id} href={`/frontend/src/app/%5Blocale%5D/news/${item.slug}`} style={{ textDecoration: 'none' }}>
+                                    <Link key={item.id} href={`/${locale}/news/${item.slug}`} style={{ textDecoration: 'none' }}>
                                         <div className="card">
                                             <div style={{
                                                 height: '200px',
@@ -172,38 +192,15 @@ export default function NewsPage() {
                                             </div>
                                             <div style={{ padding: '24px' }}>
                                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                                                    <span style={{
-                                                        fontFamily: 'var(--font-mono)',
-                                                        fontSize: '10px',
-                                                        color: 'var(--gold)',
-                                                        letterSpacing: '2px',
-                                                    }}>{item.category}</span>
-                                                    <span style={{
-                                                        fontFamily: 'var(--font-mono)',
-                                                        fontSize: '10px',
-                                                        color: 'var(--gray-400)',
-                                                    }}>{formatDate(item.createdAt)}</span>
+                                                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--gold)', letterSpacing: '2px' }}>{item.category}</span>
+                                                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--gray-400)' }}>{formatDate(item.createdAt, locale)}</span>
                                                 </div>
-                                                <h3 style={{
-                                                    fontFamily: 'var(--font-display)',
-                                                    fontSize: '18px',
-                                                    color: 'var(--navy-dark)',
-                                                    marginBottom: '10px',
-                                                    lineHeight: '1.4',
-                                                }}>{item.title}</h3>
+                                                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '18px', color: 'var(--navy-dark)', marginBottom: '10px', lineHeight: '1.4' }}>{item.title}</h3>
                                                 {item.excerpt && (
-                                                    <p style={{
-                                                        fontSize: '14px',
-                                                        color: 'var(--gray-600)',
-                                                        lineHeight: '1.7',
-                                                        overflow: 'hidden',
-                                                        display: '-webkit-box',
-                                                        WebkitLineClamp: 3,
-                                                        WebkitBoxOrient: 'vertical',
-                                                    }}>{item.excerpt}</p>
+                                                    <p style={{ fontSize: '14px', color: 'var(--gray-600)', lineHeight: '1.7', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' as const }}>{item.excerpt}</p>
                                                 )}
                                                 <div style={{ marginTop: '16px', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--gold)' }}>
-                                                    Batafsil →
+                                                    {t.readMore}
                                                 </div>
                                             </div>
                                         </div>
@@ -214,51 +211,17 @@ export default function NewsPage() {
                             {/* Pagination */}
                             {totalPages > 1 && (
                                 <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '48px' }}>
-                                    <button
-                                        onClick={() => setPage(p => Math.max(0, p - 1))}
-                                        disabled={page === 0}
-                                        style={{
-                                            padding: '10px 20px',
-                                            border: '1px solid rgba(27,58,107,0.2)',
-                                            borderRadius: '8px',
-                                            background: '#fff',
-                                            color: page === 0 ? 'var(--gray-400)' : 'var(--navy)',
-                                            cursor: page === 0 ? 'not-allowed' : 'pointer',
-                                            fontFamily: 'var(--font-mono)',
-                                            fontSize: '13px',
-                                        }}
-                                    >← Oldingi</button>
+                                    <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0}
+                                            style={{ padding: '10px 20px', border: '1px solid rgba(27,58,107,0.2)', borderRadius: '8px', background: '#fff', color: page === 0 ? 'var(--gray-400)' : 'var(--navy)', cursor: page === 0 ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-mono)', fontSize: '13px' }}
+                                    >{t.prev}</button>
                                     {Array.from({ length: totalPages }, (_, i) => (
-                                        <button
-                                            key={i}
-                                            onClick={() => setPage(i)}
-                                            style={{
-                                                padding: '10px 16px',
-                                                border: '1px solid',
-                                                borderColor: page === i ? 'var(--gold)' : 'rgba(27,58,107,0.2)',
-                                                borderRadius: '8px',
-                                                background: page === i ? 'var(--gold)' : '#fff',
-                                                color: page === i ? 'var(--navy-dark)' : 'var(--navy)',
-                                                cursor: 'pointer',
-                                                fontFamily: 'var(--font-mono)',
-                                                fontSize: '13px',
-                                            }}
+                                        <button key={i} onClick={() => setPage(i)}
+                                                style={{ padding: '10px 16px', border: '1px solid', borderColor: page === i ? 'var(--gold)' : 'rgba(27,58,107,0.2)', borderRadius: '8px', background: page === i ? 'var(--gold)' : '#fff', color: page === i ? 'var(--navy-dark)' : 'var(--navy)', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '13px' }}
                                         >{i + 1}</button>
                                     ))}
-                                    <button
-                                        onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
-                                        disabled={page === totalPages - 1}
-                                        style={{
-                                            padding: '10px 20px',
-                                            border: '1px solid rgba(27,58,107,0.2)',
-                                            borderRadius: '8px',
-                                            background: '#fff',
-                                            color: page === totalPages - 1 ? 'var(--gray-400)' : 'var(--navy)',
-                                            cursor: page === totalPages - 1 ? 'not-allowed' : 'pointer',
-                                            fontFamily: 'var(--font-mono)',
-                                            fontSize: '13px',
-                                        }}
-                                    >Keyingi →</button>
+                                    <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page === totalPages - 1}
+                                            style={{ padding: '10px 20px', border: '1px solid rgba(27,58,107,0.2)', borderRadius: '8px', background: '#fff', color: page === totalPages - 1 ? 'var(--gray-400)' : 'var(--navy)', cursor: page === totalPages - 1 ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-mono)', fontSize: '13px' }}
+                                    >{t.next}</button>
                                 </div>
                             )}
                         </>
