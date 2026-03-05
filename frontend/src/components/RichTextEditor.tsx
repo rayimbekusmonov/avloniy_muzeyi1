@@ -1,4 +1,5 @@
 'use client'
+import 'quill/dist/quill.snow.css'
 import { useEffect, useRef } from 'react'
 
 interface RichTextEditorProps {
