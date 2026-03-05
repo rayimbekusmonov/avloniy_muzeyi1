@@ -4,7 +4,7 @@ import { getMessages } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
-import '@/app/globals.css'
+import '@/styles/globals.css'
 
 export const metadata: Metadata = {
   title: 'Abdulla Avloniy Muzeyi',
