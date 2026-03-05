@@ -1,12 +1,21 @@
 {
   "nav": {
     "home": "Home",
-    "about": "About",
+    "about": "About the Museum",
     "gallery": "Gallery",
     "resources": "Resources",
     "news": "News",
     "faq": "FAQ",
     "contact": "Contact"
+  },
+  "hero": {
+    "badge": "Tashkent · Since 1934",
+    "title1": "Abdulla",
+    "title2": "Avloniy",
+    "title3": "Museum",
+    "desc": "A national museum dedicated to preserving and passing on the legacy of the great enlightener, poet, and educator Abdulla Avloniy to future generations.",
+    "btn_visit": "Plan Your Visit",
+    "btn_gallery": "View Gallery"
   },
   "footer": {
     "sections": "Sections",
@@ -14,7 +23,7 @@
     "rights": "All rights reserved"
   },
   "common": {
-    "read_more": "Read more",
+    "read_more": "Read More",
     "loading": "Loading...",
     "no_data": "No data found"
   }
