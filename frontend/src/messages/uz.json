@@ -36,7 +36,17 @@
     "cta_title1": "Muzeyga",
     "cta_title2": "xush kelibsiz",
     "cta_desc": "Har kuni Dushanbadan Yakshanba kuni. Manzil va ish vaqti haqida ma'lumot oling.",
-    "cta_btn": "Manzilni ko'rish →"
+    "cta_btn": "Manzilni ko'rish →",
+    "scroll": "SCROLL",
+    "nav_about": "Muzey Haqida",
+    "nav_gallery": "Galereya",
+    "nav_resources": "Manbalar",
+    "nav_news": "Yangiliklar",
+    "sections_about_desc": "Abdulla Avloniy hayoti, ijodi va muzeyning tarixi bilan tanishing.",
+    "sections_gallery_desc": "Rasmlar, videolar va audio materiallar to'plami.",
+    "sections_resources_desc": "E-kitoblar, maqolalar va ilmiy ishlar kutubxonasi.",
+    "sections_news_desc": "Muzeyning so'nggi tadbirlari va yangiliklari.",
+    "read_more": "Batafsil"
   },
   "about": {
     "label": "Muzey Haqida",

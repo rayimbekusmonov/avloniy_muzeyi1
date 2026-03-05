@@ -36,7 +36,17 @@
     "cta_title1": "Welcome to",
     "cta_title2": "the museum",
     "cta_desc": "Open daily Monday through Sunday. Find our address and working hours.",
-    "cta_btn": "Get directions →"
+    "cta_btn": "Get directions →",
+    "scroll": "SCROLL",
+    "nav_about": "About",
+    "nav_gallery": "Gallery",
+    "nav_resources": "Resources",
+    "nav_news": "News",
+    "sections_about_desc": "Learn about Avloniy life, work and the museum history.",
+    "sections_gallery_desc": "Collection of photos, videos and audio materials.",
+    "sections_resources_desc": "Library of e-books, articles and academic works.",
+    "sections_news_desc": "Latest events and news from the museum.",
+    "read_more": "Read more"
   },
   "about": {
     "label": "About the Museum",
