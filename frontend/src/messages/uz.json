@@ -8,23 +8,117 @@
     "faq": "FAQ",
     "contact": "Bog'lanish"
   },
-  "hero": {
+  "home": {
     "badge": "Toshkent · 1934-yildan buyon",
-    "title1": "Abdulla",
-    "title2": "Avloniy",
-    "title3": "Muzeyi",
-    "desc": "Buyuk ma'rifatparvar, shoir va pedagog Abdulla Avloniy xotirasini saqlovchi va kelajak avlodlarga yetkazuvchi milliy muzey.",
-    "btn_visit": "Muzeyni ko'rish",
-    "btn_gallery": "Galereya"
+    "hero_title1": "Abdulla",
+    "hero_title2": "Avloniy",
+    "hero_title3": "Muzeyi",
+    "hero_desc": "Buyuk ma'rifatparvar, shoir va pedagog Abdulla Avloniy xotirasini saqlovchi va kelajak avlodlarga yetkazuvchi milliy muzey.",
+    "btn_visit": "Muzeyni ko'rish →",
+    "btn_gallery": "Galereya",
+    "stats_exhibits": "Eksponat",
+    "stats_history": "Yillik tarix",
+    "stats_founded": "Asos solingan",
+    "stats_visitors": "Yillik mehmon",
+    "who_label": "Kimdir u?",
+    "who_title1": "Abdulla",
+    "who_title2": "Avloniy",
+    "who_desc1": "Abdulla Avloniy (1878–1934) — o'zbek adabiyoti va pedagogika tarixida alohida o'rin tutuvchi buyuk shaxs.",
+    "who_desc2": "Uning \"Turkiy Guliston yoxud axloq\" asari hamon pedagogik fikr taraqqiyotida muhim manba bo'lib kelmoqda.",
+    "btn_read_more": "Batafsil o'qish →",
+    "sections_label": "Nima topasiz?",
+    "sections_title1": "Muzey",
+    "sections_title2": "bo'limlari",
+    "news_label": "So'nggi voqealar",
+    "news_title": "Yangiliklar",
+    "news_btn": "Barchasini ko'rish",
+    "cta_label": "Bizga tashrif buyuring",
+    "cta_title1": "Muzeyga",
+    "cta_title2": "xush kelibsiz",
+    "cta_desc": "Har kuni Dushanbadan Yakshanba kuni. Manzil va ish vaqti haqida ma'lumot oling.",
+    "cta_btn": "Manzilni ko'rish →"
+  },
+  "about": {
+    "label": "Muzey Haqida",
+    "title1": "Tarix va",
+    "title2": "Ma'lumot",
+    "desc": "Abdulla Avloniy muzeyi, uning hayoti va Toshkentdagi muhim o'rni haqida.",
+    "museum_label": "Muzey tarixi",
+    "museum_title1": "Muzey",
+    "museum_title2": "Haqida",
+    "museum_desc1": "Abdulla Avloniy muzeyi 1934-yilda tashkil etilgan bo'lib, buyuk ma'rifatparvarning hayoti, ijodi va pedagogik faoliyatiga bag'ishlangan.",
+    "museum_desc2": "Muzey milliy ma'naviy merosni saqlash va kelajak avlodlarga yetkazish maqsadida faoliyat ko'rsatib kelmoqda.",
+    "work_hours": "Ish vaqti",
+    "work_hours_val": "Du–Yak: 9:00–17:00",
+    "entry": "Kirish narxi",
+    "entry_val": "Bepul",
+    "phone": "Telefon",
+    "address": "Manzil",
+    "address_val": "Toshkent shahri",
+    "bio_label": "Shaxsiyat",
+    "bio_title1": "Abdulla",
+    "bio_title2": "Avloniy",
+    "bio_title3": "Kim?",
+    "timeline_label": "Hayot yo'li",
+    "timeline_title1": "Muhim",
+    "timeline_title2": "Sanalar"
+  },
+  "gallery": {
+    "label": "Ko'rgazma zali",
+    "title": "Galereya",
+    "desc": "Muzeyning rasmlar, video va audio materiallar to'plami.",
+    "photos": "Rasmlar",
+    "videos": "Videolar",
+    "audio": "Audiolar"
+  },
+  "resources": {
+    "label": "Kutubxona",
+    "title": "Manbalar",
+    "desc": "E-kitoblar, maqolalar va ilmiy ishlar to'plami.",
+    "all": "Barchasi",
+    "books": "Kitoblar",
+    "articles": "Maqolalar",
+    "search": "Qidirish...",
+    "download": "Yuklab olish",
+    "read": "O'qish"
+  },
+  "news": {
+    "label": "So'nggi yangiliklar",
+    "title": "Yangiliklar",
+    "desc": "Muzeyning so'nggi tadbirlari va yangiliklari.",
+    "read_more": "Batafsil o'qish →",
+    "back": "← Orqaga",
+    "published": "Nashr etildi",
+    "no_news": "Hali yangiliklar yo'q"
+  },
+  "faq": {
+    "label": "Savol-javob",
+    "title": "FAQ",
+    "desc": "Ko'p so'raladigan savollar va javoblar."
+  },
+  "contact": {
+    "label": "Aloqa",
+    "title1": "Bog'lanish",
+    "desc": "Savollaringiz bo'lsa, biz bilan bog'laning.",
+    "name": "Ismingiz",
+    "phone": "Telefon raqamingiz",
+    "message": "Xabar",
+    "send": "Yuborish",
+    "sending": "Yuborilmoqda...",
+    "success": "Xabaringiz yuborildi!",
+    "work_hours": "Ish vaqti",
+    "address": "Manzil"
   },
   "footer": {
     "sections": "Bo'limlar",
     "address": "Manzil",
-    "rights": "Barcha huquqlar himoyalangan"
+    "rights": "Barcha huquqlar himoyalangan",
+    "work_hours": "Du–Yak: 9:00 – 17:00"
   },
   "common": {
     "read_more": "Batafsil",
     "loading": "Yuklanmoqda...",
-    "no_data": "Ma'lumot topilmadi"
+    "no_data": "Ma'lumot topilmadi",
+    "scroll": "SCROLL"
   }
 }

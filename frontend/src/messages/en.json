@@ -1,30 +1,124 @@
 {
   "nav": {
     "home": "Home",
-    "about": "About the Museum",
+    "about": "About",
     "gallery": "Gallery",
     "resources": "Resources",
     "news": "News",
     "faq": "FAQ",
     "contact": "Contact"
   },
-  "hero": {
+  "home": {
     "badge": "Tashkent · Since 1934",
-    "title1": "Abdulla",
-    "title2": "Avloniy",
-    "title3": "Museum",
-    "desc": "A national museum dedicated to preserving and passing on the legacy of the great enlightener, poet, and educator Abdulla Avloniy to future generations.",
-    "btn_visit": "Plan Your Visit",
-    "btn_gallery": "View Gallery"
+    "hero_title1": "Abdulla",
+    "hero_title2": "Avloniy",
+    "hero_title3": "Museum",
+    "hero_desc": "A national museum preserving the memory of the great enlightener, poet and educator Abdulla Avloniy.",
+    "btn_visit": "Visit Museum →",
+    "btn_gallery": "Gallery",
+    "stats_exhibits": "Exhibits",
+    "stats_history": "Years of history",
+    "stats_founded": "Founded",
+    "stats_visitors": "Visitors per year",
+    "who_label": "Who was he?",
+    "who_title1": "Abdulla",
+    "who_title2": "Avloniy",
+    "who_desc1": "Abdulla Avloniy (1878–1934) — a prominent figure in Uzbek literature and pedagogy.",
+    "who_desc2": "His work \"Turkiy Guliston yokhud Akhlok\" remains an important source of pedagogical thought.",
+    "btn_read_more": "Read more →",
+    "sections_label": "What will you find?",
+    "sections_title1": "Museum",
+    "sections_title2": "sections",
+    "news_label": "Latest events",
+    "news_title": "News",
+    "news_btn": "View all",
+    "cta_label": "Come visit us",
+    "cta_title1": "Welcome to",
+    "cta_title2": "the museum",
+    "cta_desc": "Open daily Monday through Sunday. Find our address and working hours.",
+    "cta_btn": "Get directions →"
+  },
+  "about": {
+    "label": "About the Museum",
+    "title1": "History &",
+    "title2": "Information",
+    "desc": "About the Abdulla Avloniy Museum, his life and important role in Tashkent.",
+    "museum_label": "Museum history",
+    "museum_title1": "About the",
+    "museum_title2": "Museum",
+    "museum_desc1": "The Abdulla Avloniy Museum was founded in 1934 and is dedicated to the life, work and pedagogical activities of the great enlightener.",
+    "museum_desc2": "The museum operates to preserve national spiritual heritage and pass it on to future generations.",
+    "work_hours": "Working hours",
+    "work_hours_val": "Mon–Sun: 9:00–17:00",
+    "entry": "Admission",
+    "entry_val": "Free",
+    "phone": "Phone",
+    "address": "Address",
+    "address_val": "Tashkent city",
+    "bio_label": "The person",
+    "bio_title1": "Who was",
+    "bio_title2": "Abdulla",
+    "bio_title3": "Avloniy?",
+    "timeline_label": "Life journey",
+    "timeline_title1": "Key",
+    "timeline_title2": "dates"
+  },
+  "gallery": {
+    "label": "Exhibition hall",
+    "title": "Gallery",
+    "desc": "The museum's collection of photos, videos and audio materials.",
+    "photos": "Photos",
+    "videos": "Videos",
+    "audio": "Audio"
+  },
+  "resources": {
+    "label": "Library",
+    "title": "Resources",
+    "desc": "E-books, articles and academic works.",
+    "all": "All",
+    "books": "Books",
+    "articles": "Articles",
+    "search": "Search...",
+    "download": "Download",
+    "read": "Read"
+  },
+  "news": {
+    "label": "Latest news",
+    "title": "News",
+    "desc": "The museum's latest events and news.",
+    "read_more": "Read more →",
+    "back": "← Back",
+    "published": "Published",
+    "no_news": "No news yet"
+  },
+  "faq": {
+    "label": "Q&A",
+    "title": "FAQ",
+    "desc": "Frequently asked questions and answers."
+  },
+  "contact": {
+    "label": "Contact",
+    "title1": "Get in touch",
+    "desc": "If you have any questions, feel free to contact us.",
+    "name": "Your name",
+    "phone": "Phone number",
+    "message": "Message",
+    "send": "Send",
+    "sending": "Sending...",
+    "success": "Your message has been sent!",
+    "work_hours": "Working hours",
+    "address": "Address"
   },
   "footer": {
     "sections": "Sections",
     "address": "Address",
-    "rights": "All rights reserved"
+    "rights": "All rights reserved",
+    "work_hours": "Mon–Sun: 9:00 – 17:00"
   },
   "common": {
-    "read_more": "Read More",
+    "read_more": "Read more",
     "loading": "Loading...",
-    "no_data": "No data found"
+    "no_data": "No data found",
+    "scroll": "SCROLL"
   }
 }
