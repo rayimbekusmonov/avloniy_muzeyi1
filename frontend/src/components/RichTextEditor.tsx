@@ -1,5 +1,6 @@
 'use client'
 import 'quill/dist/quill.snow.css'
+// @ts-ignore
 import { useEffect, useRef } from 'react'
 
 interface RichTextEditorProps {
@@ -15,7 +16,9 @@ export default function RichTextEditor({ value, onChange, placeholder }: RichTex
     useEffect(() => {
         if (typeof window === 'undefined' || quillRef.current) return
 
+        // @ts-ignore
         import('quill').then(({ default: Quill }) => {
+            // @ts-ignore
             import('quill/dist/quill.snow.css')
             
             if (!editorRef.current) return

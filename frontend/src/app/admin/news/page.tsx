@@ -6,7 +6,7 @@ import { isAuthenticated, removeToken } from '@/lib/api'
 import { newsService } from '@/lib/services'
 import { NewsItem } from '@/lib/api'
 import FileUpload from '@/components/FileUpload'
-
+import RichTextEditor from '@/components/RichTextEditor'
 
 const CATEGORIES = [
     { value: 'KORGAZMA', label: "Ko'rgazma" },
@@ -235,12 +235,9 @@ export default function AdminNewsPage() {
                                 </div>
                                 <div style={{ gridColumn: '1 / -1' }}>
                                     <label style={labelStyle}>Kontent *</label>
-                                    <textarea
+                                    <RichTextEditor
                                         value={form.content}
-                                        onChange={e => setForm(p => ({ ...p, content: e.target.value }))}
-                                        required
-                                        rows={8}
-                                        style={{ ...inputStyle, resize: 'vertical' }}
+                                        onChange={(val) => setForm(p => ({ ...p, content: val }))}
                                         placeholder="Yangilik matni..."
                                     />
                                 </div>
