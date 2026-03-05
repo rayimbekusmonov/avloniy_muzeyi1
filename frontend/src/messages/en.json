@@ -1,0 +1,21 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "gallery": "Gallery",
+    "resources": "Resources",
+    "news": "News",
+    "faq": "FAQ",
+    "contact": "Contact"
+  },
+  "footer": {
+    "sections": "Sections",
+    "address": "Address",
+    "rights": "All rights reserved"
+  },
+  "common": {
+    "read_more": "Read more",
+    "loading": "Loading...",
+    "no_data": "No data found"
+  }
+}
