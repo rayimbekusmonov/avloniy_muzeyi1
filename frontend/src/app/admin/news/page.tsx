@@ -22,6 +22,7 @@ const emptyForm = {
     imageUrl: '',
     category: 'YANGILIK',
     published: false,
+    publishedAt: new Date().toISOString().slice(0, 16),
 }
 
 export default function AdminNewsPage() {
@@ -45,8 +46,7 @@ export default function AdminNewsPage() {
     const fetchNews = async () => {
         setLoading(true)
         try {
-            // const data = await newsService.getAll(0, 50)
-            const data = await newsService.getAllForAdmin(0, 50)
+            const data = await newsService.getAll(0, 50)
             setNews(data.content)
         } catch {
             setError('Yangiliklar yuklanmadi')
@@ -64,17 +64,21 @@ export default function AdminNewsPage() {
             imageUrl: item.imageUrl || '',
             category: item.category,
             published: item.published,
+            publishedAt: item.publishedAt
+                ? new Date(item.publishedAt).toISOString().slice(0, 16)
+                : new Date().toISOString().slice(0, 16),
         })
         setShowForm(true)
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100)
     }
 
     const handleDelete = async (id: number) => {
-        if (!confirm('Yangilikni o\'chirishni tasdiqlaysizmi?')) return
+        if (!confirm("Yangilikni o'chirishni tasdiqlaysizmi?")) return
         try {
             await newsService.delete(id)
             setNews(prev => prev.filter(n => n.id !== id))
         } catch {
-            setError('O\'chirishda xato yuz berdi')
+            setError("O'chirishda xato yuz berdi")
         }
     }
 
@@ -127,6 +131,7 @@ export default function AdminNewsPage() {
                         fontFamily: 'var(--font-mono)',
                         fontSize: '12px',
                         letterSpacing: '1px',
+                        textDecoration: 'none',
                     }}>← Dashboard</Link>
                     <div style={{ color: 'rgba(255,255,255,0.2)' }}>|</div>
                     <span style={{ fontFamily: 'var(--font-display)', fontSize: '15px', color: '#fff' }}>
@@ -153,11 +158,13 @@ export default function AdminNewsPage() {
                 {/* Top bar */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
                     <h1 style={{ fontSize: '26px', color: 'var(--navy-dark)' }}>Yangiliklar boshqaruvi</h1>
-                    <button
-                        onClick={() => setShowForm(true)}
-                        className="btn-primary"
-                        style={{ border: 'none', cursor: 'pointer' }}
-                    >+ Yangi qo'shish</button>
+                    {!showForm && (
+                        <button
+                            onClick={() => setShowForm(true)}
+                            className="btn-primary"
+                            style={{ border: 'none', cursor: 'pointer' }}
+                        >+ Yangi qo'shish</button>
+                    )}
                 </div>
 
                 {error && (
@@ -187,6 +194,8 @@ export default function AdminNewsPage() {
                         </h2>
                         <form onSubmit={handleSubmit}>
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+
+                                {/* Sarlavha */}
                                 <div style={{ gridColumn: '1 / -1' }}>
                                     <label style={labelStyle}>Sarlavha *</label>
                                     <input
@@ -197,6 +206,8 @@ export default function AdminNewsPage() {
                                         placeholder="Yangilik sarlavhasi"
                                     />
                                 </div>
+
+                                {/* Kategoriya */}
                                 <div>
                                     <label style={labelStyle}>Kategoriya *</label>
                                     <select
@@ -209,7 +220,20 @@ export default function AdminNewsPage() {
                                         ))}
                                     </select>
                                 </div>
+
+                                {/* Sana */}
                                 <div>
+                                    <label style={labelStyle}>Nashr sanasi</label>
+                                    <input
+                                        type="datetime-local"
+                                        value={form.publishedAt}
+                                        onChange={e => setForm(p => ({ ...p, publishedAt: e.target.value }))}
+                                        style={inputStyle}
+                                    />
+                                </div>
+
+                                {/* Rasm */}
+                                <div style={{ gridColumn: '1 / -1' }}>
                                     <label style={labelStyle}>Rasm</label>
                                     <FileUpload
                                         folder="news"
@@ -219,11 +243,13 @@ export default function AdminNewsPage() {
                                     />
                                     {form.imageUrl && (
                                         <div style={{ marginTop: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                            <img src={form.imageUrl} alt="" style={{ width: '60px', height: '40px', objectFit: 'cover', borderRadius: '4px' }} />
+                                            <img src={form.imageUrl} alt="" style={{ width: '80px', height: '52px', objectFit: 'cover', borderRadius: '6px' }} />
                                             <span style={{ fontSize: '12px', color: 'var(--gray-600)', wordBreak: 'break-all' }}>{form.imageUrl}</span>
                                         </div>
                                     )}
                                 </div>
+
+                                {/* Excerpt */}
                                 <div style={{ gridColumn: '1 / -1' }}>
                                     <label style={labelStyle}>Qisqa matn (excerpt)</label>
                                     <input
@@ -233,6 +259,8 @@ export default function AdminNewsPage() {
                                         placeholder="Yangilik haqida qisqa ma'lumot"
                                     />
                                 </div>
+
+                                {/* Kontent - Rich Text Editor */}
                                 <div style={{ gridColumn: '1 / -1' }}>
                                     <label style={labelStyle}>Kontent *</label>
                                     <RichTextEditor
@@ -241,6 +269,8 @@ export default function AdminNewsPage() {
                                         placeholder="Yangilik matni..."
                                     />
                                 </div>
+
+                                {/* Nashr qilish */}
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                     <input
                                         type="checkbox"
@@ -290,6 +320,11 @@ export default function AdminNewsPage() {
                                 border: '1px solid rgba(27,58,107,0.08)',
                                 boxShadow: 'var(--shadow-sm)',
                             }}>
+                                {/* Rasm */}
+                                {item.imageUrl && (
+                                    <img src={item.imageUrl} alt="" style={{ width: '64px', height: '44px', objectFit: 'cover', borderRadius: '6px', flexShrink: 0 }} />
+                                )}
+
                                 <div style={{ flex: 1, minWidth: 0 }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
                                         <h3 style={{
