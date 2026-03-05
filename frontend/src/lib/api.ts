@@ -78,6 +78,7 @@ export interface NewsItem {
     imageUrl: string;
     category: 'KORGAZMA' | 'TADBIR' | 'YANGILIK' | 'BAYRAM';
     published: boolean;
+    publishedAt: string;
     authorUsername: string;
     createdAt: string;
     updatedAt: string;
