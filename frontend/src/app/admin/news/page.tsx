@@ -6,7 +6,7 @@ import { isAuthenticated, removeToken } from '@/lib/api'
 import { newsService } from '@/lib/services'
 import { NewsItem } from '@/lib/api'
 import FileUpload from '@/components/FileUpload'
-import RichTextEditor from '@/components/RichTextEditor'
+import {RichTextEditor} from '@/components/RichTextEditor'
 
 const CATEGORIES = [
     { value: 'KORGAZMA', label: "Ko'rgazma" },
