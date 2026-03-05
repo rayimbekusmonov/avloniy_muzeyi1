@@ -374,7 +374,7 @@ export default function HomePage() {
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
                         {latestNews.map(item => (
-                            <Link key={item.id} href={`/news/${item.slug}`} style={{ textDecoration: 'none' }}>
+                            <Link key={item.id} href={`/frontend/src/app/%5Blocale%5D/news/${item.slug}`} style={{ textDecoration: 'none' }}>
                                 <div className="card">
                                     <div style={{
                                         height: '180px',

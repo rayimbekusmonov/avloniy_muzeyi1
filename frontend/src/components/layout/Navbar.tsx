@@ -2,28 +2,38 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
-
-const navLinks = [
-    { href: '/', label: 'Bosh Sahifa' },
-    { href: '/about', label: 'Muzey Haqida' },
-    { href: '/gallery', label: 'Galereya' },
-    { href: '/resources', label: 'Manbalar' },
-    { href: '/news', label: 'Yangiliklar' },
-    { href: '/faq', label: 'FAQ' },
-    { href: '/contact', label: 'Bog\'lanish' },
-]
+import { usePathname, useRouter } from 'next/navigation'
+import { useTranslations, useLocale } from 'next-intl'
 
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false)
     const [menuOpen, setMenuOpen] = useState(false)
     const pathname = usePathname()
+    const router = useRouter()
+    const locale = useLocale()
+    const t = useTranslations('nav')
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 30)
         window.addEventListener('scroll', onScroll)
         return () => window.removeEventListener('scroll', onScroll)
     }, [])
+
+    const changeLocale = (newLocale: string) => {
+        const segments = pathname.split('/')
+        segments[1] = newLocale
+        router.push(segments.join('/'))
+    }
+
+    const navLinks = [
+        { href: `/${locale}`, label: t('home') },
+        { href: `/${locale}/about`, label: t('about') },
+        { href: `/${locale}/gallery`, label: t('gallery') },
+        { href: `/${locale}/resources`, label: t('resources') },
+        { href: `/${locale}/news`, label: t('news') },
+        { href: `/${locale}/faq`, label: t('faq') },
+        { href: `/${locale}/contact`, label: t('contact') },
+    ]
 
     return (
         <nav style={{
@@ -43,7 +53,7 @@ export default function Navbar() {
             <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
 
                 {/* Logo */}
-                <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
+                <Link href={`/${locale}`} style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
                     <div style={{
                         width: 48,
                         height: 48,
@@ -102,31 +112,60 @@ export default function Navbar() {
                     ))}
                 </div>
 
-                {/* Mobile burger */}
-                <button
-                    onClick={() => setMenuOpen(!menuOpen)}
-                    className="burger-btn"
-                    style={{
-                        display: 'none',
-                        flexDirection: 'column',
-                        gap: '5px',
-                        padding: '8px',
-                        background: 'transparent',
-                        border: 'none',
-                        cursor: 'pointer',
-                    }}
-                >
-                    {[0, 1, 2].map(i => (
-                        <span key={i} style={{
-                            display: 'block',
-                            width: '24px',
-                            height: '2px',
-                            background: '#C9A84C',
-                            borderRadius: '2px',
-                            transition: 'all 0.3s',
-                        }} />
-                    ))}
-                </button>
+                {/* Locale switcher + Mobile burger */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {/* Locale switcher */}
+                    <div style={{ display: 'flex', gap: '4px' }} className="locale-switcher">
+                        {['uz', 'ru', 'en'].map(loc => (
+                            <button
+                                key={loc}
+                                onClick={() => changeLocale(loc)}
+                                style={{
+                                    padding: '5px 10px',
+                                    borderRadius: '6px',
+                                    border: '1px solid',
+                                    borderColor: locale === loc ? '#C9A84C' : 'rgba(255,255,255,0.15)',
+                                    background: locale === loc ? 'rgba(201,168,76,0.15)' : 'transparent',
+                                    color: locale === loc ? '#C9A84C' : 'rgba(255,255,255,0.5)',
+                                    fontFamily: 'var(--font-mono)',
+                                    fontSize: '11px',
+                                    cursor: 'pointer',
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '1px',
+                                    transition: 'all 0.2s',
+                                }}
+                            >
+                                {loc}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Mobile burger */}
+                    <button
+                        onClick={() => setMenuOpen(!menuOpen)}
+                        className="burger-btn"
+                        style={{
+                            display: 'none',
+                            flexDirection: 'column',
+                            gap: '5px',
+                            padding: '8px',
+                            background: 'transparent',
+                            border: 'none',
+                            cursor: 'pointer',
+                        }}
+                    >
+                        {[0, 1, 2].map(i => (
+                            <span key={i} style={{
+                                display: 'block',
+                                width: '24px',
+                                height: '2px',
+                                background: '#C9A84C',
+                                borderRadius: '2px',
+                                transition: 'all 0.3s',
+                            }} />
+                        ))}
+                    </button>
+                </div>
             </div>
 
             {/* Mobile Menu */}
@@ -148,11 +187,35 @@ export default function Navbar() {
                                 fontSize: '17px',
                                 color: pathname === link.href ? '#C9A84C' : 'rgba(255,255,255,0.85)',
                                 borderBottom: '1px solid rgba(255,255,255,0.06)',
+                                textDecoration: 'none',
                             }}
                         >
                             {link.label}
                         </Link>
                     ))}
+                    {/* Mobile locale switcher */}
+                    <div style={{ display: 'flex', gap: '8px', marginTop: '16px' }}>
+                        {['uz', 'ru', 'en'].map(loc => (
+                            <button
+                                key={loc}
+                                onClick={() => { changeLocale(loc); setMenuOpen(false) }}
+                                style={{
+                                    padding: '6px 14px',
+                                    borderRadius: '6px',
+                                    border: '1px solid',
+                                    borderColor: locale === loc ? '#C9A84C' : 'rgba(255,255,255,0.15)',
+                                    background: locale === loc ? 'rgba(201,168,76,0.15)' : 'transparent',
+                                    color: locale === loc ? '#C9A84C' : 'rgba(255,255,255,0.5)',
+                                    fontFamily: 'var(--font-mono)',
+                                    fontSize: '12px',
+                                    cursor: 'pointer',
+                                    textTransform: 'uppercase',
+                                }}
+                            >
+                                {loc}
+                            </button>
+                        ))}
+                    </div>
                 </div>
             )}
         </nav>

@@ -119,7 +119,7 @@ export default function AdminGalleryPage() {
                 zIndex: 100,
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <Link href="/admin/dashboard" style={{
+                    <Link href="/frontend/src/app/[locale]/admin/dashboard" style={{
                         color: 'rgba(255,255,255,0.5)',
                         fontFamily: 'var(--font-mono)',
                         fontSize: '12px',

@@ -100,7 +100,7 @@ export default function NewsPage() {
                         <>
                             {/* Featured */}
                             {featured && page === 0 && (
-                                <Link href={`/news/${featured.slug}`} style={{ textDecoration: 'none' }}>
+                                <Link href={`/frontend/src/app/%5Blocale%5D/news/${featured.slug}`} style={{ textDecoration: 'none' }}>
                                     <div className="card" style={{
                                         display: 'grid',
                                         gridTemplateColumns: '1fr 1fr',
@@ -155,7 +155,7 @@ export default function NewsPage() {
                             {/* Grid */}
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
                                 {(page === 0 ? rest : news).map(item => (
-                                    <Link key={item.id} href={`/news/${item.slug}`} style={{ textDecoration: 'none' }}>
+                                    <Link key={item.id} href={`/frontend/src/app/%5Blocale%5D/news/${item.slug}`} style={{ textDecoration: 'none' }}>
                                         <div className="card">
                                             <div style={{
                                                 height: '200px',

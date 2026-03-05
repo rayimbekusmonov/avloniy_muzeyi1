@@ -40,7 +40,7 @@ export default function NotFound() {
                 </p>
 
                 <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                    <Link href="/" className="btn-primary">
+                    <Link href="/frontend/public" className="btn-primary">
                         Bosh sahifaga qaytish →
                     </Link>
                     <Link href="/news" className="btn-outline" style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.3)' }}>
