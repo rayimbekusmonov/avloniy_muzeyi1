@@ -6,6 +6,9 @@ COPY pom.xml .
 # Agar .mvn papkasi va mvnw fayli bo'lsa, ularni ham nusxalash keshga foyda beradi
 COPY .mvn ./.mvn
 COPY mvnw .
+
+RUN chmod +x mvnw
+
 RUN ./mvnw dependency:go-offline -B
 
 # 2. Faqat backend kodini nusxalash (frontend-ni emas!)
