@@ -1,10 +1,12 @@
+
+
 import type { Metadata } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
-import '../globals.css'
+import '../../globals.css'
 
 export const metadata: Metadata = {
   title: 'Abdulla Avloniy Muzeyi',
