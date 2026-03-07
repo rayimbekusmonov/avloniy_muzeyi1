@@ -175,7 +175,7 @@ export default function HomePage() {
             (entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        setVisibleSections(prev => new Set([...prev, entry.target.id]))
+                        setVisibleSections(prev => new Set(Array.from(prev).concat(entry.target.id)))
                     }
                 })
             },
