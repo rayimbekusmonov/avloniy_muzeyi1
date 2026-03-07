@@ -18,12 +18,12 @@ function formatDate(year: number, month: number, day: number, locale: string) {
     }
 }
 
-// Real museum/historical images from Unsplash
+// Public papkadagi rasmlar: /public/slide1.jpg, slide2.jpg, slide3.jpg, slide4.jpg
 const SLIDE_IMAGES = [
-    'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=80', // Museum interior
-    'https://images.unsplash.com/photo-1577083552431-6e5fd01988ec?w=1920&q=80', // Library/books
-    'https://images.unsplash.com/photo-1568454537842-d933259bb258?w=1920&q=80', // Historic architecture
-    'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=1920&q=80', // Museum gallery
+    '/slide1.jpg',
+    '/slide2.jpg',
+    '/slide3.jpg',
+    '/slide4.jpg',
 ]
 
 const SLIDE_LABELS = [
