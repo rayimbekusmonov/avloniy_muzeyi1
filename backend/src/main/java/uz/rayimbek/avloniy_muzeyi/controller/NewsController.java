@@ -18,31 +18,35 @@ public class NewsController {
 
     private final NewsService newsService;
 
-    // PUBLIC
+    // PUBLIC — locale parametr qabul qiladi (uz/ru/en)
     @GetMapping
     public ResponseEntity<Page<NewsResponse>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) String category
+            @RequestParam(required = false) String category,
+            @RequestParam(defaultValue = "uz") String locale
     ) {
-        return ResponseEntity.ok(newsService.getPublishedNews(page, size, category));
+        return ResponseEntity.ok(newsService.getPublishedNews(page, size, category, locale));
     }
 
     @GetMapping("/{slug}")
-    public ResponseEntity<NewsResponse> getBySlug(@PathVariable String slug) {
-        return ResponseEntity.ok(newsService.getNewsBySlug(slug));
+    public ResponseEntity<NewsResponse> getBySlug(
+            @PathVariable String slug,
+            @RequestParam(defaultValue = "uz") String locale
+    ) {
+        return ResponseEntity.ok(newsService.getNewsBySlug(slug, locale));
     }
 
+    // ADMIN — barcha yangiliklar (barcha til maydonlari bilan)
     @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Page<NewsResponse>> getAll(
+    public ResponseEntity<Page<NewsResponse>> getAllForAdmin(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "50") int size
     ) {
         return ResponseEntity.ok(newsService.getAllForAdmin(page, size));
     }
 
-    // ADMIN ONLY
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<NewsResponse> create(@Valid @RequestBody NewsRequest request) {

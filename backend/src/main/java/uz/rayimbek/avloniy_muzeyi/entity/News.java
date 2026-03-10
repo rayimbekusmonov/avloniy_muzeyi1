@@ -18,17 +18,38 @@ public class News {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // O'zbek tili
     @Column(nullable = false)
-    private String title;
+    private String titleUz;
+
+    @Column(columnDefinition = "TEXT", nullable = false)
+    private String contentUz;
+
+    @Column(columnDefinition = "TEXT")
+    private String excerptUz;
+
+    // Rus tili
+    @Column
+    private String titleRu;
+
+    @Column(columnDefinition = "TEXT")
+    private String contentRu;
+
+    @Column(columnDefinition = "TEXT")
+    private String excerptRu;
+
+    // Ingliz tili
+    @Column
+    private String titleEn;
+
+    @Column(columnDefinition = "TEXT")
+    private String contentEn;
+
+    @Column(columnDefinition = "TEXT")
+    private String excerptEn;
 
     @Column(nullable = false, unique = true)
     private String slug;
-
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String content;
-
-    @Column(columnDefinition = "TEXT")
-    private String excerpt;
 
     @Column(name = "image_url")
     private String imageUrl;
@@ -64,5 +85,3 @@ public class News {
         KORGAZMA, TADBIR, YANGILIK, BAYRAM
     }
 }
-
-//bu yuklash uchun fayl

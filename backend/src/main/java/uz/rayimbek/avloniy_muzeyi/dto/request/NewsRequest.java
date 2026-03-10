@@ -1,24 +1,36 @@
 package uz.rayimbek.avloniy_muzeyi.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.*;
 import uz.rayimbek.avloniy_muzeyi.entity.News;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class NewsRequest {
 
-    @NotBlank(message = "Sarlavha bo'sh bo'lishi mumkin emas")
-    private String title;
+    // O'zbek tili (majburiy)
+    @NotBlank(message = "O'zbekcha sarlavha kiritilishi shart")
+    private String titleUz;
 
-    @NotBlank(message = "Kontent bo'sh bo'lishi mumkin emas")
-    private String content;
+    @NotBlank(message = "O'zbekcha kontent kiritilishi shart")
+    private String contentUz;
 
-    private String excerpt;
+    private String excerptUz;
+
+    // Rus tili
+    private String titleRu;
+    private String contentRu;
+    private String excerptRu;
+
+    // Ingliz tili
+    private String titleEn;
+    private String contentEn;
+    private String excerptEn;
+
     private String imageUrl;
-
-    @NotNull(message = "Kategoriya bo'sh bo'lishi mumkin emas")
     private News.Category category;
-
     private Boolean published = false;
 }
