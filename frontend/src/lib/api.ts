@@ -41,7 +41,6 @@ async function request<T>(
         throw new Error(error.message || `HTTP error: ${response.status}`);
     }
 
-    // 204 No Content
     if (response.status === 204) {
         return null as T;
     }
@@ -71,10 +70,7 @@ export interface Page<T> {
 
 export interface NewsItem {
     id: number;
-    title: string;
     slug: string;
-    content: string;
-    excerpt: string;
     imageUrl: string;
     category: 'KORGAZMA' | 'TADBIR' | 'YANGILIK' | 'BAYRAM';
     published: boolean;
@@ -82,6 +78,37 @@ export interface NewsItem {
     authorUsername: string;
     createdAt: string;
     updatedAt: string;
+
+    // Locale bo'yicha qaytariladigan maydonlar (frontend uchun)
+    title: string;
+    content: string;
+    excerpt: string;
+
+    // Admin uchun barcha til maydonlari
+    titleUz: string;
+    contentUz: string;
+    excerptUz: string;
+    titleRu: string;
+    contentRu: string;
+    excerptRu: string;
+    titleEn: string;
+    contentEn: string;
+    excerptEn: string;
+}
+
+export interface NewsFormData {
+    titleUz: string;
+    contentUz: string;
+    excerptUz: string;
+    titleRu: string;
+    contentRu: string;
+    excerptRu: string;
+    titleEn: string;
+    contentEn: string;
+    excerptEn: string;
+    imageUrl: string;
+    category: string;
+    published: boolean;
 }
 
 export interface GalleryItem {
