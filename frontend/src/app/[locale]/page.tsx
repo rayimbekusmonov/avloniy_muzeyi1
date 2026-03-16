@@ -99,7 +99,7 @@ export default function HomePage() {
     ], [t, locale])
 
     useEffect(() => {
-        newsService.getAll(0, 3).then(data => setLatestNews(data.content)).catch(() => {})
+        newsService.getAll(0, 3, undefined, locale).then(data => setLatestNews(data.content)).catch(() => {})
     }, [])
 
     return (
