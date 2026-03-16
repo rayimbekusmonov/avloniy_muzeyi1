@@ -3,32 +3,51 @@ import { useState } from 'react'
 import { useLocale } from 'next-intl'
 import { contactService } from '@/lib/services'
 
+const Icons = {
+    MapPin: () => (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+        </svg>
+    ),
+    Phone: () => (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.83a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16.92z"/>
+        </svg>
+    ),
+    Mail: () => (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+        </svg>
+    ),
+    Clock: () => (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+    ),
+    Check: () => (
+        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+    ),
+}
+
 export default function ContactPage() {
     const locale = useLocale()
-    const [form, setForm] = useState({
-        name: '',
-        phone: '',
-        telegram: '',
-        subject: '',
-        message: '',
-    })
+    const [form, setForm] = useState({ name: '', phone: '', telegram: '', subject: '', message: '' })
     const [sending, setSending] = useState(false)
     const [success, setSuccess] = useState(false)
     const [error, setError] = useState('')
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        setSending(true)
-        setError('')
+        setSending(true); setError('')
         try {
             await contactService.send(form)
             setSuccess(true)
             setForm({ name: '', phone: '', telegram: '', subject: '', message: '' })
         } catch (err: unknown) {
             setError(err instanceof Error ? err.message : (locale === 'ru' ? 'Произошла ошибка' : locale === 'en' ? 'An error occurred' : 'Xato yuz berdi'))
-        } finally {
-            setSending(false)
-        }
+        } finally { setSending(false) }
     }
 
     const t = {
@@ -60,17 +79,17 @@ export default function ContactPage() {
     }
 
     const contactItems = [
-        { icon: '📍', title: t.address, text: t.addressText },
-        { icon: '📞', title: t.phone, text: '+998 71 123 45 67' },
-        { icon: '✉️', title: 'Email', text: 'info@avloniy-muzey.uz' },
-        { icon: '🕐', title: t.workHours, text: t.workHoursText },
+        { Icon: Icons.MapPin, title: t.address,   text: t.addressText },
+        { Icon: Icons.Phone,  title: t.phone,     text: '+998 71 123 45 67' },
+        { Icon: Icons.Mail,   title: 'Email',     text: 'info@avloniy-muzey.uz' },
+        { Icon: Icons.Clock,  title: t.workHours, text: t.workHoursText },
     ]
 
     return (
         <>
             <div className="page-header">
                 <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-                    <div className="label"><span>📍</span> {t.label}</div>
+                    <div className="label"><Icons.MapPin /> {t.label}</div>
                     <h1>{t.h1a}<span>{t.h1b}</span></h1>
                     <p>{t.desc}</p>
                 </div>
@@ -78,166 +97,58 @@ export default function ContactPage() {
 
             <section className="section" style={{ background: 'var(--off-white)' }}>
                 <div className="container">
-                    <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-                        gap: '60px',
-                        alignItems: 'start',
-                    }}>
-                        {/* Contact Info */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '60px', alignItems: 'start' }}>
                         <div>
-                            <h2 style={{ fontSize: '28px', marginBottom: '8px' }}>
-                                {t.infoTitle}<span style={{ color: 'var(--gold)' }}>{t.infoTitleGold}</span>
-                            </h2>
+                            <h2 style={{ fontSize: '28px', marginBottom: '8px' }}>{t.infoTitle}<span style={{ color: 'var(--gold)' }}>{t.infoTitleGold}</span></h2>
                             <div className="gold-divider" style={{ marginBottom: '32px' }} />
-
                             {contactItems.map((item, i) => (
-                                <div key={i} style={{
-                                    display: 'flex',
-                                    gap: '16px',
-                                    marginBottom: '24px',
-                                    padding: '20px',
-                                    background: '#fff',
-                                    borderRadius: '12px',
-                                    border: '1px solid rgba(27,58,107,0.08)',
-                                    boxShadow: 'var(--shadow-sm)',
-                                }}>
-                                    <div style={{ fontSize: '24px', flexShrink: 0 }}>{item.icon}</div>
+                                <div key={i} style={{ display: 'flex', gap: '16px', marginBottom: '16px', padding: '20px', background: '#fff', borderRadius: '12px', border: '1px solid rgba(27,58,107,0.08)', boxShadow: 'var(--shadow-sm)' }}>
+                                    <div style={{ color: 'var(--gold)', flexShrink: 0 }}><item.Icon /></div>
                                     <div>
-                                        <div style={{
-                                            fontFamily: 'var(--font-mono)',
-                                            fontSize: '11px',
-                                            color: 'var(--gold)',
-                                            letterSpacing: '2px',
-                                            textTransform: 'uppercase',
-                                            marginBottom: '6px',
-                                        }}>{item.title}</div>
-                                        <div style={{
-                                            fontSize: '15px',
-                                            color: 'var(--navy-dark)',
-                                            lineHeight: '1.7',
-                                            whiteSpace: 'pre-line',
-                                        }}>{item.text}</div>
+                                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '6px' }}>{item.title}</div>
+                                        <div style={{ fontSize: '15px', color: 'var(--navy-dark)', lineHeight: '1.7', whiteSpace: 'pre-line' }}>{item.text}</div>
                                     </div>
                                 </div>
                             ))}
-
-                            <div style={{ borderRadius: '12px', overflow: 'hidden', width: '100%' }}>
-                                <iframe
-                                    src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d636.0895257286825!2d69.21453237652102!3d41.35473189147808!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38ae8c3fa12f11a3%3A0xc849830383f1974d!2sA.AVLONIY%20NOMIDAGI%20PEDAGOGLARNI%20KASBIY%20RIVOJLANTIRISH%20VA%20YANGI%20METODIKALARGA%20O&#39;RGATISH%20MILLIY-TADQIQOT%20INSTITUTI!5e1!3m2!1sru!2s!4v1772104974302!5m2!1sru!2s"
-                                    width="100%"
-                                    height="300"
-                                    style={{ border: 0, display: 'block' }}
-                                    allowFullScreen
-                                    loading="lazy"
-                                    referrerPolicy="no-referrer-when-downgrade"
-                                />
+                            <div style={{ borderRadius: '12px', overflow: 'hidden' }}>
+                                <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d636.0895257286825!2d69.21453237652102!3d41.35473189147808!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38ae8c3fa12f11a3%3A0xc849830383f1974d!2sA.AVLONIY%20NOMIDAGI%20PEDAGOGLARNI%20KASBIY%20RIVOJLANTIRISH%20VA%20YANGI%20METODIKALARGA%20O&#39;RGATISH%20MILLIY-TADQIQOT%20INSTITUTI!5e1!3m2!1sru!2s!4v1772104974302!5m2!1sru!2s" width="100%" height="300" style={{ border: 0, display: 'block' }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
                             </div>
                         </div>
 
-                        {/* Form */}
-                        <div style={{
-                            background: '#fff',
-                            borderRadius: '16px',
-                            padding: '40px',
-                            border: '1px solid rgba(27,58,107,0.08)',
-                            boxShadow: 'var(--shadow-md)',
-                        }}>
-                            <h2 style={{ fontSize: '24px', marginBottom: '8px' }}>
-                                {t.formTitle}<span style={{ color: 'var(--gold)' }}>{t.formTitleGold}</span>
-                            </h2>
+                        <div style={{ background: '#fff', borderRadius: '16px', padding: '40px', border: '1px solid rgba(27,58,107,0.08)', boxShadow: 'var(--shadow-md)' }}>
+                            <h2 style={{ fontSize: '24px', marginBottom: '8px' }}>{t.formTitle}<span style={{ color: 'var(--gold)' }}>{t.formTitleGold}</span></h2>
                             <div className="gold-divider" style={{ marginBottom: '28px' }} />
 
                             {success ? (
                                 <div style={{ textAlign: 'center', padding: '40px 20px' }}>
-                                    <div style={{ fontSize: '52px', marginBottom: '16px' }}>✅</div>
-                                    <h3 style={{ fontSize: '20px', color: 'var(--navy-dark)', marginBottom: '8px' }}>
-                                        {t.successTitle}
-                                    </h3>
-                                    <p style={{ color: 'var(--gray-600)', marginBottom: '24px' }}>
-                                        {t.successDesc}
-                                    </p>
-                                    <button
-                                        onClick={() => setSuccess(false)}
-                                        className="btn-primary"
-                                        style={{ border: 'none', cursor: 'pointer' }}
-                                    >{t.sendAgain}</button>
+                                    <div style={{ color: 'var(--gold)', display: 'flex', justifyContent: 'center', marginBottom: '16px' }}><Icons.Check /></div>
+                                    <h3 style={{ fontSize: '20px', color: 'var(--navy-dark)', marginBottom: '8px' }}>{t.successTitle}</h3>
+                                    <p style={{ color: 'var(--gray-600)', marginBottom: '24px' }}>{t.successDesc}</p>
+                                    <button onClick={() => setSuccess(false)} className="btn-primary" style={{ border: 'none', cursor: 'pointer' }}>{t.sendAgain}</button>
                                 </div>
                             ) : (
                                 <form onSubmit={handleSubmit}>
                                     <div style={{ marginBottom: '20px' }}>
                                         <label style={labelStyle}>{t.nameLabel} *</label>
-                                        <input
-                                            value={form.name}
-                                            onChange={e => setForm(p => ({ ...p, name: e.target.value }))}
-                                            required
-                                            style={inputStyle}
-                                            placeholder={t.namePlaceholder}
-                                        />
+                                        <input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} required style={inputStyle} placeholder={t.namePlaceholder} />
                                     </div>
                                     <div style={{ marginBottom: '20px' }}>
                                         <label style={labelStyle}>{t.contactLabel}</label>
                                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                                            <input
-                                                value={form.phone}
-                                                onChange={e => setForm(p => ({ ...p, phone: e.target.value }))}
-                                                style={inputStyle}
-                                                placeholder="+998 90 123 45 67"
-                                            />
-                                            <input
-                                                value={form.telegram}
-                                                onChange={e => setForm(p => ({ ...p, telegram: e.target.value }))}
-                                                style={inputStyle}
-                                                placeholder="@username"
-                                            />
+                                            <input value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} style={inputStyle} placeholder="+998 90 123 45 67" />
+                                            <input value={form.telegram} onChange={e => setForm(p => ({ ...p, telegram: e.target.value }))} style={inputStyle} placeholder="@username" />
                                         </div>
                                     </div>
                                     <div style={{ marginBottom: '20px' }}>
                                         <label style={labelStyle}>{t.subjectLabel} *</label>
-                                        <input
-                                            value={form.subject}
-                                            onChange={e => setForm(p => ({ ...p, subject: e.target.value }))}
-                                            required
-                                            style={inputStyle}
-                                            placeholder={t.subjectPlaceholder}
-                                        />
+                                        <input value={form.subject} onChange={e => setForm(p => ({ ...p, subject: e.target.value }))} required style={inputStyle} placeholder={t.subjectPlaceholder} />
                                     </div>
                                     <div style={{ marginBottom: '28px' }}>
                                         <label style={labelStyle}>{t.messageLabel} *</label>
-                                        <textarea
-                                            value={form.message}
-                                            onChange={e => setForm(p => ({ ...p, message: e.target.value }))}
-                                            required
-                                            rows={5}
-                                            style={{ ...inputStyle, resize: 'vertical' }}
-                                            placeholder={t.messagePlaceholder}
-                                        />
+                                        <textarea value={form.message} onChange={e => setForm(p => ({ ...p, message: e.target.value }))} required rows={5} style={{ ...inputStyle, resize: 'vertical' }} placeholder={t.messagePlaceholder} />
                                     </div>
-
-                                    {error && (
-                                        <div style={{
-                                            background: 'rgba(220,38,38,0.1)',
-                                            border: '1px solid rgba(220,38,38,0.3)',
-                                            borderRadius: '8px',
-                                            padding: '12px 16px',
-                                            color: '#dc2626',
-                                            fontSize: '14px',
-                                            marginBottom: '20px',
-                                        }}>{error}</div>
-                                    )}
-
-                                    <button
-                                        type="submit"
-                                        disabled={sending}
-                                        className="btn-primary"
-                                        style={{
-                                            width: '100%',
-                                            border: 'none',
-                                            cursor: sending ? 'not-allowed' : 'pointer',
-                                            opacity: sending ? 0.7 : 1,
-                                            justifyContent: 'center',
-                                        }}
-                                    >
+                                    {error && <div style={{ background: 'rgba(220,38,38,0.1)', border: '1px solid rgba(220,38,38,0.3)', borderRadius: '8px', padding: '12px 16px', color: '#dc2626', fontSize: '14px', marginBottom: '20px' }}>{error}</div>}
+                                    <button type="submit" disabled={sending} className="btn-primary" style={{ width: '100%', border: 'none', cursor: sending ? 'not-allowed' : 'pointer', opacity: sending ? 0.7 : 1, justifyContent: 'center' }}>
                                         {sending ? t.sendingBtn : t.sendBtn}
                                     </button>
                                 </form>
@@ -250,24 +161,5 @@ export default function ContactPage() {
     )
 }
 
-const labelStyle: React.CSSProperties = {
-    display: 'block',
-    fontSize: '12px',
-    fontFamily: 'var(--font-mono)',
-    color: 'var(--gray-600)',
-    letterSpacing: '1px',
-    textTransform: 'uppercase',
-    marginBottom: '6px',
-}
-
-const inputStyle: React.CSSProperties = {
-    width: '100%',
-    padding: '11px 16px',
-    border: '1px solid rgba(27,58,107,0.2)',
-    borderRadius: '8px',
-    fontSize: '15px',
-    fontFamily: 'var(--font-body)',
-    color: 'var(--navy-dark)',
-    outline: 'none',
-    background: '#fff',
-}
+const labelStyle: React.CSSProperties = { display: 'block', fontSize: '12px', fontFamily: 'var(--font-mono)', color: 'var(--gray-600)', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '6px' }
+const inputStyle: React.CSSProperties = { width: '100%', padding: '11px 16px', border: '1px solid rgba(27,58,107,0.2)', borderRadius: '8px', fontSize: '15px', fontFamily: 'var(--font-body)', color: 'var(--navy-dark)', outline: 'none', background: '#fff' }
