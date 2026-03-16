@@ -291,6 +291,7 @@ export default function AdminNewsPage() {
                                             Kontent {activeLang === 'uz' ? '*' : '(ixtiyoriy)'}
                                         </label>
                                         <RichTextEditor
+                                            key={activeLang}
                                             value={getLangField('content')}
                                             onChange={(val) => setLangField('content', val)}
                                             placeholder={
