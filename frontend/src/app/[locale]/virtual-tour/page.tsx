@@ -4,7 +4,7 @@ import { useLocale } from 'next-intl'
 
 // YouTube video ID ni shu yerga qo'ying
 // Masalan: https://youtube.com/watch?v=dQw4w9WgXcQ => "dQw4w9WgXcQ"
-const YOUTUBE_VIDEO_ID = 'YOUR_VIDEO_ID'
+const YOUTUBE_VIDEO_ID = 'Z5ulqXdxSBA'
 
 export default function VirtualTourPage() {
     const locale = useLocale()
