@@ -1,408 +1,208 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { isAuthenticated, removeToken } from '@/lib/api'
+import Image from 'next/image'
+import { useLocale, useTranslations } from 'next-intl'
 import { newsService } from '@/lib/services'
 import { NewsItem } from '@/lib/api'
-import FileUpload from '@/components/FileUpload'
-import RichTextEditor from '@/components/RichTextEditor'
 
 const CATEGORIES = [
-    { value: 'KORGAZMA', label: "Ko'rgazma" },
-    { value: 'TADBIR', label: 'Tadbir' },
-    { value: 'YANGILIK', label: 'Yangilik' },
-    { value: 'BAYRAM', label: 'Bayram' },
+    { value: '', labelUz: 'Barchasi', labelRu: 'Все', labelEn: 'All' },
+    { value: 'YANGILIK', labelUz: 'Yangilik', labelRu: 'Новости', labelEn: 'News' },
+    { value: 'KORGAZMA', labelUz: "Ko'rgazma", labelRu: 'Выставка', labelEn: 'Exhibition' },
+    { value: 'TADBIR', labelUz: 'Tadbir', labelRu: 'Мероприятие', labelEn: 'Event' },
+    { value: 'BAYRAM', labelUz: 'Bayram', labelRu: 'Праздник', labelEn: 'Holiday' },
 ]
 
-const LANGS = [
-    { key: 'uz', label: "O'zbek", flag: '🇺🇿' },
-    { key: 'ru', label: 'Русский', flag: '🇷🇺' },
-    { key: 'en', label: 'English', flag: '🇬🇧' },
-]
-
-const emptyForm = {
-    titleUz: '', contentUz: '', excerptUz: '',
-    titleRu: '', contentRu: '', excerptRu: '',
-    titleEn: '', contentEn: '', excerptEn: '',
-    imageUrl: '',
-    category: 'YANGILIK',
-    published: false,
+function formatDate(dateString: string, locale: string) {
+    const date = new Date(dateString)
+    const day = date.getDate()
+    const month = date.getMonth()
+    const year = date.getFullYear()
+    const months = {
+        ru: ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'],
+        en: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+        uz: ['Yanv','Fevr','Mart','Apr','May','Iyun','Iyul','Avg','Sent','Okt','Noyb','Dek'],
+    }
+    const m = months[locale as keyof typeof months] || months.uz
+    if (locale === 'ru') return `${day} ${m[month]}, ${year}`
+    if (locale === 'en') return `${m[month]} ${day}, ${year}`
+    return `${day}-${m[month]}, ${year}`
 }
 
-export default function AdminNewsPage() {
-    const router = useRouter()
+export default function NewsPage() {
+    const locale = useLocale()
     const [news, setNews] = useState<NewsItem[]>([])
     const [loading, setLoading] = useState(true)
-    const [showForm, setShowForm] = useState(false)
-    const [editItem, setEditItem] = useState<NewsItem | null>(null)
-    const [form, setForm] = useState(emptyForm)
-    const [activeLang, setActiveLang] = useState<'uz' | 'ru' | 'en'>('uz')
-    const [saving, setSaving] = useState(false)
-    const [error, setError] = useState('')
+    const [activeCategory, setActiveCategory] = useState('')
+    const [page, setPage] = useState(0)
+    const [totalPages, setTotalPages] = useState(0)
+
+    const t = {
+        label: locale === 'ru' ? 'Новости' : locale === 'en' ? 'News' : 'Yangiliklar',
+        h1a: locale === 'ru' ? 'Последние ' : locale === 'en' ? 'Latest ' : 'So\'nggi ',
+        h1b: locale === 'ru' ? 'Новости' : locale === 'en' ? 'News' : 'Yangiliklar',
+        desc: locale === 'ru'
+            ? 'Следите за последними событиями и новостями музея Абдуллы Авлония.'
+            : locale === 'en'
+                ? 'Follow the latest events and news from the Abdulla Avloniy Museum.'
+                : "Abdulla Avloniy muzeyi so'nggi yangiliklari va tadbirlarini kuzatib boring.",
+        empty: locale === 'ru' ? 'Новостей пока нет' : locale === 'en' ? 'No news yet' : 'Hali yangiliklar yo\'q',
+        readMore: locale === 'ru' ? 'Читать далее' : locale === 'en' ? 'Read more' : 'Batafsil',
+        prev: locale === 'ru' ? '← Назад' : locale === 'en' ? '← Prev' : '← Oldingi',
+        next: locale === 'ru' ? 'Далее →' : locale === 'en' ? 'Next →' : 'Keyingi →',
+    }
 
     useEffect(() => {
-        if (!isAuthenticated()) { router.push('/admin'); return }
         fetchNews()
-    }, [router])
+    }, [activeCategory, page, locale])
 
     const fetchNews = async () => {
         setLoading(true)
         try {
-            const data = await newsService.getAll(0, 50)
+            const data = await newsService.getAll(page, 9, activeCategory || undefined, locale)
             setNews(data.content)
-        } catch { setError('Yangiliklar yuklanmadi') }
-        finally { setLoading(false) }
+            setTotalPages(data.totalPages)
+        } catch {
+            setNews([])
+        } finally {
+            setLoading(false)
+        }
     }
 
-    const handleEdit = (item: NewsItem) => {
-        setEditItem(item)
-        setForm({
-            titleUz: (item as any).titleUz || item.title || '',
-            contentUz: (item as any).contentUz || item.content || '',
-            excerptUz: (item as any).excerptUz || item.excerpt || '',
-            titleRu: (item as any).titleRu || '',
-            contentRu: (item as any).contentRu || '',
-            excerptRu: (item as any).excerptRu || '',
-            titleEn: (item as any).titleEn || '',
-            contentEn: (item as any).contentEn || '',
-            excerptEn: (item as any).excerptEn || '',
-            imageUrl: item.imageUrl || '',
-            category: item.category || 'YANGILIK',
-            published: item.published || false,
-        })
-        setActiveLang('uz')
-        setShowForm(true)
-        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100)
-    }
-
-    const handleDelete = async (id: number) => {
-        if (!confirm("Yangilikni o'chirishni tasdiqlaysizmi?")) return
-        try {
-            await newsService.delete(id)
-            setNews(prev => prev.filter(n => n.id !== id))
-        } catch { setError("O'chirishda xato yuz berdi") }
-    }
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        if (!form.titleUz.trim()) { setError("O'zbekcha sarlavha kiritilishi shart"); return }
-        if (!form.contentUz.trim()) { setError("O'zbekcha kontent kiritilishi shart"); return }
-        setSaving(true)
-        setError('')
-        try {
-            if (editItem) {
-                const updated = await newsService.update(editItem.id, form)
-                setNews(prev => prev.map(n => n.id === editItem.id ? updated : n))
-            } else {
-                const created = await newsService.create(form)
-                setNews(prev => [created, ...prev])
-            }
-            setShowForm(false)
-            setEditItem(null)
-            setForm(emptyForm)
-        } catch (err: unknown) {
-            setError(err instanceof Error ? err.message : 'Xato yuz berdi')
-        } finally { setSaving(false) }
-    }
-
-    const handleCancel = () => {
-        setShowForm(false); setEditItem(null); setForm(emptyForm); setError('')
-    }
-
-    // Til maydoni o'zgartirish
-    const setLangField = (field: string, value: string) => {
-        const key = `${field}${activeLang.charAt(0).toUpperCase() + activeLang.slice(1)}`
-        setForm(p => ({ ...p, [key]: value }))
-    }
-    const getLangField = (field: string) => {
-        const key = `${field}${activeLang.charAt(0).toUpperCase() + activeLang.slice(1)}`
-        return (form as any)[key] || ''
-    }
-
-    // Til dolzarbligi
-    const getLangStatus = (lang: string) => {
-        const title = (form as any)[`title${lang.charAt(0).toUpperCase() + lang.slice(1)}`]
-        const content = (form as any)[`content${lang.charAt(0).toUpperCase() + lang.slice(1)}`]
-        if (title && content) return 'done'
-        if (title || content) return 'partial'
-        return 'empty'
+    const getCategoryLabel = (cat: typeof CATEGORIES[0]) => {
+        return locale === 'ru' ? cat.labelRu : locale === 'en' ? cat.labelEn : cat.labelUz
     }
 
     return (
-        <div style={{ minHeight: '100vh', background: 'var(--off-white)' }}>
-            {/* Header */}
-            <header style={{
-                background: 'var(--navy-dark)', padding: '0 24px', height: '64px',
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                position: 'sticky', top: 0, zIndex: 100,
-            }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <Link href="/admin/dashboard" style={{ color: 'rgba(255,255,255,0.5)', fontFamily: 'var(--font-mono)', fontSize: '12px', textDecoration: 'none' }}>
-                        ← Dashboard
-                    </Link>
-                    <div style={{ color: 'rgba(255,255,255,0.2)' }}>|</div>
-                    <span style={{ fontFamily: 'var(--font-display)', fontSize: '15px', color: '#fff' }}>Yangiliklar</span>
+        <>
+            {/* Page Header */}
+            <div className="page-header">
+                <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+                    <div className="label"><span>📰</span> {t.label}</div>
+                    <h1>{t.h1a}<span>{t.h1b}</span></h1>
+                    <p>{t.desc}</p>
                 </div>
-                <button onClick={() => { removeToken(); router.push('/admin') }} style={{
-                    background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)',
-                    color: 'rgba(255,255,255,0.7)', padding: '8px 16px', borderRadius: '6px',
-                    fontFamily: 'var(--font-mono)', fontSize: '12px', cursor: 'pointer',
-                }}>Chiqish</button>
-            </header>
+            </div>
 
-            <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 24px' }}>
-
-                {/* Top bar */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
-                    <h1 style={{ fontSize: '26px', color: 'var(--navy-dark)' }}>Yangiliklar boshqaruvi</h1>
-                    {!showForm && (
-                        <button onClick={() => { setShowForm(true); setActiveLang('uz') }} className="btn-primary" style={{ border: 'none', cursor: 'pointer' }}>
-                            + Yangi qo'shish
-                        </button>
-                    )}
-                </div>
-
-                {error && (
-                    <div style={{ background: 'rgba(220,38,38,0.08)', border: '1px solid rgba(220,38,38,0.2)', borderRadius: '8px', padding: '12px 16px', marginBottom: '24px', color: '#dc2626', fontSize: '14px' }}>
-                        {error}
-                    </div>
-                )}
-
-                {/* FORM */}
-                {showForm && (
-                    <div style={{ background: '#fff', borderRadius: '12px', padding: '32px', marginBottom: '32px', border: '1px solid rgba(27,58,107,0.1)', boxShadow: '0 4px 20px rgba(27,58,107,0.08)' }}>
-                        <h2 style={{ fontSize: '20px', color: 'var(--navy-dark)', marginBottom: '28px' }}>
-                            {editItem ? 'Yangilikni tahrirlash' : 'Yangi yangilik qo\'shish'}
-                        </h2>
-
-                        <form onSubmit={handleSubmit}>
-                            {/* Umumiy maydonlar */}
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
-                                <div>
-                                    <label style={labelStyle}>Kategoriya</label>
-                                    <select
-                                        value={form.category}
-                                        onChange={e => setForm(p => ({ ...p, category: e.target.value }))}
-                                        style={{ ...inputStyle, cursor: 'pointer' }}
-                                    >
-                                        {CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
-                                    </select>
-                                </div>
-                                <div>
-                                    <label style={labelStyle}>Rasm</label>
-                                    <FileUpload
-                                        folder="news"
-                                        accept="image/*"
-                                        label="Rasm yuklash"
-                                        onUpload={(url) => setForm(p => ({ ...p, imageUrl: url }))}
-                                    />
-                                    {form.imageUrl && (
-                                        <div style={{ marginTop: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                            <img src={form.imageUrl} alt="" style={{ width: '64px', height: '44px', objectFit: 'cover', borderRadius: '6px' }} />
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-
-                            {/* Til tablari */}
-                            <div style={{ marginBottom: '24px' }}>
-                                <label style={{ ...labelStyle, marginBottom: '12px' }}>Til bo'yicha kontent</label>
-
-                                {/* Tab buttons */}
-                                <div style={{ display: 'flex', gap: '0', marginBottom: '0', borderBottom: '2px solid rgba(27,58,107,0.1)' }}>
-                                    {LANGS.map(lang => {
-                                        const status = getLangStatus(lang.key)
-                                        return (
-                                            <button
-                                                key={lang.key}
-                                                type="button"
-                                                onClick={() => setActiveLang(lang.key as any)}
-                                                style={{
-                                                    padding: '10px 24px',
-                                                    border: 'none',
-                                                    borderBottom: activeLang === lang.key ? '2px solid var(--navy)' : '2px solid transparent',
-                                                    marginBottom: '-2px',
-                                                    background: 'none',
-                                                    cursor: 'pointer',
-                                                    fontFamily: 'var(--font-mono)',
-                                                    fontSize: '13px',
-                                                    color: activeLang === lang.key ? 'var(--navy-dark)' : 'var(--gray-400)',
-                                                    fontWeight: activeLang === lang.key ? '600' : '400',
-                                                    display: 'flex', alignItems: 'center', gap: '8px',
-                                                    transition: 'all 0.2s',
-                                                }}
-                                            >
-                                                <span>{lang.flag}</span>
-                                                <span>{lang.label}</span>
-                                                {/* Status indicator */}
-                                                <span style={{
-                                                    width: '7px', height: '7px', borderRadius: '50%',
-                                                    background: status === 'done' ? '#16a34a' : status === 'partial' ? '#f59e0b' : 'rgba(27,58,107,0.2)',
-                                                }} />
-                                            </button>
-                                        )
-                                    })}
-                                </div>
-
-                                {/* Tab content */}
-                                <div style={{ background: 'rgba(27,58,107,0.02)', border: '1px solid rgba(27,58,107,0.08)', borderTop: 'none', borderRadius: '0 0 8px 8px', padding: '20px' }}>
-                                    {activeLang === 'uz' && (
-                                        <div style={{ marginBottom: '8px', fontSize: '12px', color: '#dc2626', fontFamily: 'var(--font-mono)' }}>
-                                            * O'zbek tili majburiy
-                                        </div>
-                                    )}
-
-                                    {/* Sarlavha */}
-                                    <div style={{ marginBottom: '16px' }}>
-                                        <label style={labelStyle}>
-                                            Sarlavha {activeLang === 'uz' ? '*' : '(ixtiyoriy)'}
-                                        </label>
-                                        <input
-                                            value={getLangField('title')}
-                                            onChange={e => setLangField('title', e.target.value)}
-                                            style={inputStyle}
-                                            placeholder={
-                                                activeLang === 'uz' ? 'Yangilik sarlavhasi...' :
-                                                    activeLang === 'ru' ? 'Заголовок новости...' :
-                                                        'News title...'
-                                            }
-                                        />
-                                    </div>
-
-                                    {/* Qisqa matn */}
-                                    <div style={{ marginBottom: '16px' }}>
-                                        <label style={labelStyle}>Qisqa matn (excerpt)</label>
-                                        <input
-                                            value={getLangField('excerpt')}
-                                            onChange={e => setLangField('excerpt', e.target.value)}
-                                            style={inputStyle}
-                                            placeholder={
-                                                activeLang === 'uz' ? "Qisqa ma'lumot..." :
-                                                    activeLang === 'ru' ? 'Краткое описание...' :
-                                                        'Brief description...'
-                                            }
-                                        />
-                                    </div>
-
-                                    {/* Kontent */}
-                                    <div>
-                                        <label style={labelStyle}>
-                                            Kontent {activeLang === 'uz' ? '*' : '(ixtiyoriy)'}
-                                        </label>
-                                        <RichTextEditor
-                                            key={activeLang}
-                                            value={getLangField('content')}
-                                            onChange={(val) => setLangField('content', val)}
-                                            placeholder={
-                                                activeLang === 'uz' ? 'Yangilik matni...' :
-                                                    activeLang === 'ru' ? 'Текст новости...' :
-                                                        'News text...'
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Nashr */}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '24px' }}>
-                                <input
-                                    type="checkbox"
-                                    id="published"
-                                    checked={form.published}
-                                    onChange={e => setForm(p => ({ ...p, published: e.target.checked }))}
-                                    style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: 'var(--navy)' }}
-                                />
-                                <label htmlFor="published" style={{ fontSize: '15px', color: 'var(--navy-dark)', cursor: 'pointer' }}>
-                                    Nashr qilish
-                                </label>
-                            </div>
-
-                            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
-                                <button type="button" onClick={handleCancel} className="btn-outline" style={{ cursor: 'pointer' }}>
-                                    Bekor qilish
-                                </button>
-                                <button type="submit" disabled={saving} className="btn-primary" style={{ border: 'none', cursor: saving ? 'not-allowed' : 'pointer', opacity: saving ? 0.7 : 1 }}>
-                                    {saving ? 'Saqlanmoqda...' : 'Saqlash'}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                )}
-
-                {/* NEWS LIST */}
-                {loading ? (
-                    <div style={{ textAlign: 'center', padding: '60px', color: 'var(--gray-600)' }}>Yuklanmoqda...</div>
-                ) : news.length === 0 ? (
-                    <div style={{ textAlign: 'center', padding: '60px', color: 'var(--gray-600)' }}>Hali yangiliklar yo'q</div>
-                ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                        {news.map(item => (
-                            <div key={item.id} style={{
-                                background: '#fff', borderRadius: '12px', padding: '20px 24px',
-                                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                                gap: '16px', border: '1px solid rgba(27,58,107,0.08)',
-                            }}>
-                                {item.imageUrl && (
-                                    <img src={item.imageUrl} alt="" style={{ width: '64px', height: '44px', objectFit: 'cover', borderRadius: '6px', flexShrink: 0 }} />
-                                )}
-                                <div style={{ flex: 1, minWidth: 0 }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-                                        <h3 style={{ fontSize: '16px', color: 'var(--navy-dark)', fontFamily: 'var(--font-display)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                            {item.title}
-                                        </h3>
-                                        <span style={{
-                                            padding: '2px 10px', borderRadius: '20px', fontSize: '11px',
-                                            fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap',
-                                            background: item.published ? 'rgba(34,197,94,0.12)' : 'rgba(156,163,175,0.15)',
-                                            color: item.published ? '#16a34a' : '#6b7280',
-                                        }}>
-                                            {item.published ? 'Nashr' : 'Qoralama'}
-                                        </span>
-                                        {/* Til indikatorlari */}
-                                        <div style={{ display: 'flex', gap: '4px' }}>
-                                            {LANGS.map(lang => {
-                                                const hasTitle = (item as any)[`title${lang.key.charAt(0).toUpperCase() + lang.key.slice(1)}`]
-                                                return (
-                                                    <span key={lang.key} title={lang.label} style={{
-                                                        fontSize: '14px', opacity: hasTitle ? 1 : 0.25,
-                                                    }}>{lang.flag}</span>
-                                                )
-                                            })}
-                                        </div>
-                                    </div>
-                                    <div style={{ fontSize: '12px', color: 'var(--gray-400)', fontFamily: 'var(--font-mono)' }}>
-                                        {item.category} · {new Date(item.createdAt).toLocaleDateString('uz-UZ')}
-                                    </div>
-                                </div>
-                                <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
-                                    <button onClick={() => handleEdit(item)} style={{
-                                        padding: '8px 16px', background: 'rgba(27,58,107,0.08)',
-                                        border: '1px solid rgba(27,58,107,0.15)', borderRadius: '6px',
-                                        fontSize: '13px', color: 'var(--navy)', cursor: 'pointer',
-                                    }}>Tahrirlash</button>
-                                    <button onClick={() => handleDelete(item.id)} style={{
-                                        padding: '8px 16px', background: 'rgba(220,38,38,0.08)',
-                                        border: '1px solid rgba(220,38,38,0.2)', borderRadius: '6px',
-                                        fontSize: '13px', color: '#dc2626', cursor: 'pointer',
-                                    }}>O'chirish</button>
-                                </div>
-                            </div>
+            {/* Category Filter */}
+            <section style={{ background: '#0d1f3c', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '0' }}>
+                <div className="container">
+                    <div style={{ display: 'flex', gap: '0', overflowX: 'auto' }}>
+                        {CATEGORIES.map(cat => (
+                            <button
+                                key={cat.value}
+                                onClick={() => { setActiveCategory(cat.value); setPage(0) }}
+                                style={{
+                                    padding: '16px 24px',
+                                    border: 'none',
+                                    borderBottom: activeCategory === cat.value ? '2px solid #C9A84C' : '2px solid transparent',
+                                    background: 'none',
+                                    color: activeCategory === cat.value ? '#C9A84C' : 'rgba(255,255,255,0.5)',
+                                    fontFamily: 'var(--font-mono)',
+                                    fontSize: '12px',
+                                    letterSpacing: '2px',
+                                    textTransform: 'uppercase',
+                                    cursor: 'pointer',
+                                    whiteSpace: 'nowrap',
+                                    transition: 'all 0.2s',
+                                }}
+                            >
+                                {getCategoryLabel(cat)}
+                            </button>
                         ))}
                     </div>
-                )}
-            </main>
-        </div>
+                </div>
+            </section>
+
+            {/* News Grid */}
+            <section className="section" style={{ background: 'var(--off-white)' }}>
+                <div className="container">
+                    {loading ? (
+                        <div style={{ textAlign: 'center', padding: '80px', color: 'var(--gray-600)' }}>
+                            <div style={{ fontSize: '40px', marginBottom: '16px' }}>📰</div>
+                            <p>{locale === 'ru' ? 'Загрузка...' : locale === 'en' ? 'Loading...' : 'Yuklanmoqda...'}</p>
+                        </div>
+                    ) : news.length === 0 ? (
+                        <div style={{ textAlign: 'center', padding: '80px', color: 'var(--gray-600)' }}>
+                            <div style={{ fontSize: '40px', marginBottom: '16px' }}>📭</div>
+                            <p>{t.empty}</p>
+                        </div>
+                    ) : (
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>
+                            {news.map(item => (
+                                <Link key={item.id} href={`/${locale}/news/${item.slug}`} style={{ textDecoration: 'none' }}>
+                                    <div className="card" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+                                         onMouseEnter={e => {
+                                             e.currentTarget.style.transform = 'translateY(-6px)'
+                                             e.currentTarget.style.boxShadow = '0 20px 50px rgba(27,58,107,0.15)'
+                                         }}
+                                         onMouseLeave={e => {
+                                             e.currentTarget.style.transform = 'translateY(0)'
+                                             e.currentTarget.style.boxShadow = ''
+                                         }}
+                                    >
+                                        {/* Image */}
+                                        <div style={{ position: 'relative', height: '220px', background: 'linear-gradient(135deg, #112548, #1B3A6B)', overflow: 'hidden' }}>
+                                            {item.imageUrl ? (
+                                                <Image src={item.imageUrl} alt={item.title} fill style={{ objectFit: 'cover' }} />
+                                            ) : (
+                                                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '48px', opacity: 0.3 }}>📸</div>
+                                            )}
+                                            <div style={{
+                                                position: 'absolute', top: '14px', left: '14px',
+                                                background: 'rgba(201,168,76,0.9)', color: '#112548',
+                                                fontFamily: 'var(--font-mono)', fontSize: '9px',
+                                                letterSpacing: '2px', textTransform: 'uppercase',
+                                                padding: '4px 10px', borderRadius: '2px',
+                                            }}>{item.category}</div>
+                                        </div>
+
+                                        {/* Content */}
+                                        <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                                            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gray-400)', marginBottom: '10px' }}>
+                                                {formatDate(item.createdAt, locale)}
+                                            </div>
+                                            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '19px', color: 'var(--navy-dark)', marginBottom: '10px', lineHeight: '1.35', flex: 1 }}>
+                                                {item.title}
+                                            </h3>
+                                            {item.excerpt && (
+                                                <p style={{ fontSize: '14px', color: 'var(--gray-600)', lineHeight: '1.75', marginBottom: '16px' }}>
+                                                    {item.excerpt.length > 120 ? item.excerpt.substring(0, 120) + '...' : item.excerpt}
+                                                </p>
+                                            )}
+                                            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)', letterSpacing: '1px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                {t.readMore} →
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* Pagination */}
+                    {totalPages > 1 && (
+                        <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', marginTop: '48px' }}>
+                            <button
+                                onClick={() => setPage(p => Math.max(0, p - 1))}
+                                disabled={page === 0}
+                                className="btn-outline"
+                                style={{ opacity: page === 0 ? 0.4 : 1, cursor: page === 0 ? 'not-allowed' : 'pointer' }}
+                            >{t.prev}</button>
+                            <span style={{ display: 'flex', alignItems: 'center', fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--gray-600)' }}>
+                                {page + 1} / {totalPages}
+                            </span>
+                            <button
+                                onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
+                                disabled={page === totalPages - 1}
+                                className="btn-outline"
+                                style={{ opacity: page === totalPages - 1 ? 0.4 : 1, cursor: page === totalPages - 1 ? 'not-allowed' : 'pointer' }}
+                            >{t.next}</button>
+                        </div>
+                    )}
+                </div>
+            </section>
+        </>
     )
-}
-
-const labelStyle: React.CSSProperties = {
-    display: 'block', fontSize: '12px', fontFamily: 'var(--font-mono)',
-    color: 'var(--gray-600)', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '6px',
-}
-
-const inputStyle: React.CSSProperties = {
-    width: '100%', padding: '10px 14px', border: '1px solid rgba(27,58,107,0.2)',
-    borderRadius: '8px', fontSize: '15px', fontFamily: 'var(--font-body)',
-    color: 'var(--navy-dark)', outline: 'none', background: '#fff',
 }
