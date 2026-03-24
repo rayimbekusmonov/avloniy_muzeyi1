@@ -264,7 +264,7 @@ export default function AdminNewsPage() {
                                         </span>
                                         <div style={{ display: 'flex', gap: '4px' }}>
                                             {LANGS.map(lang => {
-                                                const hasTitle = (item as Record<string, unknown>)[`title${lang.key.charAt(0).toUpperCase() + lang.key.slice(1)}`]
+                                                const hasTitle = (item as unknown as Record<string, unknown>)[`title${lang.key.charAt(0).toUpperCase() + lang.key.slice(1)}`]
                                                 return <span key={lang.key} title={lang.label} style={{ fontSize: '14px', opacity: hasTitle ? 1 : 0.25 }}>{lang.flag}</span>
                                             })}
                                         </div>
