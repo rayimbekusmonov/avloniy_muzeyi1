@@ -4,6 +4,9 @@ import { api, Page, NewsItem, NewsFormData, GalleryItem, ResourceItem, AuthRespo
 export const authService = {
     login: (username: string, password: string) =>
         api.post<AuthResponse>('/api/auth/login', { username, password }),
+
+    setup: (username: string, password: string) =>
+        api.post<{ message: string }>('/api/auth/setup', { username, password }),
 };
 
 // News
@@ -14,10 +17,11 @@ export const newsService = {
         if (category) params.append('category', category);
         return api.get<Page<NewsItem>>(`/api/news?${params}`);
     },
+
     getBySlug: (slug: string, locale = 'uz') =>
         api.get<NewsItem>(`/api/news/${slug}?locale=${locale}`),
 
-    // Admin: barcha til maydonlari bilan
+    // Admin: barcha til maydonlari bilan — TO'G'RI ENDPOINT!
     getAllForAdmin: (page = 0, size = 50) =>
         api.get<Page<NewsItem>>(`/api/news/all?page=${page}&size=${size}`),
 

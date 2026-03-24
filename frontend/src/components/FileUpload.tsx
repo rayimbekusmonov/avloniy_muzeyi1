@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { getToken } from "@/lib/api";
 
 interface FileUploadProps {
   folder: string;
@@ -7,6 +8,8 @@ interface FileUploadProps {
   onUpload: (url: string) => void;
   label?: string;
 }
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
 export default function FileUpload({ folder, accept = "*", onUpload, label = "Fayl yuklash" }: FileUploadProps) {
   const [loading, setLoading] = useState(false);
@@ -20,45 +23,58 @@ export default function FileUpload({ folder, accept = "*", onUpload, label = "Fa
     setError("");
 
     try {
-      const fileName = `${folder}/${crypto.randomUUID()}_${file.name}`;
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+      const token = getToken();
+      if (!token) {
+        throw new Error("Avtorizatsiya talab qilinadi");
+      }
 
-      const res = await fetch(`${supabaseUrl}/storage/v1/object/media/${fileName}`, {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("folder", folder);
+
+      // Backend orqali yuklash — Supabase key frontend da emas!
+      const res = await fetch(`${API_URL}/api/upload`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${supabaseKey}`,
-          "Content-Type": file.type,
+          Authorization: `Bearer ${token}`,
         },
-        body: file,
+        body: formData,
       });
 
       if (!res.ok) {
-        const err = await res.text();
-        throw new Error(err);
+        const errData = await res.json().catch(() => ({ error: "Fayl yuklanmadi" }));
+        throw new Error(errData.error || "Fayl yuklanmadi");
       }
 
-      const publicUrl = `${supabaseUrl}/storage/v1/object/public/media/${fileName}`;
-      onUpload(publicUrl);
-    } catch (err: any) {
-      setError("Fayl yuklanmadi: " + err.message);
+      const data = await res.json();
+      onUpload(data.url);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Fayl yuklanmadi");
     } finally {
       setLoading(false);
+      e.target.value = "";
     }
   };
 
   return (
-    <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-300">{label}</label>
-      <input
-        type="file"
-        accept={accept}
-        onChange={handleUpload}
-        disabled={loading}
-        className="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-yellow-600 file:text-white hover:file:bg-yellow-700 cursor-pointer"
-      />
-      {loading && <p className="text-yellow-400 text-sm">Yuklanmoqda...</p>}
-      {error && <p className="text-red-400 text-sm">{error}</p>}
-    </div>
+      <div>
+        <input
+            type="file"
+            accept={accept}
+            onChange={handleUpload}
+            disabled={loading}
+            style={{
+              width: '100%',
+              padding: '8px',
+              border: '1px solid rgba(27,58,107,0.2)',
+              borderRadius: '6px',
+              fontSize: '14px',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              opacity: loading ? 0.6 : 1,
+            }}
+        />
+        {loading && <p style={{ color: 'var(--gold)', fontSize: '13px', marginTop: '4px' }}>Yuklanmoqda...</p>}
+        {error && <p style={{ color: '#dc2626', fontSize: '13px', marginTop: '4px' }}>{error}</p>}
+      </div>
   );
 }

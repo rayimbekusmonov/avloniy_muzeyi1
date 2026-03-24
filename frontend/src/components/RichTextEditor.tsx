@@ -1,6 +1,6 @@
 'use client'
 import 'quill/dist/quill.snow.css'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useCallback } from 'react'
 
 interface RichTextEditorProps {
     value: string
@@ -9,16 +9,28 @@ interface RichTextEditorProps {
 }
 
 export default function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
+    const containerRef = useRef<HTMLDivElement>(null)
     const editorRef = useRef<HTMLDivElement>(null)
     const quillRef = useRef<any>(null)
+    const onChangeRef = useRef(onChange)
+
+    // onChange ni ref da saqlash — stale closure oldini olish
+    useEffect(() => {
+        onChangeRef.current = onChange
+    }, [onChange])
 
     useEffect(() => {
-        if (typeof window === 'undefined' || quillRef.current) return
+        if (typeof window === 'undefined') return
+
+        let quill: any = null
 
         import('quill').then(({ default: Quill }) => {
             if (!editorRef.current) return
 
-            quillRef.current = new Quill(editorRef.current, {
+            // Agar allaqachon Quill yaratilgan bo'lsa, qayta yaratmaymiz
+            if (quillRef.current) return
+
+            quill = new Quill(editorRef.current, {
                 theme: 'snow',
                 placeholder: placeholder || 'Matn kiriting...',
                 modules: {
@@ -38,18 +50,33 @@ export default function RichTextEditor({ value, onChange, placeholder }: RichTex
                 },
             })
 
-            quillRef.current.on('text-change', () => {
-                onChange(quillRef.current.root.innerHTML)
+            quillRef.current = quill
+
+            quill.on('text-change', () => {
+                onChangeRef.current(quill.root.innerHTML)
             })
 
             if (value) {
-                quillRef.current.root.innerHTML = value
+                quill.root.innerHTML = value
             }
         })
-    }, [])
+
+        // Cleanup — Quill instance ni tozalash
+        return () => {
+            if (quillRef.current) {
+                quillRef.current.off('text-change')
+                quillRef.current = null
+            }
+            // DOM ni tozalash
+            if (editorRef.current) {
+                const toolbar = containerRef.current?.querySelector('.ql-toolbar')
+                if (toolbar) toolbar.remove()
+            }
+        }
+    }, []) // Bo'sh dependency — faqat mount/unmount da ishlaydi
 
     return (
-        <div style={{
+        <div ref={containerRef} style={{
             background: '#fff',
             borderRadius: '8px',
             border: '1px solid rgba(27,58,107,0.2)',

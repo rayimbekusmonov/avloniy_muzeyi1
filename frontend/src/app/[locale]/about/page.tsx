@@ -121,17 +121,17 @@ export default function AboutPage() {
                 </div>
             </div>
 
-            {/* Muzey haqida */}
+            {/* Muzey haqida — RESPONSIVE */}
             <section className="section" style={{ background: 'var(--off-white)' }}>
                 <div className="container">
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '72px', alignItems: 'center' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '48px', alignItems: 'center' }}>
                         <div>
                             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '16px' }}>{t.museumLabel}</div>
                             <h2 style={{ fontSize: '36px', marginBottom: '16px' }}>{t.museumH2a}<span style={{ color: 'var(--gold)' }}>{t.museumH2b}</span></h2>
                             <div className="gold-divider" />
                             <p style={{ fontSize: '16px', color: 'var(--gray-600)', lineHeight: '1.9', marginTop: '16px', marginBottom: '16px' }}>{t.museumDesc1}</p>
                             <p style={{ fontSize: '16px', color: 'var(--gray-600)', lineHeight: '1.9', marginBottom: '24px' }}>{t.museumDesc2}</p>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '16px' }}>
                                 {infoItems.map((item, i) => (
                                     <div key={i} style={{ padding: '16px', background: 'var(--white)', borderRadius: '10px', border: '1px solid rgba(27,58,107,0.08)' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--gold)', marginBottom: '6px' }}>
@@ -150,15 +150,15 @@ export default function AboutPage() {
                 </div>
             </section>
 
-            {/* Biografiya */}
+            {/* Biografiya — RESPONSIVE */}
             <section className="section" style={{ background: 'var(--white)' }}>
                 <div className="container">
                     <div style={{ textAlign: 'center', marginBottom: '56px' }}>
                         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '12px' }}>{t.personLabel}</div>
                         <h2 style={{ fontSize: '36px' }}>Abdulla <span style={{ color: 'var(--gold)' }}>Avloniy</span>{t.personH2c}</h2>
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '64px', alignItems: 'start' }}>
-                        <div style={{ background: 'linear-gradient(135deg, var(--navy-dark), var(--navy))', borderRadius: '16px', height: '380px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.2)', position: 'sticky', top: '100px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '48px', alignItems: 'start' }}>
+                        <div style={{ background: 'linear-gradient(135deg, var(--navy-dark), var(--navy))', borderRadius: '16px', height: '380px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.2)' }}>
                             <Icons.Person />
                         </div>
                         <div>
