@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import uz.rayimbek.avloniy_muzeyi.dto.request.GalleryRequest;
 import uz.rayimbek.avloniy_muzeyi.dto.response.GalleryResponse;
 import uz.rayimbek.avloniy_muzeyi.entity.Gallery;
+import uz.rayimbek.avloniy_muzeyi.exception.ResourceNotFoundException;
 import uz.rayimbek.avloniy_muzeyi.repository.GalleryRepository;
 
 @Service
@@ -32,7 +33,7 @@ public class GalleryService {
 
     public GalleryResponse getById(Long id) {
         Gallery gallery = galleryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Galereya elementi topilmadi: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Galereya elementi", id));
         return toResponse(gallery);
     }
 
@@ -44,13 +45,12 @@ public class GalleryService {
                 .description(request.getDescription())
                 .mediaType(request.getMediaType())
                 .build();
-
         return toResponse(galleryRepository.save(gallery));
     }
 
     public GalleryResponse update(Long id, GalleryRequest request) {
         Gallery gallery = galleryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Galereya elementi topilmadi: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Galereya elementi", id));
 
         gallery.setTitle(request.getTitle());
         gallery.setFileUrl(request.getFileUrl());
@@ -63,7 +63,7 @@ public class GalleryService {
 
     public void delete(Long id) {
         if (!galleryRepository.existsById(id)) {
-            throw new RuntimeException("Galereya elementi topilmadi: " + id);
+            throw new ResourceNotFoundException("Galereya elementi", id);
         }
         galleryRepository.deleteById(id);
     }

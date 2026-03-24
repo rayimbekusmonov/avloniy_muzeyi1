@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import uz.rayimbek.avloniy_muzeyi.dto.request.LoginRequest;
 import uz.rayimbek.avloniy_muzeyi.dto.response.AuthResponse;
 import uz.rayimbek.avloniy_muzeyi.entity.User;
+import uz.rayimbek.avloniy_muzeyi.exception.ResourceNotFoundException;
 import uz.rayimbek.avloniy_muzeyi.repository.UserRepository;
 import uz.rayimbek.avloniy_muzeyi.security.JwtService;
 
@@ -29,7 +30,7 @@ public class AuthService {
         );
 
         User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new RuntimeException("Foydalanuvchi topilmadi"));
+                .orElseThrow(() -> new ResourceNotFoundException("Foydalanuvchi", request.getUsername()));
 
         String token = jwtService.generateToken(user);
 
@@ -40,10 +41,12 @@ public class AuthService {
                 .build();
     }
 
-    // Birinchi admin yaratish uchun (faqat bir marta ishlatiladi)
-    public void createAdmin(String username, String password) {
-        if (userRepository.existsByUsername(username)) {
-            throw new RuntimeException("Bu username allaqachon mavjud");
+    /**
+     * Birinchi admin yaratish — faqat hech qanday foydalanuvchi bo'lmaganda ishlaydi.
+     */
+    public void createFirstAdmin(String username, String password) {
+        if (userRepository.count() > 0) {
+            throw new IllegalStateException("Admin allaqachon mavjud. Bu endpoint faqat birinchi marta ishlaydi.");
         }
 
         User admin = User.builder()

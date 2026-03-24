@@ -23,33 +23,49 @@ public class StorageService {
     @Value("${supabase.anon-key}")
     private String supabaseAnonKey;
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
+
+    public StorageService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     public String uploadFile(MultipartFile file, String folder) throws IOException {
-        String fileName = folder + "/" + UUID.randomUUID() + "_" + file.getOriginalFilename();
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("Fayl bo'sh bo'lishi mumkin emas");
+        }
+
+        // Fayl nomidan xavfli belgilarni olib tashlash
+        String originalName = file.getOriginalFilename();
+        if (originalName != null) {
+            originalName = originalName.replaceAll("[^a-zA-Z0-9._-]", "_");
+        } else {
+            originalName = "file";
+        }
+
+        String fileName = folder + "/" + UUID.randomUUID() + "_" + originalName;
         String uploadUrl = supabaseUrl + "/storage/v1/object/media/" + fileName;
 
-        log.info("Uploading to: {}", uploadUrl);
-        log.info("File size: {}", file.getSize());
-        log.info("Content type: {}", file.getContentType());
+        log.info("Uploading file: size={}, type={}", file.getSize(), file.getContentType());
 
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", "Bearer " + supabaseAnonKey);
-            headers.setContentType(MediaType.parseMediaType(file.getContentType()));
+            headers.setContentType(MediaType.parseMediaType(
+                    file.getContentType() != null ? file.getContentType() : "application/octet-stream"
+            ));
 
             HttpEntity<byte[]> entity = new HttpEntity<>(file.getBytes(), headers);
             ResponseEntity<String> response = restTemplate.exchange(uploadUrl, HttpMethod.POST, entity, String.class);
-            
-            log.info("Upload response: {}", response.getStatusCode());
+
+            log.info("Upload successful: {}", response.getStatusCode());
             return supabaseUrl + "/storage/v1/object/public/media/" + fileName;
-            
+
         } catch (HttpClientErrorException e) {
             log.error("Upload failed: {} - {}", e.getStatusCode(), e.getResponseBodyAsString());
-            throw new IOException("Upload failed: " + e.getResponseBodyAsString());
+            throw new IOException("Fayl yuklanmadi: " + e.getResponseBodyAsString());
         } catch (Exception e) {
             log.error("Upload error: {}", e.getMessage());
-            throw new IOException("Upload error: " + e.getMessage());
+            throw new IOException("Fayl yuklashda xato: " + e.getMessage());
         }
     }
 }

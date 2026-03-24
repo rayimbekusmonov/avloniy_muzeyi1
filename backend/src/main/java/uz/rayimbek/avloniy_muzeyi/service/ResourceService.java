@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import uz.rayimbek.avloniy_muzeyi.dto.request.ResourceRequest;
 import uz.rayimbek.avloniy_muzeyi.dto.response.ResourceResponse;
 import uz.rayimbek.avloniy_muzeyi.entity.Resource;
+import uz.rayimbek.avloniy_muzeyi.exception.ResourceNotFoundException;
 import uz.rayimbek.avloniy_muzeyi.repository.ResourceRepository;
 
 @Service
@@ -39,7 +40,7 @@ public class ResourceService {
 
     public ResourceResponse getById(Long id) {
         Resource resource = resourceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Manba topilmadi: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Manba", id));
         return toResponse(resource);
     }
 
@@ -54,13 +55,12 @@ public class ResourceService {
                 .publishedYear(request.getPublishedYear())
                 .pageCount(request.getPageCount())
                 .build();
-
         return toResponse(resourceRepository.save(resource));
     }
 
     public ResourceResponse update(Long id, ResourceRequest request) {
         Resource resource = resourceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Manba topilmadi: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Manba", id));
 
         resource.setTitle(request.getTitle());
         resource.setAuthor(request.getAuthor());
@@ -76,7 +76,7 @@ public class ResourceService {
 
     public void delete(Long id) {
         if (!resourceRepository.existsById(id)) {
-            throw new RuntimeException("Manba topilmadi: " + id);
+            throw new ResourceNotFoundException("Manba", id);
         }
         resourceRepository.deleteById(id);
     }

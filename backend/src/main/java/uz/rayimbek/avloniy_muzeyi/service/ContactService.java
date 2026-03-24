@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import uz.rayimbek.avloniy_muzeyi.dto.request.ContactRequest;
 import uz.rayimbek.avloniy_muzeyi.dto.response.ContactResponse;
 import uz.rayimbek.avloniy_muzeyi.entity.Contact;
+import uz.rayimbek.avloniy_muzeyi.exception.ResourceNotFoundException;
 import uz.rayimbek.avloniy_muzeyi.repository.ContactRepository;
 
 @Service
@@ -24,7 +25,6 @@ public class ContactService {
                 .message(request.getMessage())
                 .read(false)
                 .build();
-
         contactRepository.save(contact);
     }
 
@@ -46,14 +46,14 @@ public class ContactService {
 
     public ContactResponse markAsRead(Long id) {
         Contact contact = contactRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Xabar topilmadi: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Xabar", id));
         contact.setRead(true);
         return toResponse(contactRepository.save(contact));
     }
 
     public void delete(Long id) {
         if (!contactRepository.existsById(id)) {
-            throw new RuntimeException("Xabar topilmadi: " + id);
+            throw new ResourceNotFoundException("Xabar", id);
         }
         contactRepository.deleteById(id);
     }
