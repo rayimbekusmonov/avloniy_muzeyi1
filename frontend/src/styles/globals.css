@@ -41,6 +41,7 @@ body {
     background: var(--off-white);
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -203,6 +204,33 @@ button {
     margin: 16px 0;
 }
 
+/* ── Responsive Grid Helpers ────────────────────────── */
+.grid-2-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+}
+
+.grid-2-col-uneven {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 48px;
+    align-items: start;
+}
+
+.grid-4-col {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.grid-featured {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 60px;
+    align-items: start;
+}
+
 /* ── Animations ─────────────────────────────────────── */
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(28px); }
@@ -258,30 +286,149 @@ button {
     color: var(--navy-dark);
 }
 
-/* ── Responsive Nav ─────────────────────────────────── */
-@media (max-width: 900px) {
-    .nav-links      { display: none !important; }
-    .burger-btn     { display: flex !important; }
-    .locale-switcher { display: none !important; }
-}
+/* ══════════════════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+   ══════════════════════════════════════════════════════ */
 
+/* ── Desktop Nav ────────────────────────────────────── */
 @media (min-width: 901px) {
     .burger-btn { display: none !important; }
 }
 
-/* ── Hero Quote ─────────────────────────────────────── */
-.hero-quote {
-    display: none;
+/* ── Hero Quote (faqat katta ekranlarda) ────────────── */
+.hero-quote-card { display: none; }
+@media (min-width: 1100px) {
+    .hero-quote-card { display: block !important; }
 }
 
-@media (min-width: 1180px) {
-    .hero-quote { display: block !important; }
+/* ── Tablet (768px - 900px) ─────────────────────────── */
+@media (max-width: 900px) {
+    .nav-links      { display: none !important; }
+    .burger-btn     { display: flex !important; }
+    .locale-switcher { display: none !important; }
+
+    .section {
+        padding: 60px 0;
+    }
+
+    .page-header {
+        padding: 100px 0 56px;
+    }
+
+    .page-header h1 {
+        font-size: clamp(28px, 5vw, 42px);
+    }
+
+    /* Grid helpers — tablet */
+    .grid-2-col {
+        gap: 32px;
+    }
+
+    .grid-2-col-uneven {
+        grid-template-columns: 1fr 1.5fr;
+        gap: 32px;
+    }
+
+    .grid-featured {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .grid-4-col {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
-/* ── Stats grid responsive ──────────────────────────── */
+/* ── Mobile (max 640px) ─────────────────────────────── */
 @media (max-width: 640px) {
-    .stats-grid {
-        grid-template-columns: 1fr 1fr !important;
+    .container {
+        padding: 0 16px;
+    }
+
+    .section {
+        padding: 48px 0;
+    }
+
+    .page-header {
+        padding: 90px 0 40px;
+    }
+
+    .page-header p {
+        font-size: 16px;
+    }
+
+    .page-header .label {
+        font-size: 10px;
+        padding: 5px 12px;
+    }
+
+    /* Grid helpers — mobile */
+    .grid-2-col,
+    .grid-2-col-uneven {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .grid-featured {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .grid-4-col {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    /* Buttons */
+    .btn-primary,
+    .btn-outline {
+        padding: 12px 20px;
+        font-size: 14px;
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Cards */
+    .card:hover {
+        transform: none;
+    }
+
+    /* Admin responsive */
+    .admin-header-title {
+        display: none;
+    }
+
+    /* Timeline mobilda */
+    .timeline-year {
+        min-width: 48px !important;
+        font-size: 14px !important;
+    }
+
+    .timeline-line {
+        left: 63px !important;
+    }
+
+    .timeline-dot {
+        width: 12px !important;
+        height: 12px !important;
+    }
+
+    .timeline-card {
+        padding: 16px !important;
+    }
+}
+
+/* ── Very small screens (max 400px) ─────────────────── */
+@media (max-width: 400px) {
+    .grid-4-col {
+        grid-template-columns: 1fr;
+    }
+
+    .page-header h1 {
+        font-size: 26px;
+    }
+
+    .section {
+        padding: 36px 0;
     }
 }
 

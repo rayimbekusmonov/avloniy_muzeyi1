@@ -177,12 +177,12 @@ export default function HomePage() {
                                 <span className="pulse-dot" />
                                 {t('badge')}
                             </div>
-                            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(40px, 7vw, 72px)', fontWeight: '700', color: '#fff', lineHeight: 1.1, marginBottom: '28px' }}>
+                            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(36px, 7vw, 72px)', fontWeight: '700', color: '#fff', lineHeight: 1.1, marginBottom: '28px' }}>
                                 {t('hero_title1')}<br />
                                 <span style={{ color: '#C9A84C' }}>{t('hero_title2')}</span><br />
                                 <span style={{ fontSize: '0.7em', fontWeight: '400', color: 'rgba(255,255,255,0.8)' }}>{t('hero_title3')}</span>
                             </h1>
-                            <p style={{ fontSize: '18px', color: 'rgba(255,255,255,0.65)', lineHeight: '1.8', marginBottom: '44px', maxWidth: '520px' }}>
+                            <p style={{ fontSize: 'clamp(15px, 2vw, 18px)', color: 'rgba(255,255,255,0.65)', lineHeight: '1.8', marginBottom: '44px', maxWidth: '520px' }}>
                                 {t('hero_desc')}
                             </p>
                             <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
@@ -201,7 +201,7 @@ export default function HomePage() {
 
                         {/* Quote card */}
                         <div className="hero-quote-card" style={{
-                            padding: '40px', background: 'rgba(10,24,41,0.7)',
+                            padding: 'clamp(24px, 3vw, 40px)', background: 'rgba(10,24,41,0.7)',
                             border: '1px solid rgba(201,168,76,0.25)', borderTop: '4px solid #C9A84C',
                             backdropFilter: 'blur(20px)', animation: 'fadeInUp 0.8s ease 0.3s both',
                         }}>
@@ -221,13 +221,13 @@ export default function HomePage() {
             {/* STATS */}
             <section style={{ background: '#0d1f3c', borderTop: '1px solid rgba(201,168,76,0.15)', borderBottom: '1px solid rgba(201,168,76,0.15)' }}>
                 <div className="container">
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
+                    <div className="grid-4-col">
                         {stats.map((stat, i) => (
-                            <div key={i} style={{ textAlign: 'center', padding: '40px 20px', borderRight: i < 3 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                            <div key={i} style={{ textAlign: 'center', padding: 'clamp(24px, 3vw, 40px) 20px' }}>
                                 <div style={{ color: 'rgba(201,168,76,0.6)', display: 'flex', justifyContent: 'center', marginBottom: '12px' }}>
                                     <stat.Icon />
                                 </div>
-                                <div style={{ fontFamily: 'var(--font-display)', fontSize: '36px', fontWeight: '700', color: '#C9A84C', lineHeight: 1 }}>{stat.number}</div>
+                                <div style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 4vw, 36px)', fontWeight: '700', color: '#C9A84C', lineHeight: 1 }}>{stat.number}</div>
                                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'rgba(255,255,255,0.4)', letterSpacing: '2px', textTransform: 'uppercase', marginTop: '6px' }}>{stat.label}</div>
                             </div>
                         ))}
@@ -243,10 +243,10 @@ export default function HomePage() {
                             {t('sections_title1')} <span style={{ color: '#C9A84C' }}>{t('sections_title2')}</span>
                         </h2>
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
                         {sections.map((s, i) => (
                             <Link key={i} href={s.href} style={{ textDecoration: 'none' }}>
-                                <div className="section-card" style={{ padding: '40px', height: '100%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', transition: 'all 0.3s ease' }}>
+                                <div className="section-card" style={{ padding: 'clamp(24px, 3vw, 40px)', height: '100%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', transition: 'all 0.3s ease' }}>
                                     <div style={{ color: '#C9A84C', marginBottom: '20px', opacity: 0.8 }}>
                                         <s.Icon />
                                     </div>
@@ -267,7 +267,7 @@ export default function HomePage() {
                         <h2>{t('news_title')}</h2>
                         <Link href={`/${locale}/news`} className="btn-outline">{t('news_btn')}</Link>
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
                         {latestNews.map((item) => (
                             <Link key={item.id} href={`/${locale}/news/${item.slug}`} style={{ textDecoration: 'none' }}>
                                 <div className="news-card" style={{ background: '#fff', border: '1px solid rgba(27,58,107,0.08)', overflow: 'hidden', transition: 'all 0.3s' }}>
@@ -305,8 +305,6 @@ export default function HomePage() {
                 }
                 .section-card:hover { background: rgba(201,168,76,0.07) !important; border-color: rgba(201,168,76,0.2) !important; transform: translateY(-4px); }
                 .news-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(27,58,107,0.15); }
-                .hero-quote-card { display: none; }
-                @media (min-width: 1100px) { .hero-quote-card { display: block !important; } }
             `}</style>
         </>
     )

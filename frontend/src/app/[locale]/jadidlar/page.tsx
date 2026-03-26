@@ -50,7 +50,6 @@ const Icons = {
     ),
 }
 
-// Har bir jadidga SVG ikoni
 const JADID_ICONS: Record<string, React.FC> = {
     avloniy: Icons.PenLg,
     behbudiy: Icons.Scroll,
@@ -184,7 +183,7 @@ export default function JadidlarPage() {
             {/* Jadidchilik nima */}
             <section style={{ background: '#0d1f3c', padding: '56px 0' }}>
                 <div className="container" style={{ maxWidth: '900px' }}>
-                    <div style={{ background: 'rgba(201,168,76,0.06)', border: '1px solid rgba(201,168,76,0.2)', borderLeft: '4px solid #C9A84C', borderRadius: '2px', padding: '32px 36px' }}>
+                    <div style={{ background: 'rgba(201,168,76,0.06)', border: '1px solid rgba(201,168,76,0.2)', borderLeft: '4px solid #C9A84C', borderRadius: '2px', padding: 'clamp(20px, 3vw, 32px) clamp(20px, 3vw, 36px)' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#C9A84C', letterSpacing: '4px', marginBottom: '12px', textTransform: 'uppercase' }}>
                             <Icons.BookOpen /> {t.jadidismTitle}
                         </div>
@@ -200,18 +199,18 @@ export default function JadidlarPage() {
                         <div style={{ width: '24px', height: '1px', background: 'var(--gold)' }} />
                         {t.centralFigure}
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: '60px', alignItems: 'start', background: '#fff', border: '1px solid rgba(27,58,107,0.08)', borderRadius: '4px', overflow: 'hidden', boxShadow: '0 8px 40px rgba(27,58,107,0.1)' }}>
-                        <div style={{ background: `linear-gradient(160deg, ${avloniy.color}, #254d8f)`, minHeight: '360px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px', padding: '40px' }}>
+                    <div className="grid-featured" style={{ background: '#fff', border: '1px solid rgba(27,58,107,0.08)', borderRadius: '4px', overflow: 'hidden', boxShadow: '0 8px 40px rgba(27,58,107,0.1)' }}>
+                        <div style={{ background: `linear-gradient(160deg, ${avloniy.color}, #254d8f)`, minHeight: '280px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px', padding: '40px' }}>
                             <div style={{ color: 'rgba(255,255,255,0.4)' }}><AvloniyIcon /></div>
-                            <div style={{ fontFamily: 'var(--font-display)', fontSize: '22px', color: '#fff', textAlign: 'center', lineHeight: 1.3 }}>{getName(avloniy)}</div>
+                            <div style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(18px, 2.5vw, 22px)', color: '#fff', textAlign: 'center', lineHeight: 1.3 }}>{getName(avloniy)}</div>
                             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: '#C9A84C', letterSpacing: '2px' }}>{avloniy.years}</div>
                             <div style={{ background: '#C9A84C', color: '#fff', fontFamily: 'var(--font-mono)', fontSize: '9px', letterSpacing: '2px', textTransform: 'uppercase', padding: '4px 12px', borderRadius: '2px' }}>
                                 {t.museumNamed}
                             </div>
                         </div>
-                        <div style={{ padding: '40px 40px 40px 0' }}>
+                        <div style={{ padding: 'clamp(24px, 3vw, 40px)' }}>
                             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--gold)', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '10px' }}>{getTitle(avloniy)}</div>
-                            <h2 style={{ fontSize: '28px', marginBottom: '20px', color: 'var(--navy-dark)' }}>{getName(avloniy)}</h2>
+                            <h2 style={{ fontSize: 'clamp(22px, 3vw, 28px)', marginBottom: '20px', color: 'var(--navy-dark)' }}>{getName(avloniy)}</h2>
                             <div style={{ width: '40px', height: '2px', background: 'var(--gold)', marginBottom: '20px' }} />
                             <p style={{ fontSize: '16px', color: 'var(--gray-600)', lineHeight: '1.95', marginBottom: '24px' }}>{getBio(avloniy)}</p>
                             <div>
@@ -238,11 +237,11 @@ export default function JadidlarPage() {
                         </div>
                         <h2 style={{ color: '#fff', fontSize: 'clamp(26px, 3vw, 36px)' }}>{t.colleagues}</h2>
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '16px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
                         {JADIDLAR.slice(1).map(jadid => {
                             const JadidIcon = JADID_ICONS[jadid.id]
                             return (
-                                <div key={jadid.id} onClick={() => setSelected(jadid)} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '2px', padding: '32px', cursor: 'pointer', transition: 'all 0.3s', position: 'relative', overflow: 'hidden' }}
+                                <div key={jadid.id} onClick={() => setSelected(jadid)} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '2px', padding: 'clamp(20px, 3vw, 32px)', cursor: 'pointer', transition: 'all 0.3s', position: 'relative', overflow: 'hidden' }}
                                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(201,168,76,0.07)'; e.currentTarget.style.borderColor = 'rgba(201,168,76,0.25)'; e.currentTarget.style.transform = 'translateY(-4px)' }}
                                      onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; e.currentTarget.style.transform = 'translateY(0)' }}
                                 >
@@ -277,7 +276,7 @@ export default function JadidlarPage() {
                         <h2 style={{ fontSize: 'clamp(24px, 3vw, 34px)' }}><span style={{ color: 'var(--gold)' }}>{t.era}</span></h2>
                     </div>
                     <div style={{ position: 'relative' }}>
-                        <div style={{ position: 'absolute', left: '87px', top: 0, bottom: 0, width: '2px', background: 'linear-gradient(to bottom, var(--gold), rgba(201,168,76,0.1))' }} />
+                        <div className="timeline-line" style={{ position: 'absolute', left: '87px', top: 0, bottom: 0, width: '2px', background: 'linear-gradient(to bottom, var(--gold), rgba(201,168,76,0.1))' }} />
                         {[
                             { year: '1880s', textUz: "Yangi usul maktablari O'rta Osiyoda paydo bo'la boshladi", textRu: 'Школы нового метода начали появляться в Средней Азии', textEn: 'New method schools began appearing in Central Asia' },
                             { year: '1904', textUz: "Behbudiy Samarqandda birinchi yangi usul maktabini ochdi", textRu: 'Бехбудий открыл первую школу нового метода в Самарканде', textEn: 'Behbudiy opened the first new-method school in Samarkand' },
@@ -286,10 +285,10 @@ export default function JadidlarPage() {
                             { year: '1920s', textUz: "Ko'plab jadidlar sovet hukumati bilan hamkorlik qildi", textRu: 'Многие джадиды сотрудничали с советской властью', textEn: 'Many Jadids cooperated with the Soviet government' },
                             { year: '1937–38', textUz: "Stalin repressiyasida ko'plab jadidlar qatl etildi", textRu: 'В ходе сталинских репрессий многие джадиды были расстреляны', textEn: "Many Jadids were executed during Stalin's repressions" },
                         ].map((item, i) => (
-                            <div key={i} style={{ display: 'flex', gap: '32px', marginBottom: '32px', alignItems: 'flex-start' }}>
-                                <div style={{ minWidth: '72px', fontFamily: 'var(--font-display)', fontSize: '15px', fontWeight: '700', color: 'var(--gold)', textAlign: 'right', paddingTop: '14px' }}>{item.year}</div>
-                                <div style={{ width: '14px', height: '14px', borderRadius: '50%', background: 'var(--gold)', flexShrink: 0, marginTop: '16px', border: '3px solid var(--off-white)', zIndex: 1 }} />
-                                <div style={{ flex: 1, background: '#fff', borderRadius: '2px', padding: '18px 22px', border: '1px solid rgba(27,58,107,0.07)', boxShadow: '0 2px 12px rgba(27,58,107,0.06)' }}>
+                            <div key={i} style={{ display: 'flex', gap: 'clamp(16px, 2vw, 32px)', marginBottom: '32px', alignItems: 'flex-start' }}>
+                                <div className="timeline-year" style={{ minWidth: '72px', fontFamily: 'var(--font-display)', fontSize: '15px', fontWeight: '700', color: 'var(--gold)', textAlign: 'right', paddingTop: '14px' }}>{item.year}</div>
+                                <div className="timeline-dot" style={{ width: '14px', height: '14px', borderRadius: '50%', background: 'var(--gold)', flexShrink: 0, marginTop: '16px', border: '3px solid var(--off-white)', zIndex: 1 }} />
+                                <div className="timeline-card" style={{ flex: 1, background: '#fff', borderRadius: '2px', padding: '18px 22px', border: '1px solid rgba(27,58,107,0.07)', boxShadow: '0 2px 12px rgba(27,58,107,0.06)' }}>
                                     <p style={{ fontSize: '15px', color: 'var(--navy-dark)', lineHeight: '1.7' }}>
                                         {locale === 'ru' ? item.textRu : locale === 'en' ? item.textEn : item.textUz}
                                     </p>
@@ -302,19 +301,19 @@ export default function JadidlarPage() {
 
             {/* Modal */}
             {selected && (
-                <div onClick={() => setSelected(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px', backdropFilter: 'blur(8px)' }}>
+                <div onClick={() => setSelected(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px', backdropFilter: 'blur(8px)' }}>
                     <div onClick={e => e.stopPropagation()} style={{ background: '#fff', borderRadius: '4px', maxWidth: '700px', width: '100%', maxHeight: '90vh', overflow: 'auto' }}>
                         {(() => { const SelIcon = JADID_ICONS[selected.id]; return (
-                            <div style={{ background: `linear-gradient(135deg, ${selected.color}, #254d8f)`, padding: '40px', display: 'flex', gap: '24px', alignItems: 'center' }}>
+                            <div style={{ background: `linear-gradient(135deg, ${selected.color}, #254d8f)`, padding: 'clamp(24px, 3vw, 40px)', display: 'flex', gap: '24px', alignItems: 'center', flexWrap: 'wrap' }}>
                                 <div style={{ color: 'rgba(255,255,255,0.5)', flexShrink: 0 }}><SelIcon /></div>
-                                <div>
+                                <div style={{ minWidth: '200px' }}>
                                     <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#C9A84C', letterSpacing: '2px', marginBottom: '8px' }}>{getTitle(selected)}</div>
-                                    <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '26px', color: '#fff', marginBottom: '8px' }}>{getName(selected)}</h2>
+                                    <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(20px, 3vw, 26px)', color: '#fff', marginBottom: '8px' }}>{getName(selected)}</h2>
                                     <div style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'rgba(255,255,255,0.6)' }}>{selected.years}</div>
                                 </div>
                             </div>
                         )})()}
-                        <div style={{ padding: '36px 40px' }}>
+                        <div style={{ padding: 'clamp(24px, 3vw, 36px) clamp(24px, 3vw, 40px)' }}>
                             <p style={{ fontSize: '16px', color: 'var(--gray-600)', lineHeight: '1.95', marginBottom: '32px' }}>{getBio(selected)}</p>
                             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--gold)', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '14px' }}>{t.works}</div>
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '28px' }}>

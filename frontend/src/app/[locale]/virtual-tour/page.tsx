@@ -88,7 +88,7 @@ export default function VirtualTourPage() {
 
             <section style={{ background: '#0d1f3c', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
                 <div className="container">
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)' }}>
+                    <div className="grid-4-col">
                         {t.features.map((f, i) => (
                             <div key={i} style={{ padding: '28px 24px', textAlign: 'center', borderRight: i < 3 ? '1px solid rgba(255,255,255,0.06)' : 'none' }}>
                                 <div style={{ color: 'rgba(201,168,76,0.7)', display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
@@ -156,7 +156,7 @@ export default function VirtualTourPage() {
 
             <section style={{ background: 'var(--off-white)', padding: '60px 0', textAlign: 'center' }}>
                 <div className="container">
-                    <h3 style={{ fontSize: '28px', marginBottom: '12px' }}>
+                    <h3 style={{ fontSize: 'clamp(22px, 3vw, 28px)', marginBottom: '12px' }}>
                         {locale === 'ru' ? 'Хотите посетить лично?' : locale === 'en' ? 'Want to visit in person?' : 'Shaxsan tashrif buyurmoqchimisiz?'}
                     </h3>
                     <p style={{ color: 'var(--gray-600)', marginBottom: '28px', fontSize: '16px' }}>

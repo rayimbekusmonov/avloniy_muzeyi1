@@ -121,13 +121,13 @@ export default function AboutPage() {
                 </div>
             </div>
 
-            {/* Muzey haqida — RESPONSIVE */}
+            {/* Muzey haqida */}
             <section className="section" style={{ background: 'var(--off-white)' }}>
                 <div className="container">
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '48px', alignItems: 'center' }}>
+                    <div className="grid-2-col">
                         <div>
                             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '16px' }}>{t.museumLabel}</div>
-                            <h2 style={{ fontSize: '36px', marginBottom: '16px' }}>{t.museumH2a}<span style={{ color: 'var(--gold)' }}>{t.museumH2b}</span></h2>
+                            <h2 style={{ fontSize: 'clamp(26px, 4vw, 36px)', marginBottom: '16px' }}>{t.museumH2a}<span style={{ color: 'var(--gold)' }}>{t.museumH2b}</span></h2>
                             <div className="gold-divider" />
                             <p style={{ fontSize: '16px', color: 'var(--gray-600)', lineHeight: '1.9', marginTop: '16px', marginBottom: '16px' }}>{t.museumDesc1}</p>
                             <p style={{ fontSize: '16px', color: 'var(--gray-600)', lineHeight: '1.9', marginBottom: '24px' }}>{t.museumDesc2}</p>
@@ -143,22 +143,22 @@ export default function AboutPage() {
                                 ))}
                             </div>
                         </div>
-                        <div style={{ background: 'linear-gradient(135deg, var(--navy-dark), var(--navy))', borderRadius: '16px', height: '480px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.2)', boxShadow: 'var(--shadow-lg)' }}>
+                        <div style={{ background: 'linear-gradient(135deg, var(--navy-dark), var(--navy))', borderRadius: '16px', minHeight: '380px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.2)', boxShadow: 'var(--shadow-lg)' }}>
                             <Icons.Museum />
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Biografiya — RESPONSIVE */}
+            {/* Biografiya */}
             <section className="section" style={{ background: 'var(--white)' }}>
                 <div className="container">
                     <div style={{ textAlign: 'center', marginBottom: '56px' }}>
                         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '12px' }}>{t.personLabel}</div>
-                        <h2 style={{ fontSize: '36px' }}>Abdulla <span style={{ color: 'var(--gold)' }}>Avloniy</span>{t.personH2c}</h2>
+                        <h2 style={{ fontSize: 'clamp(26px, 4vw, 36px)' }}>Abdulla <span style={{ color: 'var(--gold)' }}>Avloniy</span>{t.personH2c}</h2>
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '48px', alignItems: 'start' }}>
-                        <div style={{ background: 'linear-gradient(135deg, var(--navy-dark), var(--navy))', borderRadius: '16px', height: '380px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.2)' }}>
+                    <div className="grid-2-col-uneven">
+                        <div style={{ background: 'linear-gradient(135deg, var(--navy-dark), var(--navy))', borderRadius: '16px', minHeight: '320px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.2)' }}>
                             <Icons.Person />
                         </div>
                         <div>
@@ -178,15 +178,15 @@ export default function AboutPage() {
                 <div className="container">
                     <div style={{ textAlign: 'center', marginBottom: '56px' }}>
                         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '12px' }}>{t.timelineLabel}</div>
-                        <h2 style={{ fontSize: '36px' }}>{t.timelineH2a}<span style={{ color: 'var(--gold)' }}>{t.timelineH2b}</span></h2>
+                        <h2 style={{ fontSize: 'clamp(26px, 4vw, 36px)' }}>{t.timelineH2a}<span style={{ color: 'var(--gold)' }}>{t.timelineH2b}</span></h2>
                     </div>
                     <div style={{ position: 'relative', maxWidth: '700px', margin: '0 auto' }}>
-                        <div style={{ position: 'absolute', left: '79px', top: 0, bottom: 0, width: '2px', background: 'linear-gradient(to bottom, var(--gold), rgba(201,168,76,0.1))' }} />
+                        <div className="timeline-line" style={{ position: 'absolute', left: '79px', top: 0, bottom: 0, width: '2px', background: 'linear-gradient(to bottom, var(--gold), rgba(201,168,76,0.1))' }} />
                         {timeline.map((item, i) => (
-                            <div key={i} style={{ display: 'flex', gap: '32px', marginBottom: '36px', alignItems: 'flex-start' }}>
-                                <div style={{ minWidth: '64px', fontFamily: 'var(--font-display)', fontSize: '18px', fontWeight: '700', color: 'var(--gold)', textAlign: 'right', paddingTop: '12px' }}>{item.year}</div>
-                                <div style={{ width: '16px', height: '16px', borderRadius: '50%', background: 'var(--gold)', border: '3px solid var(--off-white)', flexShrink: 0, marginTop: '14px', zIndex: 1 }} />
-                                <div style={{ flex: 1, background: 'var(--white)', borderRadius: '12px', padding: '20px 24px', boxShadow: 'var(--shadow-sm)', border: '1px solid rgba(27,58,107,0.06)' }}>
+                            <div key={i} style={{ display: 'flex', gap: '24px', marginBottom: '36px', alignItems: 'flex-start' }}>
+                                <div className="timeline-year" style={{ minWidth: '64px', fontFamily: 'var(--font-display)', fontSize: '18px', fontWeight: '700', color: 'var(--gold)', textAlign: 'right', paddingTop: '12px' }}>{item.year}</div>
+                                <div className="timeline-dot" style={{ width: '16px', height: '16px', borderRadius: '50%', background: 'var(--gold)', border: '3px solid var(--off-white)', flexShrink: 0, marginTop: '14px', zIndex: 1 }} />
+                                <div className="timeline-card" style={{ flex: 1, background: 'var(--white)', borderRadius: '12px', padding: '20px 24px', boxShadow: 'var(--shadow-sm)', border: '1px solid rgba(27,58,107,0.06)' }}>
                                     <h4 style={{ fontFamily: 'var(--font-display)', fontSize: '17px', color: 'var(--navy-dark)', marginBottom: '6px' }}>{item.title}</h4>
                                     <p style={{ fontSize: '14px', color: 'var(--gray-600)' }}>{item.desc}</p>
                                 </div>
