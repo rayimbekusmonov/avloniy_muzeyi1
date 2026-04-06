@@ -31,12 +31,18 @@ const Icons = {
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
         </svg>
     ),
+    Pen: () => (
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+        </svg>
+    ),
 }
 
 const menuItems = [
     { href: '/admin/news',      Icon: Icons.Newspaper, title: 'Yangiliklar',  desc: "Yangilik qo'shish, tahrirlash, o'chirish" },
     { href: '/admin/gallery',   Icon: Icons.Image,     title: 'Galereya',     desc: 'Rasm, video, audio boshqaruvi' },
     { href: '/admin/resources', Icon: Icons.Book,      title: 'Manbalar',     desc: 'E-kitob va maqolalar' },
+    { href: '/admin/jadidlar',  Icon: Icons.Pen,       title: 'Jadidlar',     desc: "Tarixiy shaxslar ma'lumotlari" },
     { href: '/admin/contacts',  Icon: Icons.Mail,      title: 'Xabarlar',     desc: 'Foydalanuvchilardan kelgan xabarlar' },
 ]
 

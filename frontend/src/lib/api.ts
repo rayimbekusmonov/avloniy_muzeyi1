@@ -150,3 +150,26 @@ export interface ContactResponse {
     read: boolean;
     createdAt: string;
 }
+
+export interface HistoricalFigure {
+    id: number;
+    nameUz: string;
+    nameRu: string;
+    nameEn: string;
+    titleUz: string;
+    titleRu: string;
+    titleEn: string;
+    bioUz: string;
+    bioRu: string;
+    bioEn: string;
+    name: string;
+    title: string;
+    bio: string;
+    years: string;
+    imageUrl: string;
+    works: string;
+    pdfUrl: string;
+    featured: boolean;
+    sortOrder: number;
+    createdAt: string;
+}

@@ -1,4 +1,4 @@
-import { api, Page, NewsItem, NewsFormData, GalleryItem, ResourceItem, AuthResponse } from './api';
+import { api, Page, NewsItem, NewsFormData, GalleryItem, ResourceItem, AuthResponse, HistoricalFigure } from './api';
 
 // Auth
 export const authService = {
@@ -74,3 +74,26 @@ export const contactService = {
     send: (data: { name: string; phone: string; telegram: string; subject: string; message: string }) =>
         api.post<{ message: string }>('/api/contact', data),
 };
+
+export const figureService = {
+    // Frontend: locale bo'yicha
+    getAll: (locale = 'uz') =>
+        api.get<HistoricalFigure[]>(`/api/figures?locale=${locale}`),
+
+    getById: (id: number, locale = 'uz') =>
+        api.get<HistoricalFigure>(`/api/figures/${id}?locale=${locale}`),
+
+    // Admin: barcha til maydonlari
+    getAllForAdmin: () =>
+        api.get<HistoricalFigure[]>('/api/figures/all'),
+
+    create: (data: Omit<HistoricalFigure, 'id' | 'name' | 'title' | 'bio' | 'createdAt'>) =>
+        api.post<HistoricalFigure>('/api/figures', data),
+
+    update: (id: number, data: Omit<HistoricalFigure, 'id' | 'name' | 'title' | 'bio' | 'createdAt'>) =>
+        api.put<HistoricalFigure>(`/api/figures/${id}`, data),
+
+    delete: (id: number) =>
+        api.delete<void>(`/api/figures/${id}`),
+};
+
