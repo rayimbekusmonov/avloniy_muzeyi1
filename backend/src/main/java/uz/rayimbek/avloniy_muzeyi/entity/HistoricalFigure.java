@@ -2,6 +2,8 @@ package uz.rayimbek.avloniy_muzeyi.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import java.time.LocalDateTime;
 
@@ -45,7 +47,6 @@ public class HistoricalFigure {
     @Column(columnDefinition = "TEXT")
     private String bioEn;
 
-    // Yil oralig'i: "1878–1934"
     @Column(nullable = false)
     private String years;
 
@@ -85,4 +86,8 @@ public class HistoricalFigure {
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+
+    @OneToMany(mappedBy = "figure", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("sortOrder ASC")
+    private List<FigureWork> figureWorks = new ArrayList<>();
 }
