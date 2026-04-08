@@ -130,10 +130,10 @@ export default function AdminJadidlarPage() {
         setSaving(true); setError('')
         try {
             if (editItem) {
-                const updated = await figureService.update(editItem.id, form)
+                const updated = await figureService.update(editItem.id, form as any)
                 setFigures(prev => prev.map(f => f.id === editItem.id ? updated : f))
             } else {
-                const created = await figureService.create(form)
+                const created = await figureService.create(form as any)
                 setFigures(prev => [...prev, created])
             }
             handleCancel()
