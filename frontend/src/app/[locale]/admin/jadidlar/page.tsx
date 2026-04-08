@@ -21,6 +21,9 @@ const emptyForm = {
     imageUrl: '',
     featured: false,
     sortOrder: 0,
+    works: '',
+    pdfUrl: '',
+    figureWorks: []
 }
 
 const emptyWorkForm = { title: '', year: '', pdfUrl: '' }
@@ -67,6 +70,9 @@ export default function AdminJadidlarPage() {
             imageUrl: item.imageUrl || '',
             featured: item.featured || false,
             sortOrder: item.sortOrder || 0,
+            works: item.works || '',
+            pdfUrl: item.pdfUrl || '',
+            figureWorks: item.figureWorks || []
         })
         setActiveLang('uz')
         setShowForm(true)
