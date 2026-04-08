@@ -23,7 +23,7 @@ const emptyForm = {
     sortOrder: 0,
     works: '',
     pdfUrl: '',
-    figureWorks: []
+    figureWorks: [] as any[]
 }
 
 const emptyWorkForm = { title: '', year: '', pdfUrl: '' }
@@ -72,7 +72,7 @@ export default function AdminJadidlarPage() {
             sortOrder: item.sortOrder || 0,
             works: item.works || '',
             pdfUrl: item.pdfUrl || '',
-            figureWorks: item.figureWorks || []
+            figureWorks: (item.figureWorks || []) as any[]
         })
         setActiveLang('uz')
         setShowForm(true)
