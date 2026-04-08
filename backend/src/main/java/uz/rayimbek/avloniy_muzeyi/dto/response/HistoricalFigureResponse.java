@@ -3,6 +3,7 @@ package uz.rayimbek.avloniy_muzeyi.dto.response;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -38,4 +39,17 @@ public class HistoricalFigureResponse {
     private Boolean featured;
     private Integer sortOrder;
     private LocalDateTime createdAt;
+
+    // Mavjud fieldlardan keyin:
+    private List<WorkItem> figureWorks;
+
+    @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+    public static class WorkItem {
+        private Long id;
+        private String title;
+        private Integer year;
+        private String pdfUrl;
+        private Integer sortOrder;
+    }
+
 }

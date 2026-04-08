@@ -172,4 +172,11 @@ export interface HistoricalFigure {
     featured: boolean;
     sortOrder: number;
     createdAt: string;
+    figureWorks: {
+        id: number;
+        title: string;
+        year: number | null;
+        pdfUrl: string;
+        sortOrder: number;
+    }[];
 }

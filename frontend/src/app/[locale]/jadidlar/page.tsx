@@ -48,35 +48,24 @@ export default function JadidlarPage() {
         h1a: locale === 'ru' ? 'Узбекские ' : locale === 'en' ? 'Uzbek ' : "O'zbek ",
         h1b: locale === 'ru' ? 'Джадиды' : locale === 'en' ? 'Jadids' : 'Jadidlari',
         desc: locale === 'ru' ? 'Выдающиеся узбекские просветители XIX–XX веков.' : locale === 'en' ? 'Outstanding Uzbek enlighteners of the 19th–20th centuries.' : "XIX–XX asr buyuk o'zbek jadidlari.",
-        works: locale === 'ru' ? 'Основные произведения' : locale === 'en' ? 'Key works' : "Asosiy asarlar",
+        worksLabel: locale === 'ru' ? 'Электронные произведения' : locale === 'en' ? 'Electronic works' : 'Elektron asarlar',
         readMore: locale === 'ru' ? 'Подробнее' : locale === 'en' ? 'More details' : 'Batafsil',
         close: locale === 'ru' ? 'Закрыть' : locale === 'en' ? 'Close' : 'Yopish',
-        download: locale === 'ru' ? 'Скачать PDF' : locale === 'en' ? 'Download PDF' : 'PDF yuklab olish',
         central: locale === 'ru' ? 'Центральная фигура' : locale === 'en' ? 'Central figure' : 'Markaziy shaxs',
         others: locale === 'ru' ? 'Другие представители' : locale === 'en' ? 'Other representatives' : 'Boshqa namoyandalar',
         loading: locale === 'ru' ? 'Загрузка...' : locale === 'en' ? 'Loading...' : 'Yuklanmoqda...',
         empty: locale === 'ru' ? 'Пока нет данных' : locale === 'en' ? 'No data yet' : "Hali ma'lumot yo'q",
-    }
-
-    const worksToArray = (works: string) => {
-        if (!works) return []
-        return works.split(',').map(w => w.trim()).filter(w => w.length > 0)
+        yearSuffix: locale === 'uz' ? '-yil' : locale === 'ru' ? ' г.' : ' y.',
+        pdfDownload: 'PDF ↓'
     }
 
     if (loading) return (
-        <>
-            <div className="page-header" style={{ background: 'linear-gradient(135deg, #1a0e00 0%, #2d1a00 50%, #3d2a00 100%)' }}>
-                <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-                    <div className="label"><Icons.Pen /> {t.label}</div>
-                    <h1>{t.h1a}<span>{t.h1b}</span></h1>
-                </div>
-            </div>
-            <div style={{ textAlign: 'center', padding: '80px', color: 'var(--gray-600)' }}>{t.loading}</div>
-        </>
+        <div style={{ textAlign: 'center', padding: '80px', color: 'var(--gray-600)' }}>{t.loading}</div>
     )
 
     return (
         <>
+            {/* Header qismi */}
             <div className="page-header" style={{ background: 'linear-gradient(135deg, #1a0e00 0%, #2d1a00 50%, #3d2a00 100%)' }}>
                 <div className="container" style={{ position: 'relative', zIndex: 1 }}>
                     <div className="label" style={{ background: 'rgba(201,168,76,0.15)', borderColor: 'rgba(201,168,76,0.3)' }}>
@@ -91,7 +80,7 @@ export default function JadidlarPage() {
                 <div style={{ textAlign: 'center', padding: '80px', color: 'var(--gray-600)' }}>{t.empty}</div>
             ) : (
                 <>
-                    {/* Featured shaxs */}
+                    {/* Markaziy shaxs bo'limi */}
                     {featured && (
                         <section style={{ background: 'var(--off-white)', padding: '72px 0' }}>
                             <div className="container">
@@ -106,28 +95,32 @@ export default function JadidlarPage() {
                                         ) : (
                                             <div style={{ color: 'rgba(255,255,255,0.4)' }}><Icons.Person /></div>
                                         )}
-                                        <div style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(18px, 2.5vw, 22px)', color: '#fff', textAlign: 'center' }}>{featured.name}</div>
+                                        <div style={{ fontFamily: 'var(--font-display)', fontSize: '22px', color: '#fff', textAlign: 'center' }}>{featured.name}</div>
                                         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: '#C9A84C' }}>{featured.years}</div>
                                     </div>
-                                    <div style={{ padding: 'clamp(24px, 3vw, 40px)' }}>
+                                    <div style={{ padding: '40px' }}>
                                         {featured.title && <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--gold)', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '10px' }}>{featured.title}</div>}
-                                        <h2 style={{ fontSize: 'clamp(22px, 3vw, 28px)', marginBottom: '20px', color: 'var(--navy-dark)' }}>{featured.name}</h2>
-                                        <div style={{ width: '40px', height: '2px', background: 'var(--gold)', marginBottom: '20px' }} />
+                                        <h2 style={{ fontSize: '28px', marginBottom: '20px', color: 'var(--navy-dark)' }}>{featured.name}</h2>
                                         <p style={{ fontSize: '16px', color: 'var(--gray-600)', lineHeight: '1.95', marginBottom: '24px' }}>{featured.bio}</p>
-                                        {worksToArray(featured.works).length > 0 && (
-                                            <div>
-                                                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--gold)', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '12px' }}>{t.works}</div>
-                                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                                                    {worksToArray(featured.works).map((w, i) => (
-                                                        <span key={i} style={{ background: 'rgba(27,58,107,0.06)', border: '1px solid rgba(27,58,107,0.12)', borderRadius: '2px', padding: '5px 12px', fontSize: '13px', color: 'var(--navy-dark)', fontFamily: 'var(--font-mono)' }}>{w}</span>
+
+                                        {/* Featured shaxsning elektron asarlari */}
+                                        {featured.figureWorks && featured.figureWorks.length > 0 && (
+                                            <>
+                                                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--gold)', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '14px' }}>{t.worksLabel}</div>
+                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                                    {featured.figureWorks.map(work => (
+                                                        <a key={work.id} href={work.pdfUrl || '#'} target="_blank" rel="noopener noreferrer"
+                                                           style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: 'rgba(27,58,107,0.04)', border: '1px solid rgba(27,58,107,0.1)', borderRadius: '4px', textDecoration: 'none' }}>
+                                                            <span style={{ fontSize: '20px' }}>📄</span>
+                                                            <div style={{ flex: 1 }}>
+                                                                <div style={{ fontSize: '15px', color: 'var(--navy-dark)', fontWeight: '500' }}>{work.title}</div>
+                                                                {work.year && <div style={{ fontSize: '12px', color: 'var(--gray-400)' }}>{work.year}{t.yearSuffix}</div>}
+                                                            </div>
+                                                            {work.pdfUrl && <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)' }}>{t.pdfDownload}</span>}
+                                                        </a>
                                                     ))}
                                                 </div>
-                                            </div>
-                                        )}
-                                        {featured.pdfUrl && (
-                                            <a href={featured.pdfUrl} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ marginTop: '20px', display: 'inline-flex', textDecoration: 'none' }}>
-                                                <Icons.Download /> {t.download}
-                                            </a>
+                                            </>
                                         )}
                                     </div>
                                 </div>
@@ -135,40 +128,23 @@ export default function JadidlarPage() {
                         </section>
                     )}
 
-                    {/* Boshqa jadidlar */}
+                    {/* Boshqa jadidlar ro'yxati */}
                     {others.length > 0 && (
                         <section style={{ background: '#060f1e', padding: '72px 0' }}>
                             <div className="container">
                                 <div style={{ textAlign: 'center', marginBottom: '52px' }}>
-                                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#C9A84C', letterSpacing: '4px', textTransform: 'uppercase', marginBottom: '16px' }}>
-                                        {t.others}
-                                    </div>
-                                    <h2 style={{ color: '#fff', fontSize: 'clamp(26px, 3vw, 36px)' }}>{t.h1a}<span style={{ color: '#C9A84C' }}>{t.h1b}</span></h2>
+                                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#C9A84C', letterSpacing: '4px', textTransform: 'uppercase', marginBottom: '16px' }}>{t.others}</div>
+                                    <h2 style={{ color: '#fff', fontSize: '36px' }}>{t.h1a}<span style={{ color: '#C9A84C' }}>{t.h1b}</span></h2>
                                 </div>
                                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
                                     {others.map(jadid => (
-                                        <div key={jadid.id} onClick={() => setSelected(jadid)} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '2px', padding: 'clamp(20px, 3vw, 32px)', cursor: 'pointer', transition: 'all 0.3s' }}
-                                             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(201,168,76,0.07)'; e.currentTarget.style.borderColor = 'rgba(201,168,76,0.25)'; e.currentTarget.style.transform = 'translateY(-4px)' }}
-                                             onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; e.currentTarget.style.transform = 'translateY(0)' }}
-                                        >
-                                            <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', marginBottom: '16px' }}>
-                                                <div style={{ width: '52px', height: '52px', flexShrink: 0, borderRadius: '50%', overflow: 'hidden', background: 'linear-gradient(135deg, #1B3A6B, rgba(201,168,76,0.2))' }}>
-                                                    {jadid.imageUrl ? (
-                                                        <img src={jadid.imageUrl} alt={jadid.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                                    ) : (
-                                                        <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.4)', fontSize: '20px' }}>?</div>
-                                                    )}
-                                                </div>
-                                                <div>
-                                                    <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '18px', color: '#fff', marginBottom: '4px' }}>{jadid.name}</h3>
-                                                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#C9A84C' }}>{jadid.years}</div>
-                                                </div>
-                                            </div>
-                                            {jadid.title && <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'rgba(255,255,255,0.4)', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '1px' }}>{jadid.title}</div>}
+                                        <div key={jadid.id} onClick={() => setSelected(jadid)} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '2px', padding: '32px', cursor: 'pointer', transition: 'all 0.3s' }}>
+                                            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '18px', color: '#fff', marginBottom: '4px' }}>{jadid.name}</h3>
+                                            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#C9A84C', marginBottom: '12px' }}>{jadid.years}</div>
                                             <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.5)', lineHeight: '1.8', marginBottom: '16px' }}>
-                                                {jadid.bio && jadid.bio.length > 150 ? jadid.bio.substring(0, 150) + '...' : jadid.bio}
+                                                {jadid.bio && jadid.bio.length > 120 ? jadid.bio.substring(0, 120) + '...' : jadid.bio}
                                             </p>
-                                            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#C9A84C', letterSpacing: '2px' }}>{t.readMore} →</div>
+                                            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#C9A84C' }}>{t.readMore} →</div>
                                         </div>
                                     ))}
                                 </div>
@@ -178,44 +154,45 @@ export default function JadidlarPage() {
                 </>
             )}
 
-            {/* Modal */}
+            {/* Modal - Batafsil ma'lumot */}
             {selected && (
                 <div onClick={() => setSelected(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px', backdropFilter: 'blur(8px)' }}>
                     <div onClick={e => e.stopPropagation()} style={{ background: '#fff', borderRadius: '4px', maxWidth: '700px', width: '100%', maxHeight: '90vh', overflow: 'auto' }}>
-                        <div style={{ background: 'linear-gradient(135deg, #1B3A6B, #254d8f)', padding: 'clamp(24px, 3vw, 40px)', display: 'flex', gap: '24px', alignItems: 'center', flexWrap: 'wrap' }}>
-                            {selected.imageUrl ? (
-                                <img src={selected.imageUrl} alt={selected.name} style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(201,168,76,0.4)', flexShrink: 0 }} />
-                            ) : (
-                                <div style={{ color: 'rgba(255,255,255,0.5)', flexShrink: 0 }}><Icons.Person /></div>
-                            )}
-                            <div style={{ minWidth: '200px' }}>
-                                {selected.title && <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#C9A84C', letterSpacing: '2px', marginBottom: '8px' }}>{selected.title}</div>}
-                                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(20px, 3vw, 26px)', color: '#fff', marginBottom: '8px' }}>{selected.name}</h2>
+                        <div style={{ background: 'linear-gradient(135deg, #1B3A6B, #254d8f)', padding: '40px', display: 'flex', gap: '24px', alignItems: 'center' }}>
+                            {selected.imageUrl && <img src={selected.imageUrl} alt="" style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(201,168,76,0.4)' }} />}
+                            <div>
+                                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '26px', color: '#fff', marginBottom: '4px' }}>{selected.name}</h2>
                                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'rgba(255,255,255,0.6)' }}>{selected.years}</div>
                             </div>
                         </div>
-                        <div style={{ padding: 'clamp(24px, 3vw, 36px) clamp(24px, 3vw, 40px)' }}>
+                        <div style={{ padding: '40px' }}>
                             <p style={{ fontSize: '16px', color: 'var(--gray-600)', lineHeight: '1.95', marginBottom: '32px' }}>{selected.bio}</p>
-                            {worksToArray(selected.works).length > 0 && (
+
+                            {/* Modal ichidagi elektron asarlar */}
+                            {selected.figureWorks && selected.figureWorks.length > 0 && (
                                 <>
-                                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--gold)', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '14px' }}>{t.works}</div>
-                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '28px' }}>
-                                        {worksToArray(selected.works).map((w, i) => (
-                                            <span key={i} style={{ background: 'rgba(27,58,107,0.06)', border: '1px solid rgba(27,58,107,0.12)', borderRadius: '2px', padding: '6px 14px', fontSize: '13px', color: 'var(--navy-dark)', fontFamily: 'var(--font-mono)' }}>{w}</span>
+                                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--gold)', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '14px' }}>{t.worksLabel}</div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '28px' }}>
+                                        {selected.figureWorks.map(work => (
+                                            <a key={work.id} href={work.pdfUrl || '#'} target="_blank" rel="noopener noreferrer"
+                                               style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: 'rgba(27,58,107,0.04)', border: '1px solid rgba(27,58,107,0.1)', borderRadius: '4px', textDecoration: 'none', transition: 'all 0.2s' }}
+                                               onMouseEnter={e => { e.currentTarget.style.background = 'rgba(201,168,76,0.08)'; e.currentTarget.style.borderColor = 'rgba(201,168,76,0.3)' }}
+                                               onMouseLeave={e => { e.currentTarget.style.background = 'rgba(27,58,107,0.04)'; e.currentTarget.style.borderColor = 'rgba(27,58,107,0.1)' }}>
+                                                <span style={{ fontSize: '20px' }}>📄</span>
+                                                <div style={{ flex: 1 }}>
+                                                    <div style={{ fontSize: '15px', color: 'var(--navy-dark)', fontWeight: '500' }}>{work.title}</div>
+                                                    {work.year && <div style={{ fontSize: '12px', color: 'var(--gray-400)' }}>{work.year}{t.yearSuffix}</div>}
+                                                </div>
+                                                {work.pdfUrl && <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)' }}>{t.pdfDownload}</span>}
+                                            </a>
                                         ))}
                                     </div>
                                 </>
                             )}
-                            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                                {selected.pdfUrl && (
-                                    <a href={selected.pdfUrl} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ textDecoration: 'none' }}>
-                                        <Icons.Download /> {t.download}
-                                    </a>
-                                )}
-                                <button onClick={() => setSelected(null)} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 28px', background: 'var(--navy-dark)', color: '#fff', border: 'none', borderRadius: '2px', fontFamily: 'var(--font-display)', fontWeight: '600', fontSize: '14px', cursor: 'pointer' }}>
-                                    {t.close} <Icons.X />
-                                </button>
-                            </div>
+
+                            <button onClick={() => setSelected(null)} style={{ width: '100%', padding: '14px', background: 'var(--navy-dark)', color: '#fff', border: 'none', borderRadius: '2px', cursor: 'pointer', fontFamily: 'var(--font-display)', fontWeight: '600' }}>
+                                {t.close}
+                            </button>
                         </div>
                     </div>
                 </div>

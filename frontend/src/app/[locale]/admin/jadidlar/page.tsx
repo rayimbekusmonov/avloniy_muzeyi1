@@ -19,11 +19,11 @@ const emptyForm = {
     bioUz: '', bioRu: '', bioEn: '',
     years: '',
     imageUrl: '',
-    works: '',
-    pdfUrl: '',
     featured: false,
     sortOrder: 0,
 }
+
+const emptyWorkForm = { title: '', year: '', pdfUrl: '' }
 
 export default function AdminJadidlarPage() {
     const router = useRouter()
@@ -35,6 +35,10 @@ export default function AdminJadidlarPage() {
     const [activeLang, setActiveLang] = useState<'uz' | 'ru' | 'en'>('uz')
     const [saving, setSaving] = useState(false)
     const [error, setError] = useState('')
+
+    // Asarlar uchun state-lar
+    const [showWorkForm, setShowWorkForm] = useState(false)
+    const [workForm, setWorkForm] = useState(emptyWorkForm)
 
     const fetchFigures = useCallback(async () => {
         setLoading(true)
@@ -61,8 +65,6 @@ export default function AdminJadidlarPage() {
             bioUz: item.bioUz || '', bioRu: item.bioRu || '', bioEn: item.bioEn || '',
             years: item.years || '',
             imageUrl: item.imageUrl || '',
-            works: item.works || '',
-            pdfUrl: item.pdfUrl || '',
             featured: item.featured || false,
             sortOrder: item.sortOrder || 0,
         })
@@ -79,6 +81,41 @@ export default function AdminJadidlarPage() {
         } catch { setError("O'chirishda xato yuz berdi") }
     }
 
+    // --- ASARLAR BILAN ISHLASH ---
+    const handleAddWork = async () => {
+        if (!workForm.title || !workForm.pdfUrl || !editItem) {
+            alert("Asar nomi va PDF fayli majburiy!");
+            return;
+        }
+        try {
+            const work = await figureService.addWork(editItem.id, {
+                title: workForm.title,
+                year: workForm.year ? Number(workForm.year) : undefined,
+                pdfUrl: workForm.pdfUrl,
+            })
+            // State-ni yangilash: editItem ichidagi figureWorks ro'yxatiga yangi asarni qo'shish
+            setEditItem(prev => prev ? { ...prev, figureWorks: [...(prev.figureWorks || []), work] } : prev)
+            setWorkForm(emptyWorkForm)
+            setShowWorkForm(false)
+        } catch {
+            setError("Asar qo'shishda xato yuz berdi")
+        }
+    }
+
+    const handleDeleteWork = async (workId: number) => {
+        if (!confirm("Asarni o'chirishni tasdiqlaysizmi?")) return
+        try {
+            await figureService.deleteWork(workId)
+            setEditItem(prev => prev ? {
+                ...prev,
+                figureWorks: (prev.figureWorks || []).filter(w => w.id !== workId)
+            } : prev)
+        } catch {
+            setError("Asarni o'chirishda xato yuz berdi")
+        }
+    }
+    // ----------------------------
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         if (!form.nameUz.trim()) { setError("O'zbekcha ism kiritilishi shart"); return }
@@ -94,13 +131,14 @@ export default function AdminJadidlarPage() {
                 setFigures(prev => [...prev, created])
             }
             handleCancel()
-        } catch (err: unknown) {
-            setError(err instanceof Error ? err.message : 'Xato yuz berdi')
+        } catch (err: any) {
+            setError(err.message || 'Xato yuz berdi')
         } finally { setSaving(false) }
     }
 
     const handleCancel = () => {
         setShowForm(false); setEditItem(null); setForm(emptyForm); setError('')
+        setShowWorkForm(false); setWorkForm(emptyWorkForm)
     }
 
     const setLangField = (field: string, value: string) => {
@@ -142,14 +180,12 @@ export default function AdminJadidlarPage() {
                     <div style={{ background: 'rgba(220,38,38,0.08)', border: '1px solid rgba(220,38,38,0.2)', borderRadius: '8px', padding: '12px 16px', marginBottom: '24px', color: '#dc2626', fontSize: '14px' }}>{error}</div>
                 )}
 
-                {/* FORM */}
                 {showForm && (
                     <div style={{ background: '#fff', borderRadius: '12px', padding: '32px', marginBottom: '32px', border: '1px solid rgba(27,58,107,0.1)', boxShadow: '0 4px 20px rgba(27,58,107,0.08)' }}>
                         <h2 style={{ fontSize: '20px', color: 'var(--navy-dark)', marginBottom: '28px' }}>
                             {editItem ? 'Jadidni tahrirlash' : 'Yangi jadid qo\'shish'}
                         </h2>
                         <form onSubmit={handleSubmit}>
-                            {/* Rasm va umumiy ma'lumotlar */}
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
                                 <div>
                                     <label style={labelStyle}>Rasm *</label>
@@ -167,28 +203,59 @@ export default function AdminJadidlarPage() {
                                 </div>
                             </div>
 
-                            {/* Asarlar */}
-                            <div style={{ marginBottom: '24px' }}>
-                                <label style={labelStyle}>Asosiy asarlari (har birini vergul bilan ajrating)</label>
-                                <input value={form.works} onChange={e => setForm(p => ({ ...p, works: e.target.value }))} style={inputStyle} placeholder="Turkiy Guliston (1913), Adib (1907), Baxtsiz kuyov" />
-                            </div>
+                            {/* ASARLAR BO'LIMI - FAQAT TAHRIRLASHDA */}
+                            {editItem && (
+                                <div style={{ marginBottom: '24px', padding: '20px', background: 'rgba(27,58,107,0.02)', border: '1px solid rgba(27,58,107,0.08)', borderRadius: '8px' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                                        <label style={labelStyle}>Elektron asarlar</label>
+                                        <button type="button" onClick={() => setShowWorkForm(true)} style={{ padding: '6px 14px', background: 'var(--gold)', color: 'var(--navy-dark)', border: 'none', borderRadius: '6px', fontSize: '12px', fontFamily: 'var(--font-mono)', cursor: 'pointer' }}>+ Asar qo'shish</button>
+                                    </div>
 
-                            {/* PDF kitob */}
-                            <div style={{ marginBottom: '24px' }}>
-                                <label style={labelStyle}>PDF kitob (ixtiyoriy)</label>
-                                <FileUpload folder="jadidlar/books" accept=".pdf" label="PDF yuklash" onUpload={(url) => setForm(p => ({ ...p, pdfUrl: url }))} />
-                                {form.pdfUrl && <p style={{ fontSize: '12px', color: 'var(--gray-600)', marginTop: '4px', wordBreak: 'break-all' }}>{form.pdfUrl}</p>}
-                            </div>
+                                    {showWorkForm && (
+                                        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 2fr auto', gap: '8px', marginBottom: '16px', alignItems: 'end' }}>
+                                            <div>
+                                                <label style={{ ...labelStyle, fontSize: '10px' }}>Asar nomi</label>
+                                                <input value={workForm.title} onChange={e => setWorkForm(p => ({ ...p, title: e.target.value }))} style={inputStyle} placeholder="Turkiy Guliston" />
+                                            </div>
+                                            <div>
+                                                <label style={{ ...labelStyle, fontSize: '10px' }}>Yil</label>
+                                                <input type="number" value={workForm.year} onChange={e => setWorkForm(p => ({ ...p, year: e.target.value }))} style={inputStyle} placeholder="1913" />
+                                            </div>
+                                            <div>
+                                                <label style={{ ...labelStyle, fontSize: '10px' }}>PDF fayl</label>
+                                                <FileUpload folder="jadidlar/works" accept=".pdf" label="PDF" onUpload={(url) => setWorkForm(p => ({ ...p, pdfUrl: url }))} />
+                                            </div>
+                                            <button type="button" onClick={handleAddWork} style={{ padding: '10px 16px', background: 'var(--navy)', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '13px', cursor: 'pointer', height: '42px' }}>Saqlash</button>
+                                        </div>
+                                    )}
 
-                            {/* Featured */}
+                                    {editItem.figureWorks && editItem.figureWorks.length > 0 ? (
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                            {editItem.figureWorks.map(work => (
+                                                <div key={work.id} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 14px', background: '#fff', borderRadius: '6px', border: '1px solid rgba(27,58,107,0.1)' }}>
+                                                    <span style={{ fontSize: '16px' }}>📄</span>
+                                                    <div style={{ flex: 1 }}>
+                                                        <span style={{ fontSize: '14px', color: 'var(--navy-dark)', fontWeight: '500' }}>{work.title}</span>
+                                                        {work.year && <span style={{ fontSize: '12px', color: 'var(--gray-400)', marginLeft: '8px' }}>({work.year})</span>}
+                                                    </div>
+                                                    {work.pdfUrl && <a href={work.pdfUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: '12px', color: 'var(--gold)', textDecoration: 'none' }}>Yuklab olish ↓</a>}
+                                                    <button type="button" onClick={() => handleDeleteWork(work.id)} style={{ padding: '4px 10px', background: 'rgba(220,38,38,0.08)', border: '1px solid rgba(220,38,38,0.2)', borderRadius: '4px', fontSize: '12px', color: '#dc2626', cursor: 'pointer' }}>✕</button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <p style={{ fontSize: '13px', color: 'var(--gray-400)', textAlign: 'center', padding: '20px' }}>Hali asarlar qo'shilmagan</p>
+                                    )}
+                                </div>
+                            )}
+
                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '24px' }}>
                                 <input type="checkbox" id="featured" checked={form.featured} onChange={e => setForm(p => ({ ...p, featured: e.target.checked }))} style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: 'var(--gold)' }} />
-                                <label htmlFor="featured" style={{ fontSize: '15px', color: 'var(--navy-dark)', cursor: 'pointer' }}>Markaziy shaxs (sahifada yuqorida katta ko'rinadi)</label>
+                                <label htmlFor="featured" style={{ fontSize: '15px', color: 'var(--navy-dark)', cursor: 'pointer' }}>Markaziy shaxs</label>
                             </div>
 
                             {/* Til tablari */}
                             <div style={{ marginBottom: '24px' }}>
-                                <label style={{ ...labelStyle, marginBottom: '12px' }}>Til bo'yicha ma'lumot</label>
                                 <div style={{ display: 'flex', gap: '0', borderBottom: '2px solid rgba(27,58,107,0.1)' }}>
                                     {LANGS.map(lang => {
                                         const status = getLangStatus(lang.key)
@@ -196,10 +263,9 @@ export default function AdminJadidlarPage() {
                                             <button key={lang.key} type="button" onClick={() => setActiveLang(lang.key as any)} style={{
                                                 padding: '10px 24px', border: 'none',
                                                 borderBottom: activeLang === lang.key ? '2px solid var(--navy)' : '2px solid transparent',
-                                                marginBottom: '-2px', background: 'none', cursor: 'pointer',
+                                                background: 'none', cursor: 'pointer',
                                                 fontFamily: 'var(--font-mono)', fontSize: '13px',
                                                 color: activeLang === lang.key ? 'var(--navy-dark)' : 'var(--gray-400)',
-                                                fontWeight: activeLang === lang.key ? '600' : '400',
                                                 display: 'flex', alignItems: 'center', gap: '8px',
                                             }}>
                                                 <span>{lang.flag}</span><span>{lang.label}</span>
@@ -208,31 +274,25 @@ export default function AdminJadidlarPage() {
                                         )
                                     })}
                                 </div>
-                                <div style={{ background: 'rgba(27,58,107,0.02)', border: '1px solid rgba(27,58,107,0.08)', borderTop: 'none', borderRadius: '0 0 8px 8px', padding: '20px' }}>
-                                    {activeLang === 'uz' && (
-                                        <div style={{ marginBottom: '8px', fontSize: '12px', color: '#dc2626', fontFamily: 'var(--font-mono)' }}>* O'zbek tili majburiy</div>
-                                    )}
+                                <div style={{ background: 'rgba(27,58,107,0.02)', border: '1px solid rgba(27,58,107,0.08)', padding: '20px', borderRadius: '0 0 8px 8px' }}>
                                     <div style={{ marginBottom: '16px' }}>
                                         <label style={labelStyle}>Ism {activeLang === 'uz' ? '*' : '(ixtiyoriy)'}</label>
-                                        <input value={getLangField('name')} onChange={e => setLangField('name', e.target.value)} style={inputStyle}
-                                               placeholder={activeLang === 'uz' ? 'Abdulla Avloniy' : activeLang === 'ru' ? 'Абдулла Авлоний' : 'Abdulla Avloniy'} />
+                                        <input value={getLangField('name')} onChange={e => setLangField('name', e.target.value)} style={inputStyle} />
                                     </div>
                                     <div style={{ marginBottom: '16px' }}>
                                         <label style={labelStyle}>Unvon</label>
-                                        <input value={getLangField('title')} onChange={e => setLangField('title', e.target.value)} style={inputStyle}
-                                               placeholder={activeLang === 'uz' ? "Shoir, dramaturg, pedagog" : activeLang === 'ru' ? 'Поэт, драматург, педагог' : 'Poet, playwright, pedagogue'} />
+                                        <input value={getLangField('title')} onChange={e => setLangField('title', e.target.value)} style={inputStyle} />
                                     </div>
                                     <div>
                                         <label style={labelStyle}>Biografiya {activeLang === 'uz' ? '*' : '(ixtiyoriy)'}</label>
-                                        <textarea value={getLangField('bio')} onChange={e => setLangField('bio', e.target.value)} rows={6} style={{ ...inputStyle, resize: 'vertical' }}
-                                                  placeholder={activeLang === 'uz' ? "Jadid haqida batafsil ma'lumot..." : activeLang === 'ru' ? 'Подробная информация...' : 'Detailed information...'} />
+                                        <textarea value={getLangField('bio')} onChange={e => setLangField('bio', e.target.value)} rows={6} style={{ ...inputStyle, resize: 'vertical' }} />
                                     </div>
                                 </div>
                             </div>
 
                             <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
-                                <button type="button" onClick={handleCancel} className="btn-outline" style={{ cursor: 'pointer' }}>Bekor qilish</button>
-                                <button type="submit" disabled={saving} className="btn-primary" style={{ border: 'none', cursor: saving ? 'not-allowed' : 'pointer', opacity: saving ? 0.7 : 1 }}>
+                                <button type="button" onClick={handleCancel} className="btn-outline">Bekor qilish</button>
+                                <button type="submit" disabled={saving} className="btn-primary">
                                     {saving ? 'Saqlanmoqda...' : 'Saqlash'}
                                 </button>
                             </div>
@@ -240,44 +300,30 @@ export default function AdminJadidlarPage() {
                     </div>
                 )}
 
-                {/* FIGURES LIST */}
+                {/* LIST SECTION */}
                 {loading ? (
-                    <div style={{ textAlign: 'center', padding: '60px', color: 'var(--gray-600)' }}>Yuklanmoqda...</div>
-                ) : figures.length === 0 ? (
-                    <div style={{ textAlign: 'center', padding: '60px', color: 'var(--gray-600)' }}>Hali jadidlar qo'shilmagan</div>
+                    <div style={{ textAlign: 'center', padding: '60px' }}>Yuklanmoqda...</div>
                 ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                         {figures.map(item => (
                             <div key={item.id} style={{ background: '#fff', borderRadius: '12px', padding: '20px 24px', display: 'flex', alignItems: 'center', gap: '16px', border: '1px solid rgba(27,58,107,0.08)' }}>
-                                <div style={{ width: '60px', height: '60px', borderRadius: '8px', overflow: 'hidden', flexShrink: 0, background: 'linear-gradient(135deg, var(--navy-dark), var(--navy))' }}>
-                                    {item.imageUrl ? (
-                                        <img src={item.imageUrl} alt={item.nameUz} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                    ) : (
-                                        <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.3)', fontSize: '24px' }}>?</div>
-                                    )}
+                                <div style={{ width: '60px', height: '60px', borderRadius: '8px', overflow: 'hidden', background: '#eee' }}>
+                                    {item.imageUrl && <img src={item.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
                                 </div>
-                                <div style={{ flex: 1, minWidth: 0 }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-                                        <h3 style={{ fontSize: '16px', color: 'var(--navy-dark)', fontFamily: 'var(--font-display)' }}>{item.nameUz}</h3>
-                                        {item.featured && (
-                                            <span style={{ padding: '2px 8px', borderRadius: '10px', fontSize: '10px', fontFamily: 'var(--font-mono)', background: 'rgba(201,168,76,0.15)', color: 'var(--gold)' }}>FEATURED</span>
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                        <h3 style={{ fontSize: '16px', color: 'var(--navy-dark)' }}>{item.nameUz}</h3>
+                                        {item.featured && <span style={{ fontSize: '10px', color: 'var(--gold)', border: '1px solid', padding: '1px 5px', borderRadius: '4px' }}>FEATURED</span>}
+                                        <span style={{ fontSize: '12px', color: 'var(--gray-400)' }}>{item.years}</span>
+                                        {item.figureWorks && item.figureWorks.length > 0 && (
+                                            <span style={{ fontSize: '11px', color: '#16a34a' }}>📄 {item.figureWorks.length} ta asar</span>
                                         )}
-                                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--gray-400)' }}>{item.years}</span>
-                                        {item.pdfUrl && <span style={{ fontSize: '11px', color: '#16a34a' }}>📄 PDF</span>}
-                                        <div style={{ display: 'flex', gap: '4px' }}>
-                                            {LANGS.map(lang => {
-                                                const hasName = (item as any)[`name${lang.key.charAt(0).toUpperCase() + lang.key.slice(1)}`]
-                                                return <span key={lang.key} style={{ fontSize: '14px', opacity: hasName ? 1 : 0.25 }}>{lang.flag}</span>
-                                            })}
-                                        </div>
                                     </div>
-                                    <div style={{ fontSize: '13px', color: 'var(--gray-600)', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
-                                        {item.titleUz || 'Unvon kiritilmagan'}
-                                    </div>
+                                    <div style={{ fontSize: '13px', color: 'var(--gray-600)' }}>{item.titleUz}</div>
                                 </div>
-                                <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
-                                    <button onClick={() => handleEdit(item)} style={{ padding: '8px 16px', background: 'rgba(27,58,107,0.08)', border: '1px solid rgba(27,58,107,0.15)', borderRadius: '6px', fontSize: '13px', color: 'var(--navy)', cursor: 'pointer' }}>Tahrirlash</button>
-                                    <button onClick={() => handleDelete(item.id)} style={{ padding: '8px 16px', background: 'rgba(220,38,38,0.08)', border: '1px solid rgba(220,38,38,0.2)', borderRadius: '6px', fontSize: '13px', color: '#dc2626', cursor: 'pointer' }}>O'chirish</button>
+                                <div style={{ display: 'flex', gap: '8px' }}>
+                                    <button onClick={() => handleEdit(item)} className="btn-edit-small">Tahrirlash</button>
+                                    <button onClick={() => handleDelete(item.id)} className="btn-delete-small">O'chirish</button>
                                 </div>
                             </div>
                         ))}
@@ -288,5 +334,5 @@ export default function AdminJadidlarPage() {
     )
 }
 
-const labelStyle: React.CSSProperties = { display: 'block', fontSize: '12px', fontFamily: 'var(--font-mono)', color: 'var(--gray-600)', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '6px' }
-const inputStyle: React.CSSProperties = { width: '100%', padding: '10px 14px', border: '1px solid rgba(27,58,107,0.2)', borderRadius: '8px', fontSize: '15px', fontFamily: 'var(--font-body)', color: 'var(--navy-dark)', outline: 'none', background: '#fff' }
+const labelStyle: React.CSSProperties = { display: 'block', fontSize: '12px', fontFamily: 'var(--font-mono)', color: 'var(--gray-600)', textTransform: 'uppercase', marginBottom: '6px' }
+const inputStyle: React.CSSProperties = { width: '100%', padding: '10px 14px', border: '1px solid rgba(27,58,107,0.2)', borderRadius: '8px', fontSize: '15px', color: 'var(--navy-dark)', outline: 'none' }

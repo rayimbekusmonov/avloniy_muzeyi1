@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import uz.rayimbek.avloniy_muzeyi.dto.request.HistoricalFigureRequest;
 import uz.rayimbek.avloniy_muzeyi.dto.response.HistoricalFigureResponse;
 import uz.rayimbek.avloniy_muzeyi.service.HistoricalFigureService;
+import java.util.Map;
 
 import java.util.List;
 
@@ -65,4 +66,33 @@ public class HistoricalFigureController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    // === ASARLAR (Works) ===
+
+    @GetMapping("/{figureId}/works")
+    public ResponseEntity<List<HistoricalFigureResponse.WorkItem>> getWorks(
+            @PathVariable Long figureId) {
+        return ResponseEntity.ok(service.getWorks(figureId));
+    }
+
+    @PostMapping("/{figureId}/works")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<HistoricalFigureResponse.WorkItem> addWork(
+            @PathVariable Long figureId,
+            @RequestBody Map<String, Object> body) {
+        String title = (String) body.get("title");
+        Integer year = body.get("year") != null ? ((Number) body.get("year")).intValue() : null;
+        String pdfUrl = (String) body.get("pdfUrl");
+        Integer sortOrder = body.get("sortOrder") != null ? ((Number) body.get("sortOrder")).intValue() : 0;
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(service.addWork(figureId, title, year, pdfUrl, sortOrder));
+    }
+
+    @DeleteMapping("/works/{workId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteWork(@PathVariable Long workId) {
+        service.deleteWork(workId);
+        return ResponseEntity.noContent().build();
+    }
+
 }

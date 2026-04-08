@@ -6,6 +6,8 @@ import uz.rayimbek.avloniy_muzeyi.dto.request.HistoricalFigureRequest;
 import uz.rayimbek.avloniy_muzeyi.dto.response.HistoricalFigureResponse;
 import uz.rayimbek.avloniy_muzeyi.entity.HistoricalFigure;
 import uz.rayimbek.avloniy_muzeyi.exception.ResourceNotFoundException;
+import uz.rayimbek.avloniy_muzeyi.repository.FigureWorkRepository;
+import uz.rayimbek.avloniy_muzeyi.entity.FigureWork;
 import uz.rayimbek.avloniy_muzeyi.repository.HistoricalFigureRepository;
 
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 public class HistoricalFigureService {
 
     private final HistoricalFigureRepository repository;
+    private final FigureWorkRepository figureWorkRepository;
 
     // PUBLIC — frontend uchun (locale bo'yicha)
     public List<HistoricalFigureResponse> getAllPublic(String locale) {
@@ -40,7 +43,7 @@ public class HistoricalFigureService {
     }
 
     public HistoricalFigureResponse create(HistoricalFigureRequest request) {
-        // Agar featured=true bo'lsa, eskisini false qilish
+        // 1. Agar yangi shaxs "featured" bo'lsa, eskisini false qilish
         if (Boolean.TRUE.equals(request.getFeatured())) {
             repository.findByFeaturedTrue().ifPresent(old -> {
                 old.setFeatured(false);
@@ -48,6 +51,7 @@ public class HistoricalFigureService {
             });
         }
 
+        // 2. Yangi obyektni yaratish (Lombok Builder yordamida)
         HistoricalFigure figure = HistoricalFigure.builder()
                 .nameUz(request.getNameUz())
                 .nameRu(request.getNameRu())
@@ -66,7 +70,9 @@ public class HistoricalFigureService {
                 .sortOrder(request.getSortOrder() != null ? request.getSortOrder() : 0)
                 .build();
 
-        return toAdminResponse(repository.save(figure));
+        // 3. Saqlash va natijani qaytarish
+        HistoricalFigure saved = repository.save(figure);
+        return toAdminResponse(saved);
     }
 
     public HistoricalFigureResponse update(Long id, HistoricalFigureRequest request) {
@@ -140,6 +146,15 @@ public class HistoricalFigureService {
                 .featured(f.getFeatured())
                 .sortOrder(f.getSortOrder())
                 .createdAt(f.getCreatedAt())
+                .figureWorks(f.getFigureWorks() != null ? f.getFigureWorks().stream()
+                        .map(w -> HistoricalFigureResponse.WorkItem.builder()
+                                .id(w.getId())
+                                .title(w.getTitle())
+                                .year(w.getYear())
+                                .pdfUrl(w.getPdfUrl())
+                                .sortOrder(w.getSortOrder())
+                                .build())
+                        .collect(Collectors.toList()) : List.of())
                 .build();
     }
 
@@ -165,6 +180,61 @@ public class HistoricalFigureService {
                 .featured(f.getFeatured())
                 .sortOrder(f.getSortOrder())
                 .createdAt(f.getCreatedAt())
+                .figureWorks(f.getFigureWorks() != null ? f.getFigureWorks().stream()
+                        .map(w -> HistoricalFigureResponse.WorkItem.builder()
+                                .id(w.getId())
+                                .title(w.getTitle())
+                                .year(w.getYear())
+                                .pdfUrl(w.getPdfUrl())
+                                .sortOrder(w.getSortOrder())
+                                .build())
+                        .collect(Collectors.toList()) : List.of())
                 .build();
     }
+
+    // === ASARLAR ===
+
+    public List<HistoricalFigureResponse.WorkItem> getWorks(Long figureId) {
+        return figureWorkRepository.findAllByFigureIdOrderBySortOrderAsc(figureId)
+                .stream()
+                .map(w -> HistoricalFigureResponse.WorkItem.builder()
+                        .id(w.getId())
+                        .title(w.getTitle())
+                        .year(w.getYear())
+                        .pdfUrl(w.getPdfUrl())
+                        .sortOrder(w.getSortOrder())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    public HistoricalFigureResponse.WorkItem addWork(Long figureId, String title, Integer year, String pdfUrl, Integer sortOrder) {
+        HistoricalFigure figure = repository.findById(figureId)
+                .orElseThrow(() -> new ResourceNotFoundException("Jadid", figureId));
+
+        FigureWork work = FigureWork.builder()
+                .figure(figure)
+                .title(title)
+                .year(year)
+                .pdfUrl(pdfUrl)
+                .sortOrder(sortOrder != null ? sortOrder : 0)
+                .build();
+
+        FigureWork saved = figureWorkRepository.save(work);
+
+        return HistoricalFigureResponse.WorkItem.builder()
+                .id(saved.getId())
+                .title(saved.getTitle())
+                .year(saved.getYear())
+                .pdfUrl(saved.getPdfUrl())
+                .sortOrder(saved.getSortOrder())
+                .build();
+    }
+
+    public void deleteWork(Long workId) {
+        if (!figureWorkRepository.existsById(workId)) {
+            throw new ResourceNotFoundException("Asar", workId);
+        }
+        figureWorkRepository.deleteById(workId);
+    }
+
 }

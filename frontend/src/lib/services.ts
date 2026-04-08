@@ -95,5 +95,11 @@ export const figureService = {
 
     delete: (id: number) =>
         api.delete<void>(`/api/figures/${id}`),
+
+    addWork: (figureId: number, data: { title: string; year?: number; pdfUrl: string; sortOrder?: number }) =>
+        api.post<any>(`/api/figures/${figureId}/works`, data),
+
+    deleteWork: (workId: number) =>
+        api.delete<void>(`/api/figures/works/${workId}`),
 };
 
