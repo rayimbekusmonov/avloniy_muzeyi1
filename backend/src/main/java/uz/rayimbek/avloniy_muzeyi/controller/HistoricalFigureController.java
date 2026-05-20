@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import uz.rayimbek.avloniy_muzeyi.dto.request.HistoricalFigureRequest;
 import uz.rayimbek.avloniy_muzeyi.dto.response.HistoricalFigureResponse;
 import uz.rayimbek.avloniy_muzeyi.service.HistoricalFigureService;
-import java.util.Map;
 
 import java.util.List;
 
@@ -36,7 +35,7 @@ public class HistoricalFigureController {
         return ResponseEntity.ok(service.getByIdPublic(id, locale));
     }
 
-    // ADMIN — barcha til maydonlari bilan
+    // ADMIN — barcha tillar jamlanmasi bilan
     @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<HistoricalFigureResponse>> getAllForAdmin() {
@@ -71,21 +70,18 @@ public class HistoricalFigureController {
 
     @GetMapping("/{figureId}/works")
     public ResponseEntity<List<HistoricalFigureResponse.WorkItem>> getWorks(
-            @PathVariable Long figureId) {
-        return ResponseEntity.ok(service.getWorks(figureId));
+            @PathVariable Long figureId,
+            @RequestParam(defaultValue = "uz") String locale) {
+        return ResponseEntity.ok(service.getWorks(figureId, locale));
     }
 
     @PostMapping("/{figureId}/works")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<HistoricalFigureResponse.WorkItem> addWork(
             @PathVariable Long figureId,
-            @RequestBody Map<String, Object> body) {
-        String title = (String) body.get("title");
-        Integer year = body.get("year") != null ? ((Number) body.get("year")).intValue() : null;
-        String pdfUrl = (String) body.get("pdfUrl");
-        Integer sortOrder = body.get("sortOrder") != null ? ((Number) body.get("sortOrder")).intValue() : 0;
+            @Valid @RequestBody HistoricalFigureRequest.WorkRequest workRequest) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(service.addWork(figureId, title, year, pdfUrl, sortOrder));
+                .body(service.addWork(figureId, workRequest));
     }
 
     @DeleteMapping("/works/{workId}")
@@ -94,5 +90,4 @@ public class HistoricalFigureController {
         service.deleteWork(workId);
         return ResponseEntity.noContent().build();
     }
-
 }

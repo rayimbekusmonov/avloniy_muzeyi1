@@ -19,6 +19,16 @@ public class HistoricalFigureRequest {
     private String titleRu;
     private String titleEn;
 
+    // Yangi qo'shilgan maydonlar: Hudud / Maktab
+    private String regionUz;
+    private String regionRu;
+    private String regionEn;
+
+    // Yangi qo'shilgan maydonlar: Mashhur shior
+    private String mottoUz;
+    private String mottoRu;
+    private String mottoEn;
+
     @NotBlank(message = "O'zbekcha biografiya kiritilishi shart")
     private String bioUz;
     private String bioRu;
@@ -28,8 +38,26 @@ public class HistoricalFigureRequest {
     private String years;
 
     private String imageUrl;
-    private String works;
-    private String pdfUrl;
     private Boolean featured = false;
     private Integer sortOrder = 0;
+
+    // Asarlar qo'shish uchun ichki DTO klass (Asar qo'shish formalari uchun)
+    @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+    public static class WorkRequest {
+        @NotBlank(message = "Asar turi (OWN_WORK yoki ABOUT_WORK) kiritilishi shart")
+        private String workType;
+
+        @NotBlank(message = "O'zbekcha asar nomi kiritilishi shart")
+        private String titleUz;
+        private String titleRu;
+        private String titleEn;
+
+        private String descriptionUz;
+        private String descriptionRu;
+        private String descriptionEn;
+
+        private Integer year;
+        private String pdfUrl;
+        private Integer sortOrder = 0;
+    }
 }

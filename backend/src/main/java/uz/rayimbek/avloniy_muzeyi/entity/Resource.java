@@ -55,5 +55,3 @@ public class Resource {
         EBOOK, ARTICLE, RESEARCH
     }
 }
-
-//bu yuklash uchun fayl

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,49 +19,50 @@ public class HistoricalFigure {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Ism — 3 tilda
+    // Ism-sharifi (3 tilda)
     @Column(nullable = false)
     private String nameUz;
-
     private String nameRu;
     private String nameEn;
 
-    // Unvon — 3 tilda (shoir, dramaturg, ...)
+    // Faoliyat yo'nalishi / Unvoni (3 tilda - Masalan: shoir, dramaturg, siyosatchi)
     @Column(columnDefinition = "TEXT")
     private String titleUz;
-
     @Column(columnDefinition = "TEXT")
     private String titleRu;
-
     @Column(columnDefinition = "TEXT")
     private String titleEn;
 
-    // Biografiya — 3 tilda
+    // Yashagan hududi / Jadidlik maktabi (3 tilda - Masalan: Buxoro, Toshkent, Xiva)
+    private String regionUz;
+    private String regionRu;
+    private String regionEn;
+
+    // Mashhur shiori yoki g'oyasi (3 tilda - Masalan: "Haq olinur, berilmas!")
+    @Column(columnDefinition = "TEXT")
+    private String mottoUz;
+    @Column(columnDefinition = "TEXT")
+    private String mottoRu;
+    @Column(columnDefinition = "TEXT")
+    private String mottoEn;
+
+    // To'liq Biografiyasi (3 tilda)
     @Column(columnDefinition = "TEXT", nullable = false)
     private String bioUz;
-
     @Column(columnDefinition = "TEXT")
     private String bioRu;
-
     @Column(columnDefinition = "TEXT")
     private String bioEn;
 
+    // Yashagan yillari (Masalan: "1875 — 1938")
     @Column(nullable = false)
     private String years;
 
-    // Rasm URL
+    // Asosiy profil rasmi URL
     @Column(name = "image_url")
     private String imageUrl;
 
-    // Asosiy asarlari (oddiy matn, vergul bilan ajratilgan)
-    @Column(columnDefinition = "TEXT")
-    private String works;
-
-    // PDF kitob (ixtiyoriy)
-    @Column(name = "pdf_url")
-    private String pdfUrl;
-
-    // Markaziy shaxs belgisi (Avloniy uchun)
+    // Tanlangan jadid (Bosh sahifada alohida vizual ajralib turishi uchun)
     @Column(nullable = false)
     private Boolean featured = false;
 
@@ -87,7 +87,9 @@ public class HistoricalFigure {
         this.updatedAt = LocalDateTime.now();
     }
 
+    // Jadidga tegishli barcha asarlar ro'yxati (o'zi yozgan va u haqidagi)
     @OneToMany(mappedBy = "figure", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("sortOrder ASC")
+    @Builder.Default
     private List<FigureWork> figureWorks = new ArrayList<>();
 }
