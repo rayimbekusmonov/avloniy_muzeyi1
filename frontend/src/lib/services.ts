@@ -76,29 +76,61 @@ export const contactService = {
 };
 
 export const figureService = {
-    // Frontend: locale bo'yicha
+    // Frontend uchun: Tanlangan til (locale) bo'yicha ma'lumotlarni olish
     getAll: (locale = 'uz') =>
         api.get<HistoricalFigure[]>(`/api/figures?locale=${locale}`),
 
     getById: (id: number, locale = 'uz') =>
         api.get<HistoricalFigure>(`/api/figures/${id}?locale=${locale}`),
 
-    // Admin: barcha til maydonlari
+    // Admin panel uchun: Barcha tillardagi maydonlar bilan birga olish
     getAllForAdmin: () =>
         api.get<HistoricalFigure[]>('/api/figures/all'),
 
-    create: (data: Omit<HistoricalFigure, 'id' | 'name' | 'title' | 'bio' | 'createdAt'>) =>
+    // Yangi jadid yaratish (Request DTO ga mos maydonlar bilan)
+    create: (data: {
+        nameUz: string; nameRu?: string; nameEn?: string;
+        titleUz?: string; titleRu?: string; titleEn?: string;
+        regionUz?: string; regionRu?: string; regionEn?: string;
+        mottoUz?: string; mottoRu?: string; mottoEn?: string;
+        bioUz: string; bioRu?: string; bioEn?: string;
+        years: string; imageUrl?: string;
+        featured?: boolean; sortOrder?: number;
+    }) =>
         api.post<HistoricalFigure>('/api/figures', data),
 
-    update: (id: number, data: Omit<HistoricalFigure, 'id' | 'name' | 'title' | 'bio' | 'createdAt'>) =>
+    // Jadid ma'lumotlarini yangilash
+    update: (id: number, data: {
+        nameUz: string; nameRu?: string; nameEn?: string;
+        titleUz?: string; titleRu?: string; titleEn?: string;
+        regionUz?: string; regionRu?: string; regionEn?: string;
+        mottoUz?: string; mottoRu?: string; mottoEn?: string;
+        bioUz: string; bioRu?: string; bioEn?: string;
+        years: string; imageUrl?: string;
+        featured?: boolean; sortOrder?: number;
+    }) =>
         api.put<HistoricalFigure>(`/api/figures/${id}`, data),
 
+    // Jadidni o'chirish
     delete: (id: number) =>
         api.delete<void>(`/api/figures/${id}`),
 
-    addWork: (figureId: number, data: { title: string; year?: number; pdfUrl: string; sortOrder?: number }) =>
+    // --- JADID ASARLARI (WORKS) BILAN ISHLASH ---
+
+    // Jadidning barcha asarlarini olish
+    getWorks: (figureId: number, locale = 'uz') =>
+        api.get<HistoricalFigure['figureWorks']>(`/api/figures/${figureId}/works?locale=${locale}`),
+
+    // Yangi asar qo'shish (Toifa ajratilgan: OWN_WORK / ABOUT_WORK)
+    addWork: (figureId: number, data: {
+        workType: 'OWN_WORK' | 'ABOUT_WORK';
+        titleUz: string; titleRu?: string; titleEn?: string;
+        descriptionUz?: string; descriptionRu?: string; descriptionEn?: string;
+        year?: number; pdfUrl?: string; sortOrder?: number;
+    }) =>
         api.post<any>(`/api/figures/${figureId}/works`, data),
 
+    // Asarni o'chirish
     deleteWork: (workId: number) =>
         api.delete<void>(`/api/figures/works/${workId}`),
 };
