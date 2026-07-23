@@ -7,6 +7,8 @@ export const authService = {
 
     setup: (username: string, password: string) =>
         api.post<{ message: string }>('/api/auth/setup', { username, password }),
+    getStatus: () =>
+        api.get<{ hasAdmin: boolean }>('/api/auth/status'),
 };
 
 // News

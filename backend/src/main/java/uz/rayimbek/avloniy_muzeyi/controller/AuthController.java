@@ -22,6 +22,11 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(request));
     }
 
+    @GetMapping("/status")
+    public ResponseEntity<Map<String, Object>> status() {
+        return ResponseEntity.ok(Map.of("hasAdmin", authService.hasAdmin()));
+    }
+
     /**
      * Birinchi admin yaratish uchun.
      * Faqat hech qanday admin mavjud bo'lmaganda ishlaydi.

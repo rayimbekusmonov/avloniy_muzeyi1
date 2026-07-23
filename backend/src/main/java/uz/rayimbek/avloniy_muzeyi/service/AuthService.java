@@ -57,4 +57,8 @@ public class AuthService {
 
         userRepository.save(admin);
     }
+
+    public boolean hasAdmin() {
+        return userRepository.count() > 0;
+    }
 }
