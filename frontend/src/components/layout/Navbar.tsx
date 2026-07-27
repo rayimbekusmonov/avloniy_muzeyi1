@@ -6,10 +6,41 @@ import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 
+// Modern Vector SVG Country Flag Icons (100% Cross-Platform Compatible for Windows, iOS, Android, Mac, Linux)
+const FlagUZ = () => (
+    <svg width="20" height="20" viewBox="0 0 32 32" fill="none" style={{ borderRadius: '50%', overflow: 'hidden', flexShrink: 0, border: '1px solid rgba(255,255,255,0.25)', boxShadow: '0 2px 6px rgba(0,0,0,0.3)' }}>
+        <rect width="32" height="32" fill="#0099B5"/>
+        <rect y="10.5" width="32" height="11" fill="#FFFFFF"/>
+        <rect y="21" width="32" height="11" fill="#1EB53A"/>
+        <rect y="10" width="32" height="1" fill="#CE1126"/>
+        <rect y="21" width="32" height="1" fill="#CE1126"/>
+        <circle cx="7" cy="5.5" r="3" fill="#FFFFFF"/>
+        <circle cx="8" cy="5.5" r="2.5" fill="#0099B5"/>
+    </svg>
+)
+
+const FlagRU = () => (
+    <svg width="20" height="20" viewBox="0 0 32 32" fill="none" style={{ borderRadius: '50%', overflow: 'hidden', flexShrink: 0, border: '1px solid rgba(255,255,255,0.25)', boxShadow: '0 2px 6px rgba(0,0,0,0.3)' }}>
+        <rect width="32" height="10.6" fill="#FFFFFF"/>
+        <rect y="10.6" width="32" height="10.7" fill="#0039A6"/>
+        <rect y="21.3" width="32" height="10.7" fill="#D52B1E"/>
+    </svg>
+)
+
+const FlagEN = () => (
+    <svg width="20" height="20" viewBox="0 0 32 32" fill="none" style={{ borderRadius: '50%', overflow: 'hidden', flexShrink: 0, border: '1px solid rgba(255,255,255,0.25)', boxShadow: '0 2px 6px rgba(0,0,0,0.3)' }}>
+        <rect width="32" height="32" fill="#00247D"/>
+        <path d="M0 0 L32 32 M32 0 L0 32" stroke="#FFFFFF" strokeWidth="4"/>
+        <path d="M0 0 L32 32 M32 0 L0 32" stroke="#CF142B" strokeWidth="2"/>
+        <path d="M16 0 V32 M0 16 H32" stroke="#FFFFFF" strokeWidth="6"/>
+        <path d="M16 0 V32 M0 16 H32" stroke="#CF142B" strokeWidth="3.5"/>
+    </svg>
+)
+
 const LANGUAGES = [
-    { code: 'uz', name: "O'zbekcha", flag: '🇺🇿', short: 'UZ' },
-    { code: 'ru', name: 'Русский', flag: '🇷🇺', short: 'RU' },
-    { code: 'en', name: 'English', flag: '🇬🇧', short: 'EN' },
+    { code: 'uz', name: "O'zbekcha", flagComponent: <FlagUZ />, short: 'UZ' },
+    { code: 'ru', name: 'Русский', flagComponent: <FlagRU />, short: 'RU' },
+    { code: 'en', name: 'English', flagComponent: <FlagEN />, short: 'EN' },
 ]
 
 export default function Navbar() {
@@ -29,7 +60,6 @@ export default function Navbar() {
         return () => window.removeEventListener('scroll', onScroll)
     }, [])
 
-    // Click outside handler for language dropdown
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -82,7 +112,7 @@ export default function Navbar() {
         }}>
             <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
 
-                {/* Logo with Zoomed Center Circle */}
+                {/* Logo */}
                 <Link href={`/${locale}`} style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
                     <div style={{
                         width: 48,
@@ -129,7 +159,7 @@ export default function Navbar() {
                     </div>
                 </Link>
 
-                {/* Desktop Links (Hidden on mobile via CSS) */}
+                {/* Desktop Nav Links */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }} className="nav-links">
                     {navLinks.map(link => (
                         <Link
@@ -152,18 +182,18 @@ export default function Navbar() {
                     ))}
                 </div>
 
-                {/* Right Action Bar: Language Dropdown + Mobile Burger */}
+                {/* Right Action Bar: SVG Flag Language Dropdown + Mobile Burger */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     
-                    {/* LANGUAGE DROPDOWN (Stays ON MAIN NAVBAR even on mobile phone screens) */}
+                    {/* LANGUAGE DROPDOWN (Stays on main bar on mobile) */}
                     <div ref={dropdownRef} style={{ position: 'relative' }} className="locale-dropdown">
                         <button
                             onClick={() => setLangDropdownOpen(!langDropdownOpen)}
                             style={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                gap: '6px',
-                                padding: '6px 12px',
+                                gap: '8px',
+                                padding: '6px 14px',
                                 borderRadius: '8px',
                                 border: '1px solid rgba(201,168,76,0.4)',
                                 background: 'rgba(201,168,76,0.15)',
@@ -176,9 +206,11 @@ export default function Navbar() {
                                 boxShadow: '0 2px 10px rgba(0,0,0,0.2)'
                             }}
                         >
-                            <span style={{ fontSize: '16px' }}>{currentLang.flag}</span>
+                            {currentLang.flagComponent}
                             <span>{currentLang.short}</span>
-                            <span style={{ fontSize: '10px', transition: 'transform 0.2s ease', transform: langDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>▼</span>
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition: 'transform 0.2s ease', transform: langDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
                         </button>
 
                         {/* Dropdown Menu */}
@@ -187,7 +219,7 @@ export default function Navbar() {
                                 position: 'absolute',
                                 top: 'calc(100% + 8px)',
                                 right: 0,
-                                width: '150px',
+                                width: '155px',
                                 background: 'rgba(6,29,21,0.98)',
                                 border: '1px solid rgba(201,168,76,0.35)',
                                 borderRadius: '10px',
@@ -233,11 +265,15 @@ export default function Navbar() {
                                             }
                                         }}
                                     >
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                            <span style={{ fontSize: '16px' }}>{lang.flag}</span>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                            {lang.flagComponent}
                                             <span>{lang.name}</span>
                                         </div>
-                                        {locale === lang.code && <span style={{ color: '#C9A84C', fontSize: '12px' }}>✓</span>}
+                                        {locale === lang.code && (
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                                <polyline points="20 6 9 17 4 12"/>
+                                            </svg>
+                                        )}
                                     </button>
                                 ))}
                             </div>
@@ -295,7 +331,7 @@ export default function Navbar() {
                 </div>
             </div>
 
-            {/* Mobile Hamburger Menu Drawer (All navigation links inside drawer) */}
+            {/* Mobile Hamburger Menu Drawer */}
             {menuOpen && (
                 <div style={{
                     background: 'rgba(6,29,21,0.98)',

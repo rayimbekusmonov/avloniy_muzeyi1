@@ -6,20 +6,20 @@ import { useLocale } from 'next-intl'
 import { figureService } from '@/lib/services'
 import { HistoricalFigure } from '@/lib/api'
 
-// SVG Icons
+// Modernized Vector SVG Icons
 const Icons = {
-    Pen: () => (
+    Feather: () => (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+            <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L3 13v5h5l9.24-9.24z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/>
         </svg>
     ),
     Search: () => (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
         </svg>
     ),
     Person: () => (
-        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
         </svg>
     ),
@@ -29,14 +29,13 @@ const Icons = {
         </svg>
     ),
     Book: () => (
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
         </svg>
     ),
     ArrowRight: () => (
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            <path d="M7 17 17 7"/><path d="M7 7h10v10"/>
         </svg>
     )
 }
@@ -117,7 +116,7 @@ export default function JadidlarPage() {
                         color: '#C9A84C', fontFamily: 'var(--font-mono)', fontSize: '12px',
                         letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '16px'
                     }}>
-                        <Icons.Pen /> {t.label}
+                        <Icons.Feather /> {t.label}
                     </div>
                     <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '42px', color: '#ffffff', fontWeight: '700', marginBottom: '12px' }}>
                         {t.h1a}<span style={{ color: '#C9A84C' }}>{t.h1b}</span>
@@ -288,7 +287,7 @@ export default function JadidlarPage() {
                                                 <img src={jadid.imageUrl} alt={jadid.name} style={{ width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(201,168,76,0.4)' }} />
                                             ) : (
                                                 <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(201,168,76,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#C9A84C' }}>
-                                                    <Icons.Pen />
+                                                    <Icons.Feather />
                                                 </div>
                                             )}
                                             {jadid.region && (
