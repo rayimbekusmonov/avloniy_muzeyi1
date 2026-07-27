@@ -16,7 +16,7 @@ export const MOCK_JADIDS: HistoricalFigure[] = [
         title: "Shoir, dramaturg, pedagog, matbuot asoschisi",
         bio: "Abdulla Avloniy — XX asr boshidagi o'zbek ma'rifatparvarlik va jadidchilik harakatining eng ko'zga ko'ringan vakillaridan biri. Toshkentda yangi usul maktablari, 'Shuhrat', 'Taraqqiy', 'Osiyo' gazetalariga asos solgan. Uning 'Turkiy Guliston yoxud axloq' asari milliy pedagogikamiz durdonasidir.",
         years: "1878–1934",
-        imageUrl: "/avatars/avloniy.jpg",
+        imageUrl: "/jadidlar/avloniy.jpg",
         works: "Turkiy Guliston yoxud axloq, Muallimi soniy, Adabiyot yoxud milliy she'rlar",
         pdfUrl: "/books/turkiy_guliston.pdf",
         featured: true,
@@ -33,15 +33,13 @@ export const MOCK_JADIDS: HistoricalFigure[] = [
             { year: "1934", title: "Abadiyat", desc: "Toshkentda vafot etdi va Botkin qabristoniga dafn etildi." }
         ],
         galleryPhotos: [
-            { title: "Abdulla Avloniy shaxsiy surati (1920)", url: "/gallery/avloniy_1.jpg" },
-            { title: "Yangi usul maktabi o'quvchilari bilan (1914)", url: "/gallery/avloniy_2.jpg" },
+            { title: "Abdulla Avloniy shaxsiy surati (1920)", url: "/jadidlar/avloniy.jpg" },
             { title: "Turkiy Guliston kitobining birinchi nusxasi (1913)", url: "/gallery/avloniy_3.jpg" }
         ],
         figureWorks: [
             { id: 101, title: "Turkiy Guliston yoxud axloq", year: 1913, pdfUrl: "/books/turkiy_guliston.pdf", sortOrder: 1 },
             { id: 102, title: "Muallimi soniy (Ikkinchi muallim)", year: 1917, pdfUrl: "/books/muallimi_soniy.pdf", sortOrder: 2 },
-            { id: 103, title: "Adabiyot yoxud milliy she'rlar", year: 1909, pdfUrl: "/books/adabiyot.pdf", sortOrder: 3 },
-            { id: 104, title: "Pinxona dramalari to'plami", year: 1916, pdfUrl: "/books/pinxona.pdf", sortOrder: 4 }
+            { id: 103, title: "Adabiyot yoxud milliy she'rlar", year: 1909, pdfUrl: "/books/adabiyot.pdf", sortOrder: 3 }
         ]
     },
     {
@@ -59,31 +57,28 @@ export const MOCK_JADIDS: HistoricalFigure[] = [
         title: "Jadidchilik harakati sarvari, dramaturg, noshir",
         bio: "Mahmudxo'ja Behbudiy — Turkiston jadidchilik harakatining rahnamosi, publitsist, noshir va birinchi o'zbek dramasi 'Padarkush' muallifi. Samarqandda 'Samarqand' gazetasi va 'Oyna' jurnalini nashr etib, milliy o'zlikni anglashga ulkan hissa qo'shgan.",
         years: "1875–1919",
-        imageUrl: "/avatars/behbudiy.jpg",
+        imageUrl: "/jadidlar/behbudiy.jpg",
         works: "Padarkush, Oyna jurnali to'plami, Muntaxabi jugrofiyayi umumiy",
         pdfUrl: "/books/padarkush.pdf",
-        featured: false,
+        featured: true,
         sortOrder: 2,
         createdAt: "2026-01-01T00:00:00Z",
         region: "Samarqand",
         category: "Matbuot & Teatr",
         quote: "Haq olinadur, berilmaydur! Dunyoda turmoq uchun dunyoviy fan va ilm lozimdir.",
         timeline: [
-            { year: "1875", title: "Tavallud", desc: "Samarqand yaqinidagi BAXSHITEPA qishlog'ida tug'ilgan." },
+            { year: "1875", title: "Tavallud", desc: "Samarqand yaqinidagi Baxshitepa qishlog'ida tug'ilgan." },
             { year: "1903", title: "Maktablar harakati", desc: "Samarqandda yangi usul maktablarini tashkil qildi." },
             { year: "1911", title: "'Padarkush' dramasi", desc: "Birinchi o'zbek professional dramasi 'Padarkush'ni yozgan." },
             { year: "1913", title: "'Oyna' jurnali", desc: "'Oyna' jurnali va 'Samarqand' gazetasiga asos solgan." },
             { year: "1919", title: "Fojiali o'lim", desc: "Qarshi shahrida ma'rifat yo'lidagi kurashda halok bo'lgan." }
         ],
         galleryPhotos: [
-            { title: "Mahmudxo'ja Behbudiy portreti (1915)", url: "/gallery/behbudiy_1.jpg" },
-            { title: "Padarkush spektakli afrishasi (1914)", url: "/gallery/behbudiy_2.jpg" },
-            { title: "Oyna jurnali birinchi soni muqovasi (1913)", url: "/gallery/behbudiy_3.jpg" }
+            { title: "Mahmudxo'ja Behbudiy portreti (1915)", url: "/jadidlar/behbudiy.jpg" }
         ],
         figureWorks: [
             { id: 201, title: "Padarkush yoxud o'qimagan bolaning holi", year: 1911, pdfUrl: "/books/padarkush.pdf", sortOrder: 1 },
-            { id: 202, title: "Oyna jurnali maqolalar to'plami", year: 1913, pdfUrl: "/books/oyna.pdf", sortOrder: 2 },
-            { id: 203, title: "Muntaxabi jugrofiyayi umumiy", year: 1906, pdfUrl: "/books/jugrofiya.pdf", sortOrder: 3 }
+            { id: 202, title: "Oyna jurnali maqolalar to'plami", year: 1913, pdfUrl: "/books/oyna.pdf", sortOrder: 2 }
         ]
     },
     {
@@ -101,10 +96,10 @@ export const MOCK_JADIDS: HistoricalFigure[] = [
         title: "Toshkent jadidlarining yetakchisi, pedagog, jamoat arbobi",
         bio: "Munavvarqori Abdurrashidxonov — Toshkentdagi jadidchilik harakatining asoschisi va g'oyaviy rahnamosi. 'Xurshid', 'Najot' gazetalarini tashkil etgan, 'Jamiyati imdodiya' xayriya jamiyatiga hamda 'Turon' teatr truppasiga boshchilik qilgan.",
         years: "1878–1931",
-        imageUrl: "/avatars/munavvarqori.jpg",
+        imageUrl: "/jadidlar/munavvarqori.png",
         works: "Adibi soniy, Sabzavor, Tajvidul Qur'on",
         pdfUrl: "/books/adibi_soniy.pdf",
-        featured: false,
+        featured: true,
         sortOrder: 3,
         createdAt: "2026-01-01T00:00:00Z",
         region: "Toshkent",
@@ -114,17 +109,13 @@ export const MOCK_JADIDS: HistoricalFigure[] = [
             { year: "1878", title: "Tavallud", desc: "Toshkentning Shayxontohur dahasida tavallud topgan." },
             { year: "1901", title: "Birinchi maktab", desc: "Toshkentda o'z hovlisida birinchi jadid maktabini ochgan." },
             { year: "1906", title: "'Xurshid' gazetasi", desc: "'Xurshid' gazetasini chop eta boshlagan." },
-            { year: "1914", title: "'Turon' jamiyati", desc: "'Turon' jamiyati va teatr truppasini tuzgan." },
             { year: "1931", title: "Qatag'on", desc: "Moskvada qatag'on qurboni bo'lgan." }
         ],
         galleryPhotos: [
-            { title: "Munavvarqori Abdurrashidxonov surati (1917)", url: "/gallery/munavvarqori_1.jpg" },
-            { title: "Toshkent jadidlari majlisi (1918)", url: "/gallery/munavvarqori_2.jpg" }
+            { title: "Munavvarqori Abdurrashidxonov surati (1917)", url: "/jadidlar/munavvarqori.png" }
         ],
         figureWorks: [
-            { id: 301, title: "Adibi soniy", year: 1907, pdfUrl: "/books/adibi_soniy.pdf", sortOrder: 1 },
-            { id: 302, title: "Sabzavor (O'qish kitobi)", year: 1912, pdfUrl: "/books/sabzavor.pdf", sortOrder: 2 },
-            { id: 303, title: "Yer yuzi (Jugrofiya darsligi)", year: 1918, pdfUrl: "/books/yer_yuzi.pdf", sortOrder: 3 }
+            { id: 301, title: "Adibi soniy", year: 1907, pdfUrl: "/books/adibi_soniy.pdf", sortOrder: 1 }
         ]
     },
     {
@@ -142,10 +133,10 @@ export const MOCK_JADIDS: HistoricalFigure[] = [
         title: "Buyuk shoir, yozuvchi, tarjimon",
         bio: "Abdulhamid Sulaymon o'g'li Cho'lpon — XX asr o'zbek she'riyati va nasrining tengsiz namoyandasi. Uning 'Kecha va kunduz' romani hamda otashin she'rlari erkinlik, ma'rifat va milliy g'urur madhiyasi bo'lib qoldi.",
         years: "1897–1938",
-        imageUrl: "/avatars/cholpon.jpg",
+        imageUrl: "/jadidlar/cholpon.jpg",
         works: "Kecha va kunduz, Buloqlar, Uyg'onish, Yorqinoy",
         pdfUrl: "/books/kecha_va_kunduz.pdf",
-        featured: false,
+        featured: true,
         sortOrder: 4,
         createdAt: "2026-01-01T00:00:00Z",
         region: "Farg'ona",
@@ -153,19 +144,15 @@ export const MOCK_JADIDS: HistoricalFigure[] = [
         quote: "Go'zal Turkiston, senga ne bo'ldi? Yonar bag'ringizda alanga qayda?",
         timeline: [
             { year: "1897", title: "Tavallud", desc: "Andijon shahrida ziyoli oilada tug'ilgan." },
-            { year: "1914", title: "Ilk ijod", desc: "Birinchi she'rlari va maqolalarini matbuotda chop ettirgan." },
             { year: "1922", title: "'Uyg'onish' to'plami", desc: "Mashhur 'Uyg'onish' she'riy to'plami bosilib chiqqan." },
             { year: "1936", title: "'Kecha va kunduz'", desc: "O'zbek adabiyoti shoh romani 'Kecha va kunduz' nashr etilgan." },
-            { year: "1938", title: "Qatag'on", desc: "Toshkentda foljiatli tarzda qatag'on qilingan." }
+            { year: "1938", title: "Qatag'on", desc: "Toshkentda fojiali tarzda qatag'on qilingan." }
         ],
         galleryPhotos: [
-            { title: "Abdulhamid Cho'lpon surati (1930)", url: "/gallery/cholpon_1.jpg" },
-            { title: "Kecha va kunduz birinchi nashri muqovasi (1936)", url: "/gallery/cholpon_2.jpg" }
+            { title: "Abdulhamid Cho'lpon surati (1930)", url: "/jadidlar/cholpon.jpg" }
         ],
         figureWorks: [
-            { id: 401, title: "Kecha va kunduz (Roman)", year: 1936, pdfUrl: "/books/kecha_va_kunduz.pdf", sortOrder: 1 },
-            { id: 402, title: "Buloqlar (She'riy to'plam)", year: 1923, pdfUrl: "/books/buloqlar.pdf", sortOrder: 2 },
-            { id: 403, title: "Uyg'onish (She'riy to'plam)", year: 1922, pdfUrl: "/books/uygonish.pdf", sortOrder: 3 }
+            { id: 401, title: "Kecha va kunduz (Roman)", year: 1936, pdfUrl: "/books/kecha_va_kunduz.pdf", sortOrder: 1 }
         ]
     },
     {
@@ -174,7 +161,7 @@ export const MOCK_JADIDS: HistoricalFigure[] = [
         nameRu: "Абдурауф Фитрат",
         nameEn: "Abdurauf Fitrat",
         titleUz: "Olim, dramaturg, davlat va jamoat arbobi, akademik",
-        titleRu: "Учёный, драматург, государственный деятель, академик",
+        titleRu: "Учённый, драматург, государственный деятель, академик",
         titleEn: "Scholar, playwright, statesman, academician",
         bioUz: "Abdurauf Fitrat (1886–1938) — Buxoro jadidchilik harakatining yo'lboshchisi, o'zbek filologiyasi va adabiyotshunosligiga asos solgan buyuk aloma. Turkiy tillar, adabiyot tarixi va musiqa bo'yicha fundamental ilmiy asarlar muallifi.",
         bioRu: "Абдурауф Фитрат (1886–1938) — лидер движения джадидов Бухары, основоположник узбекской филологии. Автор фундаментальных трудов по языкознанию, литературе и музыке.",
@@ -183,10 +170,10 @@ export const MOCK_JADIDS: HistoricalFigure[] = [
         title: "Olim, dramaturg, davlat va jamoat arbobi, akademik",
         bio: "Abdurauf Fitrat — Buxoro jadidchilik harakatining yo'lboshchisi, o'zbek filologiyasi va adabiyotshunosligiga asos solgan buyuk aloma. Turkiy tillar, adabiyot tarixi va musiqa bo'yicha fundamental ilmiy asarlar muallifi.",
         years: "1886–1938",
-        imageUrl: "/avatars/fitrat.jpg",
+        imageUrl: "/jadidlar/fitrat.jpg",
         works: "Munozara, Hind sayyohi bayonoti, O'zbek tili qoidalari, Abulfayzxon",
         pdfUrl: "/books/munozara.pdf",
-        featured: false,
+        featured: true,
         sortOrder: 5,
         createdAt: "2026-01-01T00:00:00Z",
         region: "Buxoro",
@@ -194,19 +181,14 @@ export const MOCK_JADIDS: HistoricalFigure[] = [
         quote: "Haqiqat egiladi, bukiladi, ammo sinmaydi! Millat ma'rifat bilan yashaydi.",
         timeline: [
             { year: "1886", title: "Tavallud", desc: "Buxoro shahrida tavallud topgan." },
-            { year: "1909", title: "Istanbul yillari", desc: "Istanbulda o'qib, 'Buxoro ta'limi maorif' jamiyatini tuzgan." },
             { year: "1911", title: "'Munozara' e'loni", desc: "Mashhur 'Munozara' asarini e'lon qilgan." },
-            { year: "1926", title: "Professor unvoni", desc: "Birinchi o'zbek professorlaridan biriga aylangan." },
             { year: "1938", title: "Qatag'on", desc: "Toshkentda qatag'on qilingan." }
         ],
         galleryPhotos: [
-            { title: "Abdurauf Fitrat surati (1925)", url: "/gallery/fitrat_1.jpg" },
-            { title: "O'zbek tili qoidalari darsligi muqovasi (1925)", url: "/gallery/fitrat_2.jpg" }
+            { title: "Abdurauf Fitrat surati (1925)", url: "/jadidlar/fitrat.jpg" }
         ],
         figureWorks: [
-            { id: 501, title: "Munozara", year: 1911, pdfUrl: "/books/munozara.pdf", sortOrder: 1 },
-            { id: 502, title: "Hind sayyohi bayonoti", year: 1912, pdfUrl: "/books/hind_sayyohi.pdf", sortOrder: 2 },
-            { id: 503, title: "Abulfayzxon (Tarixiy drama)", year: 1924, pdfUrl: "/books/abulfayzxon.pdf", sortOrder: 3 }
+            { id: 501, title: "Munozara", year: 1911, pdfUrl: "/books/munozara.pdf", sortOrder: 1 }
         ]
     },
     {
@@ -224,10 +206,10 @@ export const MOCK_JADIDS: HistoricalFigure[] = [
         title: "Tilshunos olim, ma'rifatparvar, noshir",
         bio: "Ishoqxon Junaydullaxo'ja o'g'li Ibrat — Namangan viloyatining To'raqo'rg'onida tug'ilgan buyuk ma'rifatparvar. U 6 ta tilni mukammal bilgan va o'z qishlog'ida bosmaxona ('Matbaai Ibratiya') tashkil etgan.",
         years: "1862–1937",
-        imageUrl: "/avatars/ibrat.jpg",
+        imageUrl: "/jadidlar/ibrat.jpg",
         works: "Lug'ati sitta-alsina, Jame' ul-xutut, Tarixi Farg'ona",
         pdfUrl: "/books/lugati_sitta.pdf",
-        featured: false,
+        featured: true,
         sortOrder: 6,
         createdAt: "2026-01-01T00:00:00Z",
         region: "Farg'ona",
@@ -235,18 +217,14 @@ export const MOCK_JADIDS: HistoricalFigure[] = [
         quote: "Har bir millat o'z tilida sadosini topmog'i va dunyo ilmlarini egallamog'i lozim.",
         timeline: [
             { year: "1862", title: "Tavallud", desc: "To'raqo'rg'on tumanida tavallud topgan." },
-            { year: "1886", title: "Dunyo sayohati", desc: "Sharq va Yevropa mamlakatlariga sayohat qilib, tillar o'rgangan." },
-            { year: "1901", title: "Olti tilli lug'at", desc: "'Lug'ati sitta-alsina' (Olti tilli lug'at) asarini yaratgan." },
             { year: "1908", title: "Bosmaxona", desc: "To'raqo'rg'onda birinchi bosmaxonasini ishga tushirgan." },
             { year: "1937", title: "Qatag'on", desc: "Andijon qamoqxonasida vafot etgan." }
         ],
         galleryPhotos: [
-            { title: "Ishoqxon Ibrat shaxsiy surati (1925)", url: "/gallery/ibrat_1.jpg" },
-            { title: "Lug'ati sitta-alsina kitobi (1901)", url: "/gallery/ibrat_2.jpg" }
+            { title: "Ishoqxon Ibrat shaxsiy surati (1925)", url: "/jadidlar/ibrat.jpg" }
         ],
         figureWorks: [
-            { id: 601, title: "Lug'ati sitta-alsina (Olti tilli lug'at)", year: 1901, pdfUrl: "/books/lugati_sitta.pdf", sortOrder: 1 },
-            { id: 602, title: "Jame' ul-xutut (Yozuvlar to'plami)", year: 1912, pdfUrl: "/books/jame_ul_xutut.pdf", sortOrder: 2 }
+            { id: 601, title: "Lug'ati sitta-alsina (Olti tilli lug'at)", year: 1901, pdfUrl: "/books/lugati_sitta.pdf", sortOrder: 1 }
         ]
     },
     {
@@ -264,7 +242,7 @@ export const MOCK_JADIDS: HistoricalFigure[] = [
         title: "Shoir, tilshunos olim, jadid adabiyoti vakili",
         bio: "Elbek — o'zbek bolalar adabiyoti va folklorshunosligining ilk darg'alaridan biri. U jadid maktablari uchun ko'plab darsliklar va she'riy to'plamlar yaratgan.",
         years: "1898–1939",
-        imageUrl: "/avatars/elbek.jpg",
+        imageUrl: "/jadidlar/elbek.png",
         works: "Armug'on, Yozig'lar, Chirchiq bo'ylarida",
         pdfUrl: "/books/armugon.pdf",
         featured: false,
@@ -274,17 +252,122 @@ export const MOCK_JADIDS: HistoricalFigure[] = [
         category: "Adabiyot & Tilshunoslik",
         quote: "O'zbek tili — boy va jozibador til. Uni asramoq ham farz, ham qarzdir.",
         timeline: [
-            { year: "1898", title: "Tavallud", desc: "Toshkent viloyatining Bo'stonliq tumanida tug'ilgan." },
-            { year: "1917", title: "Jadidchilik harakati", desc: "Jadid matbuoti va ma'rifiy to'garaklarda faol qatnashgan." },
-            { year: "1921", title: "'Armug'on' to'plami", desc: "Ilk she'riy to'plamini nashr etgan." },
+            { year: "1898", title: "Tavallud", desc: "Bo'stonliq tumanida tug'ilgan." },
             { year: "1939", title: "Abadiyat", desc: "Qatag'on yillarida vafot etgan." }
         ],
         galleryPhotos: [
-            { title: "Elbek surati (1928)", url: "/gallery/elbek_1.jpg" }
+            { title: "Elbek surati (1928)", url: "/jadidlar/elbek.png" }
         ],
         figureWorks: [
-            { id: 701, title: "Armug'on (She'riy to'plam)", year: 1921, pdfUrl: "/books/armugon.pdf", sortOrder: 1 },
-            { id: 702, title: "Yozig'lar (O'qish darsligi)", year: 1923, pdfUrl: "/books/yoziglar.pdf", sortOrder: 2 }
+            { id: 701, title: "Armug'on (She'riy to'plam)", year: 1921, pdfUrl: "/books/armugon.pdf", sortOrder: 1 }
+        ]
+    },
+    {
+        id: 8,
+        nameUz: "Fayzulla Xo'jayev",
+        nameRu: "Файзулла Ходжаев",
+        nameEn: "Fayzulla Khodjayev",
+        titleUz: "Buxoro jadidlari yetakchisi, davlat va jamoat arbobi",
+        titleRu: "Лидер бухарских джадидов, государственный деятель",
+        titleEn: "Leader of Bukhara Jadids, statesman",
+        bioUz: "Fayzulla Xo'jayev (1896–1938) — Buxorodagi 'Yo'sh buxorolilar' jadidchilik harakatining rahnamosi va davlat arbobi. U milliy maorif va iqtisodiy islohotlarga ulkan hissa qo'shgan.",
+        bioRu: "Файзулла Ходжаев (1896–1938) — лидер движения «Младобухарцы», государственный и политический деятель.",
+        bioEn: "Fayzulla Khodjayev (1896–1938) — leader of the Young Bukharans movement and prominent statesman.",
+        name: "Fayzulla Xo'jayev",
+        title: "Buxoro jadidlari yetakchisi, davlat va jamoat arbobi",
+        bio: "Fayzulla Xo'jayev — Buxorodagi 'Yo'sh buxorolilar' jadidchilik harakatining rahnamosi va davlat arbobi. U milliy maorif va iqtisodiy islohotlarga ulkan hissa qo'shgan.",
+        years: "1896–1938",
+        imageUrl: "/jadidlar/fayzulla.jpg",
+        works: "Buxoro inqilobining tarixi, Tanlangan asarlar",
+        pdfUrl: "/books/buxoro_tarixi.pdf",
+        featured: false,
+        sortOrder: 8,
+        createdAt: "2026-01-01T00:00:00Z",
+        region: "Buxoro",
+        category: "Davlat & Jamiyat",
+        quote: "Buxoro va Turkiston xalqi ozod, ma'rifatli va mustaqil yashashga munosibdir.",
+        timeline: [
+            { year: "1896", title: "Tavallud", desc: "Buxoroning Goziyon mahallasida yirik tajir oilasida tug'ilgan." },
+            { year: "1917", title: "Yosh buxorolilar", desc: "'Yosh buxorolilar' partiyasi MK raisi etib saylangan." },
+            { year: "1938", title: "Qatag'on", desc: "Moskvada qatag'on etilgan." }
+        ],
+        galleryPhotos: [
+            { title: "Fayzulla Xo'jayev surati (1925)", url: "/jadidlar/fayzulla.jpg" }
+        ],
+        figureWorks: [
+            { id: 801, title: "Buxoro inqilobining tarixi manbalari", year: 1926, pdfUrl: "/books/buxoro_tarixi.pdf", sortOrder: 1 }
+        ]
+    },
+    {
+        id: 9,
+        nameUz: "Siddiqiy Ajziy",
+        nameRu: "Сиддикий Аджзи",
+        nameEn: "Siddiqiy Ajziy",
+        titleUz: "Shoir, ma'rifatparvar, tarjimon va pedagog",
+        titleRu: "Поэт, просветитель, переводчик и педагог",
+        titleEn: "Poet, enlightener, translator and educator",
+        bioUz: "Siddiqiy Ajziy (1864–1927) — Samarqand jadidchilik harakatining yirik namoyandalaridan biri. U jadid maktablari uchun darsliklar yaratgan, she'riy to'plamlar va ma'rifiy asarlar nashr etgan.",
+        bioRu: "Сиддикий Аджзи (1864–1927) — один из крупнейших представителей Самаркандского джадидизма.",
+        bioEn: "Siddiqiy Ajziy (1864–1927) — prominent representative of Samarqand Jadidism.",
+        name: "Siddiqiy Ajziy",
+        title: "Shoir, ma'rifatparvar, tarjimon va pedagog",
+        bio: "Siddiqiy Ajziy — Samarqand jadidchilik harakatining yirik namoyandalaridan biri. U jadid maktablari uchun darsliklar yaratgan, she'riy to'plamlar va ma'rifiy asarlar nashr etgan.",
+        years: "1864–1927",
+        imageUrl: "/jadidlar/ajziy.jpg",
+        works: "Mir'oti ibrat, Ganjinayi hikmat, Anjumani arva",
+        pdfUrl: "/books/miroti_ibrat.pdf",
+        featured: false,
+        sortOrder: 9,
+        createdAt: "2026-01-01T00:00:00Z",
+        region: "Samarqand",
+        category: "Adabiyot & Ta'lim",
+        quote: "Nodonlik va g'aflatdan qutulmoqning yakka chorasi — maktab va ma'rifatdir.",
+        timeline: [
+            { year: "1864", title: "Tavallud", desc: "Samarqand yaqinidagi Halvoyi qishlog'ida tug'ilgan." },
+            { year: "1903", title: "Jadid maktabi", desc: "Halvoyi qishlog'ida yangi usul jadid maktabini ochgan." },
+            { year: "1927", title: "Abadiyat", desc: "Samarqandda vafot etgan." }
+        ],
+        galleryPhotos: [
+            { title: "Siddiqiy Ajziy portreti (1920)", url: "/jadidlar/ajziy.jpg" }
+        ],
+        figureWorks: [
+            { id: 901, title: "Mir'oti ibrat", year: 1914, pdfUrl: "/books/miroti_ibrat.pdf", sortOrder: 1 }
+        ]
+    },
+    {
+        id: 10,
+        nameUz: "Hamza Hakimzoda Niyoziy",
+        nameRu: "Хамза Хакимзаде Ниязи",
+        nameEn: "Hamza Hakimzoda Niyoziy",
+        titleUz: "Shoir, dramaturg, kompozitor, ma'rifatparvar",
+        titleRu: "Поэт, драматург, композитор, просветитель",
+        titleEn: "Poet, playwright, composer, enlightener",
+        bioUz: "Hamza Hakimzoda Niyoziy (1889–1929) — Farg'ona vodiysidagi ma'rifatparvarlik harakati arbobi. Qo'qon va Marg'ilonda jadid maktablari va teatr truppalarini tashkil etgan.",
+        bioRu: "Хамза Хакимзаде Ниязи (1889–1929) — узбекский поэт, драматург, композитор, просветитель.",
+        bioEn: "Hamza Hakimzoda Niyoziy (1889–1929) — Uzbek poet, playwright, composer and educator.",
+        name: "Hamza Hakimzoda Niyoziy",
+        title: "Shoir, dramaturg, kompozitor, ma'rifatparvar",
+        bio: "Hamza Hakimzoda Niyoziy — Farg'ona vodiysidagi ma'rifatparvarlik harakati arbobi. Qo'qon va Marg'ilonda jadid maktablari va teatr truppalarini tashkil etgan.",
+        years: "1889–1929",
+        imageUrl: "/jadidlar/niyoziy.jpg",
+        works: "Maysaraning ishi, Boy ila xizmatchi, Yengil adabiyot",
+        pdfUrl: "/books/maysara.pdf",
+        featured: false,
+        sortOrder: 10,
+        createdAt: "2026-01-01T00:00:00Z",
+        region: "Farg'ona",
+        category: "Teatr & Musiqa",
+        quote: "O'qu, o'rgan, bilim ol, millat uchun xizmat qil!",
+        timeline: [
+            { year: "1889", title: "Tavallud", desc: "Qo'qon shahrida tabib oilasida tug'ilgan." },
+            { year: "1911", title: "Jadid maktabi", desc: "Qo'qon va Marg'ilonda bepul maktablar ochgan." },
+            { year: "1929", title: "Fojiali o'lim", desc: "Shohimardonda halok bo'lgan." }
+        ],
+        galleryPhotos: [
+            { title: "Hamza Hakimzoda Niyoziy surati (1924)", url: "/jadidlar/niyoziy.jpg" }
+        ],
+        figureWorks: [
+            { id: 1001, title: "Maysaraning ishi (Komediya)", year: 1926, pdfUrl: "/books/maysara.pdf", sortOrder: 1 }
         ]
     }
 ];

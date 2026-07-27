@@ -53,11 +53,14 @@ public class DataInitializer implements CommandLineRunner {
                     .bioRu("Абдулла Авлоний (1878–1934) — один из самых ярких представителей узбекского движения джадидов начала XX века.")
                     .bioEn("Abdulla Avloniy (1878–1934) — prominent Uzbek Jadid educator and writer.")
                     .years("1878–1934")
-                    .imageUrl("/avatars/avloniy.jpg")
+                    .imageUrl("/jadidlar/avloniy.jpg")
                     .works("Turkiy Guliston yoxud axloq, Muallimi soniy, Adabiyot yoxud milliy she'rlar")
                     .pdfUrl("/books/turkiy_guliston.pdf")
                     .featured(true)
                     .sortOrder(1)
+                    .region("Toshkent")
+                    .category("Ta'lim & Matbuot")
+                    .quote("Tarbiya biz uchun yo hayot — yo mamot, yo najot — yo halokat, yo saodat — yo falokat masalasidir.")
                     .build();
 
             HistoricalFigure behbudiy = HistoricalFigure.builder()
@@ -71,11 +74,14 @@ public class DataInitializer implements CommandLineRunner {
                     .bioRu("Махмудходжа Бехбудий (1875–1919) — признанный лидер джадидизма в Туркестане, издатель газеты «Самарканд» и журнала «Ойна».")
                     .bioEn("Mahmudkhoja Behbudiy (1875–1919) — leader of Turkestan Jadidism, founder of 'Oyna' magazine.")
                     .years("1875–1919")
-                    .imageUrl("/avatars/behbudiy.jpg")
+                    .imageUrl("/jadidlar/behbudiy.jpg")
                     .works("Padarkush, Oyna jurnali to'plami, Muntaxabi jugrofiyayi umumiy")
                     .pdfUrl("/books/padarkush.pdf")
-                    .featured(false)
+                    .featured(true)
                     .sortOrder(2)
+                    .region("Samarqand")
+                    .category("Matbuot & Teatr")
+                    .quote("Haq olinadur, berilmaydur! Dunyoda turmoq uchun dunyoviy fan va ilm lozimdir.")
                     .build();
 
             HistoricalFigure munavvarqori = HistoricalFigure.builder()
@@ -89,11 +95,14 @@ public class DataInitializer implements CommandLineRunner {
                     .bioRu("Мунавваркары Абдуррашидханов (1878–1931) — основатель и идеолог движения джадидов в Ташкенте.")
                     .bioEn("Munawwar Qari Abdurrashidkhanov (1878–1931) — founder and leader of Tashkent Jadidism.")
                     .years("1878–1931")
-                    .imageUrl("/avatars/munavvarqori.jpg")
+                    .imageUrl("/jadidlar/munavvarqori.png")
                     .works("Adibi soniy, Sabzavor, Tajvidul Qur'on")
                     .pdfUrl("/books/adibi_soniy.pdf")
-                    .featured(false)
+                    .featured(true)
                     .sortOrder(3)
+                    .region("Toshkent")
+                    .category("Ta'lim & Jamiyat")
+                    .quote("Bizni jaholat va nodonlik qorong'uligidan faqat ilm, ma'rifat va maktab qutqara oladi.")
                     .build();
 
             HistoricalFigure cholpon = HistoricalFigure.builder()
@@ -107,14 +116,35 @@ public class DataInitializer implements CommandLineRunner {
                     .bioRu("Абдулхамид Сулаймон огли Чулпан (1897–1938) — выдающийся узбекский поэт и прозаик.")
                     .bioEn("Abdulhamid Cholpon (1897–1938) — outstanding Uzbek poet and author of 'Night and Day'.")
                     .years("1897–1938")
-                    .imageUrl("/avatars/cholpon.jpg")
+                    .imageUrl("/jadidlar/cholpon.jpg")
                     .works("Kecha va kunduz, Buloqlar, Uyg'onish")
                     .pdfUrl("/books/kecha_va_kunduz.pdf")
-                    .featured(false)
+                    .featured(true)
                     .sortOrder(4)
+                    .region("Farg'ona")
+                    .category("Adabiyot & She'riyat")
+                    .quote("Go'zal Turkiston, senga ne bo'ldi? Yonar bag'ringizda alanga qayda?")
                     .build();
 
-            figureRepository.saveAll(java.util.List.of(avloniy, behbudiy, munavvarqori, cholpon));
+            HistoricalFigure fitrat = HistoricalFigure.builder()
+                    .nameUz("Abdurauf Fitrat")
+                    .nameRu("Абдурауф Фитрат")
+                    .nameEn("Abdurauf Fitrat")
+                    .titleUz("Olim, dramaturg, akademik")
+                    .titleRu("Учёный, драматург, академик")
+                    .titleEn("Scholar, playwright, academician")
+                    .bioUz("Abdurauf Fitrat (1886–1938) — Buxoro jadidchilik harakatining yo'lboshchisi va aloma.")
+                    .years("1886–1938")
+                    .imageUrl("/jadidlar/fitrat.jpg")
+                    .works("Munozara, Hind sayyohi bayonoti")
+                    .featured(true)
+                    .sortOrder(5)
+                    .region("Buxoro")
+                    .category("Adabiyot & Fan")
+                    .quote("Haqiqat egiladi, bukiladi, ammo sinmaydi! Millat ma'rifat bilan yashaydi.")
+                    .build();
+
+            figureRepository.saveAll(java.util.List.of(avloniy, behbudiy, munavvarqori, cholpon, fitrat));
             log.info("Boshlang'ich jadid ma'rifatparvarlari ma'lumotlar bazasiga saqlandi.");
         }
     }
