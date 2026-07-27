@@ -30,6 +30,11 @@ public class HistoricalFigureRequest {
     private String imageUrl;
     private String works;
     private String pdfUrl;
+    private String region;
+    private String category;
+    private String quote;
+    private String timelineJson;
+    private String galleryPhotosJson;
     private Boolean featured = false;
     private Integer sortOrder = 0;
 }

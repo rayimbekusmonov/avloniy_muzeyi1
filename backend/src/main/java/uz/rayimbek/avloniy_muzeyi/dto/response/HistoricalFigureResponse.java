@@ -36,6 +36,11 @@ public class HistoricalFigureResponse {
     private String imageUrl;
     private String works;
     private String pdfUrl;
+    private String region;
+    private String category;
+    private String quote;
+    private String timelineJson;
+    private String galleryPhotosJson;
     private Boolean featured;
     private Integer sortOrder;
     private LocalDateTime createdAt;

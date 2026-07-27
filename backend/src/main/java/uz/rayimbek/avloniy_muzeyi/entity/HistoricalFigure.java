@@ -62,7 +62,25 @@ public class HistoricalFigure {
     @Column(name = "pdf_url")
     private String pdfUrl;
 
-    // Markaziy shaxs belgisi (Avloniy uchun)
+    // Harakat markazi (Toshkent, Samarqand, Buxoro, Farg'ona)
+    private String region;
+
+    // Soha / Kategoriya (Ta'lim, Matbuot, Adabiyot, Teatr, Fan)
+    private String category;
+
+    // Mashhur hikmati / so'zi
+    @Column(columnDefinition = "TEXT")
+    private String quote;
+
+    // Tarixiy vaqt shajarasi (JSON matn shaklida)
+    @Column(columnDefinition = "TEXT")
+    private String timelineJson;
+
+    // Galereya rasmlari (JSON matn shaklida)
+    @Column(columnDefinition = "TEXT")
+    private String galleryPhotosJson;
+
+    // Markaziy shaxs belgisi (Avloniy yoxud yetakchilar uchun)
     @Column(nullable = false)
     private Boolean featured = false;
 

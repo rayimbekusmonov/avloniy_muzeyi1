@@ -66,6 +66,11 @@ public class HistoricalFigureService {
                 .imageUrl(request.getImageUrl())
                 .works(request.getWorks())
                 .pdfUrl(request.getPdfUrl())
+                .region(request.getRegion())
+                .category(request.getCategory())
+                .quote(request.getQuote())
+                .timelineJson(request.getTimelineJson())
+                .galleryPhotosJson(request.getGalleryPhotosJson())
                 .featured(request.getFeatured() != null ? request.getFeatured() : false)
                 .sortOrder(request.getSortOrder() != null ? request.getSortOrder() : 0)
                 .build();
@@ -102,6 +107,11 @@ public class HistoricalFigureService {
         figure.setImageUrl(request.getImageUrl());
         figure.setWorks(request.getWorks());
         figure.setPdfUrl(request.getPdfUrl());
+        figure.setRegion(request.getRegion());
+        figure.setCategory(request.getCategory());
+        figure.setQuote(request.getQuote());
+        figure.setTimelineJson(request.getTimelineJson());
+        figure.setGalleryPhotosJson(request.getGalleryPhotosJson());
         figure.setFeatured(request.getFeatured() != null ? request.getFeatured() : false);
         figure.setSortOrder(request.getSortOrder() != null ? request.getSortOrder() : 0);
 
@@ -143,6 +153,11 @@ public class HistoricalFigureService {
                 .imageUrl(f.getImageUrl())
                 .works(f.getWorks())
                 .pdfUrl(f.getPdfUrl())
+                .region(f.getRegion())
+                .category(f.getCategory())
+                .quote(f.getQuote())
+                .timelineJson(f.getTimelineJson())
+                .galleryPhotosJson(f.getGalleryPhotosJson())
                 .featured(f.getFeatured())
                 .sortOrder(f.getSortOrder())
                 .createdAt(f.getCreatedAt())
@@ -177,6 +192,11 @@ public class HistoricalFigureService {
                 .imageUrl(f.getImageUrl())
                 .works(f.getWorks())
                 .pdfUrl(f.getPdfUrl())
+                .region(f.getRegion())
+                .category(f.getCategory())
+                .quote(f.getQuote())
+                .timelineJson(f.getTimelineJson())
+                .galleryPhotosJson(f.getGalleryPhotosJson())
                 .featured(f.getFeatured())
                 .sortOrder(f.getSortOrder())
                 .createdAt(f.getCreatedAt())
