@@ -26,13 +26,15 @@ export default function Navbar() {
     }
 
     const jadidlarLabel = locale === 'ru' ? 'Джадиды' : locale === 'en' ? 'Jadids' : 'Jadidlar'
+    const historyLabel = locale === 'ru' ? 'История движения' : locale === 'en' ? 'History' : 'Harakat Tarixi'
+    const libraryLabel = locale === 'ru' ? 'Библиотека' : locale === 'en' ? 'Library' : 'Kutubxona'
 
     const navLinks = [
         { href: `/${locale}`, label: t('home') },
         { href: `/${locale}/jadidlar`, label: jadidlarLabel },
-        { href: `/${locale}/about`, label: t('about') },
+        { href: `/${locale}/about`, label: historyLabel },
+        { href: `/${locale}/resources`, label: libraryLabel },
         { href: `/${locale}/gallery`, label: t('gallery') },
-        { href: `/${locale}/resources`, label: t('resources') },
         { href: `/${locale}/news`, label: t('news') },
         { href: `/${locale}/faq`, label: t('faq') },
         { href: `/${locale}/contact`, label: t('contact') },
@@ -47,48 +49,57 @@ export default function Navbar() {
             zIndex: 1000,
             transition: 'all 0.4s ease',
             background: scrolled
-                ? 'rgba(17, 37, 72, 0.97)'
+                ? 'rgba(11, 23, 42, 0.97)'
                 : 'transparent',
             backdropFilter: scrolled ? 'blur(20px)' : 'none',
-            borderBottom: scrolled ? '1px solid rgba(201,168,76,0.2)' : '1px solid transparent',
+            borderBottom: scrolled ? '1px solid rgba(201,168,76,0.25)' : '1px solid transparent',
             padding: scrolled ? '10px 0' : '16px 0',
         }}>
             <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
 
-                {/* Logo */}
-                <Link href={`/${locale}`} style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
+                {/* Logo with Zoomed Center Circle */}
+                <Link href={`/${locale}`} style={{ display: 'flex', alignItems: 'center', gap: '14px', textDecoration: 'none' }}>
                     <div style={{
-                        width: 48,
-                        height: 48,
+                        width: 52,
+                        height: 52,
                         borderRadius: '50%',
                         overflow: 'hidden',
                         flexShrink: 0,
-                        border: '2px solid rgba(201,168,76,0.5)',
-                        background: '#fff',
+                        border: '2px solid #C9A84C',
+                        boxShadow: '0 0 16px rgba(201,168,76,0.4)',
+                        background: '#060d17',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
                     }}>
                         <Image
                             src="/logo.png"
                             alt="O'zbekiston Jadidlari Logo"
-                            width={48}
-                            height={48}
-                            style={{ objectFit: 'contain', width: '100%', height: '100%' }}
+                            width={70}
+                            height={70}
+                            style={{
+                                objectFit: 'cover',
+                                transform: 'scale(1.4)',
+                                transformOrigin: 'center center'
+                            }}
                         />
                     </div>
                     <div>
                         <div style={{
                             fontFamily: 'var(--font-display)',
-                            fontWeight: '700',
-                            fontSize: '17px',
+                            fontWeight: '800',
+                            fontSize: '18px',
                             color: '#fff',
                             lineHeight: 1.1,
-                            letterSpacing: '0.3px',
+                            letterSpacing: '0.4px',
                         }}>O&apos;zbekiston Jadidlari</div>
                         <div style={{
                             fontFamily: 'var(--font-mono)',
                             fontSize: '10px',
-                            color: 'rgba(201,168,76,0.9)',
+                            color: '#C9A84C',
                             letterSpacing: '2px',
                             textTransform: 'uppercase',
+                            fontWeight: '600'
                         }}>Ma&apos;rifat Portali</div>
                     </div>
                 </Link>

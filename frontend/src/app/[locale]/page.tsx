@@ -53,7 +53,7 @@ const Icons = {
     )
 }
 
-const SLIDE_IMAGES = ['/slide1.jpg', '/slide2.jpg', '/slide3.jpg', '/slide4.jpg']
+const SLIDE_IMAGES = ['/slide1.png', '/slide2.png', '/slide3.png', '/slide4.png']
 
 function HeroSlideshow() {
     const [current, setCurrent] = useState(0)
