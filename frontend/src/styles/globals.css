@@ -1,25 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Crimson+Pro:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
-    --navy: #1B3A6B;
-    --navy-light: #254d8f;
-    --navy-dark: #112548;
-    --navy-deeper: #0a1829;
+    --navy: #0b2e22;
+    --navy-light: #154836;
+    --navy-dark: #061d15;
+    --navy-deeper: #03120d;
+    --emerald-glow: #0f3d2e;
     --gold: #C9A84C;
     --gold-light: #e4c068;
-    --gold-pale: rgba(201, 168, 76, 0.12);
+    --gold-pale: rgba(201, 168, 76, 0.14);
     --white: #FFFFFF;
-    --off-white: #F8F6F0;
-    --gray-100: #f0f4f8;
+    --off-white: #F4F8F5;
+    --gray-100: #e8f0eb;
     --gray-400: #94a3b8;
     --gray-600: #64748b;
-    --text-dark: #1a2540;
+    --text-dark: #0f241d;
     --font-display: 'Playfair Display', Georgia, serif;
     --font-body: 'Crimson Pro', Georgia, serif;
     --font-mono: 'JetBrains Mono', monospace;
-    --shadow-sm: 0 2px 8px rgba(27,58,107,0.08);
-    --shadow-md: 0 8px 32px rgba(27,58,107,0.12);
-    --shadow-lg: 0 20px 60px rgba(27,58,107,0.18);
+    --shadow-sm: 0 2px 8px rgba(6,29,21,0.08);
+    --shadow-md: 0 8px 32px rgba(6,29,21,0.14);
+    --shadow-lg: 0 20px 60px rgba(6,29,21,0.22);
     --radius: 4px;
     --radius-lg: 8px;
 }

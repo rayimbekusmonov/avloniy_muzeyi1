@@ -51,10 +51,10 @@ export default function Footer() {
 
     return (
         <footer style={{
-            background: 'linear-gradient(135deg, #0a1829 0%, #112548 100%)',
-            color: 'rgba(255,255,255,0.75)',
+            background: 'linear-gradient(135deg, #03120d 0%, #08241b 100%)',
+            color: 'rgba(255,255,255,0.8)',
             paddingTop: '64px',
-            borderTop: '1px solid rgba(201,168,76,0.2)',
+            borderTop: '1px solid rgba(201,168,76,0.25)',
         }}>
             <div className="container">
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '48px', paddingBottom: '48px' }}>

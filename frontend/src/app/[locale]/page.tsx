@@ -66,13 +66,13 @@ function HeroSlideshow() {
 
     return (
         <>
-            <div style={{ position: 'absolute', inset: 0, background: '#050c18', zIndex: 0 }} />
+            <div style={{ position: 'absolute', inset: 0, background: '#03120d', zIndex: 0 }} />
             <div key={`curr-${current}`} style={{ position: 'absolute', inset: 0, zIndex: 1, transition: 'opacity 1.2s ease' }}>
                 {/* High visibility image opacity: 0.75 */}
                 <Image src={SLIDE_IMAGES[current]} alt="Jadidlar Portali Background" fill priority sizes="100vw" style={{ objectFit: 'cover', opacity: 0.75 }} />
             </div>
-            {/* Subtle gradient overlay allowing background slides to shine through brightly */}
-            <div style={{ position: 'absolute', inset: 0, zIndex: 2, background: 'linear-gradient(to bottom, rgba(5,12,24,0.45) 0%, rgba(5,12,24,0.72) 70%, #050c18 100%)' }} />
+            {/* Royal Emerald gradient overlay allowing background slides to shine through brightly */}
+            <div style={{ position: 'absolute', inset: 0, zIndex: 2, background: 'linear-gradient(to bottom, rgba(3,18,13,0.45) 0%, rgba(3,18,13,0.75) 70%, #03120d 100%)' }} />
         </>
     )
 }
@@ -188,7 +188,7 @@ export default function HomePage() {
     }
 
     return (
-        <div style={{ background: '#050c18', color: '#e2e8f0', minHeight: '100vh' }}>
+        <div style={{ background: '#03120d', color: '#e2e8f0', minHeight: '100vh' }}>
             
             {/* HERO SECTION WITH BRIGHT & SHARP BACKGROUND SLIDES */}
             <section style={{ position: 'relative', minHeight: '90vh', display: 'flex', alignItems: 'center', paddingTop: '110px', paddingBottom: '60px', overflow: 'hidden' }}>
