@@ -25,8 +25,11 @@ export default function Navbar() {
         router.push(segments.join('/'))
     }
 
+    const jadidlarLabel = locale === 'ru' ? 'Джадиды' : locale === 'en' ? 'Jadids' : 'Jadidlar'
+
     const navLinks = [
         { href: `/${locale}`, label: t('home') },
+        { href: `/${locale}/jadidlar`, label: jadidlarLabel },
         { href: `/${locale}/about`, label: t('about') },
         { href: `/${locale}/gallery`, label: t('gallery') },
         { href: `/${locale}/resources`, label: t('resources') },
@@ -60,12 +63,12 @@ export default function Navbar() {
                         borderRadius: '50%',
                         overflow: 'hidden',
                         flexShrink: 0,
-                        border: '2px solid rgba(201,168,76,0.4)',
+                        border: '2px solid rgba(201,168,76,0.5)',
                         background: '#fff',
                     }}>
                         <Image
                             src="/logo.jpg"
-                            alt="Avloniy Muzeyi Logo"
+                            alt="O'zbekiston Jadidlari Logo"
                             width={48}
                             height={48}
                             style={{ objectFit: 'cover', width: '100%', height: '100%' }}
@@ -75,17 +78,18 @@ export default function Navbar() {
                         <div style={{
                             fontFamily: 'var(--font-display)',
                             fontWeight: '700',
-                            fontSize: '16px',
+                            fontSize: '17px',
                             color: '#fff',
                             lineHeight: 1.1,
-                        }}>Abdulla Avloniy</div>
+                            letterSpacing: '0.3px',
+                        }}>O&apos;zbekiston Jadidlari</div>
                         <div style={{
                             fontFamily: 'var(--font-mono)',
                             fontSize: '10px',
-                            color: 'rgba(201,168,76,0.8)',
+                            color: 'rgba(201,168,76,0.9)',
                             letterSpacing: '2px',
                             textTransform: 'uppercase',
-                        }}>Muzeyi</div>
+                        }}>Ma&apos;rifat Portali</div>
                     </div>
                 </Link>
 

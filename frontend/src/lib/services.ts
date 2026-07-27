@@ -1,4 +1,5 @@
 import { api, Page, NewsItem, NewsFormData, GalleryItem, ResourceItem, AuthResponse, HistoricalFigure } from './api';
+import { getLocalizedJadids, MOCK_JADIDS } from './mockJadids';
 
 // Auth
 export const authService = {
@@ -79,11 +80,50 @@ export const contactService = {
 
 export const figureService = {
     // Frontend: locale bo'yicha
-    getAll: (locale = 'uz') =>
-        api.get<HistoricalFigure[]>(`/api/figures?locale=${locale}`),
+    getAll: async (locale = 'uz'): Promise<HistoricalFigure[]> => {
+        try {
+            const apiData = await api.get<HistoricalFigure[]>(`/api/figures?locale=${locale}`);
+            if (apiData && apiData.length > 0) {
+                // Merge extra mock metadata if apiData lacks region/timeline
+                return apiData.map(item => {
+                    const mockMatch = MOCK_JADIDS.find(m => m.id === item.id || m.nameUz.toLowerCase().includes(item.nameUz.toLowerCase()));
+                    return {
+                        ...mockMatch,
+                        ...item
+                    };
+                });
+            }
+            return getLocalizedJadids(locale);
+        } catch {
+            return getLocalizedJadids(locale);
+        }
+    },
 
-    getById: (id: number, locale = 'uz') =>
-        api.get<HistoricalFigure>(`/api/figures/${id}?locale=${locale}`),
+    getById: async (id: number, locale = 'uz'): Promise<HistoricalFigure> => {
+        try {
+            const apiItem = await api.get<HistoricalFigure>(`/api/figures/${id}?locale=${locale}`);
+            const mockMatch = MOCK_JADIDS.find(m => m.id === id || m.id === Number(id));
+            if (apiItem) {
+                return {
+                    ...mockMatch,
+                    ...apiItem
+                };
+            }
+            if (mockMatch) {
+                const name = locale === 'ru' ? mockMatch.nameRu || mockMatch.nameUz : locale === 'en' ? mockMatch.nameEn || mockMatch.nameUz : mockMatch.nameUz;
+                const title = locale === 'ru' ? mockMatch.titleRu || mockMatch.titleUz : locale === 'en' ? mockMatch.titleEn || mockMatch.titleUz : mockMatch.titleUz;
+                const bio = locale === 'ru' ? mockMatch.bioRu || mockMatch.bioUz : locale === 'en' ? mockMatch.bioEn || mockMatch.bioUz : mockMatch.bioUz;
+                return { ...mockMatch, name, title, bio };
+            }
+            throw new Error("Figure not found");
+        } catch {
+            const mockMatch = MOCK_JADIDS.find(m => m.id === id || m.id === Number(id)) || MOCK_JADIDS[0];
+            const name = locale === 'ru' ? mockMatch.nameRu || mockMatch.nameUz : locale === 'en' ? mockMatch.nameEn || mockMatch.nameUz : mockMatch.nameUz;
+            const title = locale === 'ru' ? mockMatch.titleRu || mockMatch.titleUz : locale === 'en' ? mockMatch.titleEn || mockMatch.titleUz : mockMatch.titleUz;
+            const bio = locale === 'ru' ? mockMatch.bioRu || mockMatch.bioUz : locale === 'en' ? mockMatch.bioEn || mockMatch.bioUz : mockMatch.bioUz;
+            return { ...mockMatch, name, title, bio };
+        }
+    },
 
     // Admin: barcha til maydonlari
     getAllForAdmin: () =>

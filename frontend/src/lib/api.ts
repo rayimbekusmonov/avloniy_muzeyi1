@@ -172,6 +172,11 @@ export interface HistoricalFigure {
     featured: boolean;
     sortOrder: number;
     createdAt: string;
+    region?: string; // e.g. "Toshkent", "Samarqand", "Buxoro", "Farg'ona"
+    category?: string; // e.g. "Ta'lim", "Matbuot", "Adabiyot", "Teatr"
+    quote?: string;
+    timeline?: { year: string; title: string; desc: string }[];
+    galleryPhotos?: { title: string; url: string }[];
     figureWorks: {
         id: number;
         title: string;

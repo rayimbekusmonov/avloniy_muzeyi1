@@ -29,21 +29,21 @@ export default function Footer() {
     ]
 
     const t = {
-        museumLabel: locale === 'ru' ? 'Музей · 1934'        : locale === 'en' ? 'Museum · 1934'         : "Muzeyi · 1934",
+        museumLabel: locale === 'ru' ? 'Просветительский портал' : locale === 'en' ? 'Enlightenment Portal' : "Ma'rifat Portali",
         tagline:     locale === 'ru'
-            ? 'Национальный музей, увековечивающий память великого просветителя, поэта и педагога Абдуллы Авлония.'
+            ? 'Единый портал узбекского джадидизма: жизнь, наследие, труды и исторические документы узбекских просветителей.'
             : locale === 'en'
-                ? 'A national museum dedicated to the memory of the great enlightener, poet and educator Abdulla Avloniy.'
-                : "Buyuk ma'rifatparvar, shoir va pedagog Abdulla Avloniy xotirasini abadiylashtiruvchi milliy muzey.",
+                ? 'The unified portal of Uzbek Jadidism: life, heritage, works, and historical records of Uzbek enlighteners.'
+                : "O'zbekiston jadidlarining hayoti, ilmiy-adabiy merosi, asarlari va tarixiy hujjatlarini jamlagan yagona ma'rifat portali.",
         sections:  locale === 'ru' ? 'Разделы'              : locale === 'en' ? 'Sections'              : "Bo'limlar",
         address:   locale === 'ru' ? 'Адрес'                : locale === 'en' ? 'Address'               : 'Manzil',
         city:      locale === 'ru' ? 'г. Ташкент'           : locale === 'en' ? 'Tashkent city'         : 'Toshkent shahri',
         hours:     locale === 'ru' ? 'Пн–Вс: 9:00 – 17:00' : locale === 'en' ? 'Mon–Sun: 9:00 – 17:00' : 'Du–Yak: 9:00 – 17:00',
         copyright: locale === 'ru'
-            ? '© 2026 Музей Абдуллы Авлония. Все права защищены.'
+            ? '© 2026 Просветительский портал «Джадиды Узбекистана». Все права защищены.'
             : locale === 'en'
-                ? '© 2026 Abdulla Avloniy Museum. All rights reserved.'
-                : '© 2026 Abdulla Avloniy Muzeyi. Barcha huquqlar himoyalangan.',
+                ? '© 2026 Uzbek Jadids Enlightenment Portal. All rights reserved.'
+                : "© 2026 O'zbekiston Jadidlari Ma'rifat Portali. Barcha huquqlar himoyalangan.",
     }
 
     return (
@@ -58,7 +58,7 @@ export default function Footer() {
 
                     {/* Brand */}
                     <div>
-                        <div style={{ fontFamily: 'var(--font-display)', fontSize: '22px', fontWeight: '700', color: '#fff', marginBottom: '8px' }}>Abdulla Avloniy</div>
+                        <div style={{ fontFamily: 'var(--font-display)', fontSize: '22px', fontWeight: '700', color: '#fff', marginBottom: '8px' }}>O&apos;zbekiston Jadidlari</div>
                         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#C9A84C', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '16px' }}>{t.museumLabel}</div>
                         <p style={{ fontSize: '14px', lineHeight: '1.8', maxWidth: '260px', marginBottom: '24px' }}>{t.tagline}</p>
 
