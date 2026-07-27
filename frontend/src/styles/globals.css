@@ -304,9 +304,9 @@ button {
 
 /* ── Tablet (768px - 900px) ─────────────────────────── */
 @media (max-width: 900px) {
-    .nav-links      { display: none !important; }
-    .burger-btn     { display: flex !important; }
-    .locale-switcher { display: none !important; }
+    .nav-links       { display: none !important; }
+    .burger-btn      { display: flex !important; }
+    .locale-dropdown { display: flex !important; }
 
     .section {
         padding: 60px 0;

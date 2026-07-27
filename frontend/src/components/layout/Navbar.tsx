@@ -1,13 +1,23 @@
 'use client'
-import { useState, useEffect } from 'react'
+
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 
+const LANGUAGES = [
+    { code: 'uz', name: "O'zbekcha", flag: '🇺🇿', short: 'UZ' },
+    { code: 'ru', name: 'Русский', flag: '🇷🇺', short: 'RU' },
+    { code: 'en', name: 'English', flag: '🇬🇧', short: 'EN' },
+]
+
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false)
     const [menuOpen, setMenuOpen] = useState(false)
+    const [langDropdownOpen, setLangDropdownOpen] = useState(false)
+    const dropdownRef = useRef<HTMLDivElement>(null)
+
     const pathname = usePathname()
     const router = useRouter()
     const locale = useLocale()
@@ -19,11 +29,26 @@ export default function Navbar() {
         return () => window.removeEventListener('scroll', onScroll)
     }, [])
 
+    // Click outside handler for language dropdown
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setLangDropdownOpen(false)
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside)
+        return () => document.removeEventListener('mousedown', handleClickOutside)
+    }, [])
+
     const changeLocale = (newLocale: string) => {
         const segments = pathname.split('/')
         segments[1] = newLocale
         router.push(segments.join('/'))
+        setLangDropdownOpen(false)
+        setMenuOpen(false)
     }
+
+    const currentLang = LANGUAGES.find(l => l.code === locale) || LANGUAGES[0]
 
     const jadidlarLabel = locale === 'ru' ? 'Джадиды' : locale === 'en' ? 'Jadids' : 'Jadidlar'
     const historyLabel = locale === 'ru' ? 'История движения' : locale === 'en' ? 'History' : 'Harakat Tarixi'
@@ -58,10 +83,10 @@ export default function Navbar() {
             <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
 
                 {/* Logo with Zoomed Center Circle */}
-                <Link href={`/${locale}`} style={{ display: 'flex', alignItems: 'center', gap: '14px', textDecoration: 'none' }}>
+                <Link href={`/${locale}`} style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
                     <div style={{
-                        width: 52,
-                        height: 52,
+                        width: 48,
+                        height: 48,
                         borderRadius: '50%',
                         overflow: 'hidden',
                         flexShrink: 0,
@@ -75,8 +100,8 @@ export default function Navbar() {
                         <Image
                             src="/logo.png"
                             alt="O'zbekiston Jadidlari Logo"
-                            width={70}
-                            height={70}
+                            width={68}
+                            height={68}
                             style={{
                                 objectFit: 'cover',
                                 transform: 'scale(1.4)',
@@ -88,7 +113,7 @@ export default function Navbar() {
                         <div style={{
                             fontFamily: 'var(--font-display)',
                             fontWeight: '800',
-                            fontSize: '18px',
+                            fontSize: '17px',
                             color: '#fff',
                             lineHeight: 1.1,
                             letterSpacing: '0.4px',
@@ -104,7 +129,7 @@ export default function Navbar() {
                     </div>
                 </Link>
 
-                {/* Desktop Links */}
+                {/* Desktop Links (Hidden on mobile via CSS) */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }} className="nav-links">
                     {navLinks.map(link => (
                         <Link
@@ -127,108 +152,179 @@ export default function Navbar() {
                     ))}
                 </div>
 
-                {/* Locale switcher + Mobile burger */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    {/* Locale switcher */}
-                    <div style={{ display: 'flex', gap: '4px' }} className="locale-switcher">
-                        {['uz', 'ru', 'en'].map(loc => (
-                            <button
-                                key={loc}
-                                onClick={() => changeLocale(loc)}
-                                style={{
-                                    padding: '5px 10px',
-                                    borderRadius: '6px',
-                                    border: '1px solid',
-                                    borderColor: locale === loc ? '#C9A84C' : 'rgba(255,255,255,0.15)',
-                                    background: locale === loc ? 'rgba(201,168,76,0.15)' : 'transparent',
-                                    color: locale === loc ? '#C9A84C' : 'rgba(255,255,255,0.5)',
-                                    fontFamily: 'var(--font-mono)',
-                                    fontSize: '11px',
-                                    cursor: 'pointer',
-                                    textTransform: 'uppercase',
-                                    letterSpacing: '1px',
-                                    transition: 'all 0.2s',
-                                }}
-                            >
-                                {loc}
-                            </button>
-                        ))}
+                {/* Right Action Bar: Language Dropdown + Mobile Burger */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    
+                    {/* LANGUAGE DROPDOWN (Stays ON MAIN NAVBAR even on mobile phone screens) */}
+                    <div ref={dropdownRef} style={{ position: 'relative' }} className="locale-dropdown">
+                        <button
+                            onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '6px',
+                                padding: '6px 12px',
+                                borderRadius: '8px',
+                                border: '1px solid rgba(201,168,76,0.4)',
+                                background: 'rgba(201,168,76,0.15)',
+                                color: '#C9A84C',
+                                fontFamily: 'var(--font-mono)',
+                                fontSize: '13px',
+                                fontWeight: '700',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s ease',
+                                boxShadow: '0 2px 10px rgba(0,0,0,0.2)'
+                            }}
+                        >
+                            <span style={{ fontSize: '16px' }}>{currentLang.flag}</span>
+                            <span>{currentLang.short}</span>
+                            <span style={{ fontSize: '10px', transition: 'transform 0.2s ease', transform: langDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>▼</span>
+                        </button>
+
+                        {/* Dropdown Menu */}
+                        {langDropdownOpen && (
+                            <div style={{
+                                position: 'absolute',
+                                top: 'calc(100% + 8px)',
+                                right: 0,
+                                width: '150px',
+                                background: 'rgba(6,29,21,0.98)',
+                                border: '1px solid rgba(201,168,76,0.35)',
+                                borderRadius: '10px',
+                                padding: '6px',
+                                boxShadow: '0 10px 30px rgba(0,0,0,0.6)',
+                                backdropFilter: 'blur(16px)',
+                                zIndex: 1100,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '2px'
+                            }}>
+                                {LANGUAGES.map(lang => (
+                                    <button
+                                        key={lang.code}
+                                        onClick={() => changeLocale(lang.code)}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                            width: '100%',
+                                            padding: '8px 12px',
+                                            borderRadius: '6px',
+                                            border: 'none',
+                                            background: locale === lang.code ? 'rgba(201,168,76,0.2)' : 'transparent',
+                                            color: locale === lang.code ? '#C9A84C' : 'rgba(255,255,255,0.85)',
+                                            fontFamily: 'var(--font-mono)',
+                                            fontSize: '13px',
+                                            fontWeight: locale === lang.code ? '700' : '500',
+                                            cursor: 'pointer',
+                                            textAlign: 'left',
+                                            transition: 'all 0.2s ease'
+                                        }}
+                                        onMouseEnter={e => {
+                                            if (locale !== lang.code) {
+                                                e.currentTarget.style.background = 'rgba(255,255,255,0.06)'
+                                                e.currentTarget.style.color = '#fff'
+                                            }
+                                        }}
+                                        onMouseLeave={e => {
+                                            if (locale !== lang.code) {
+                                                e.currentTarget.style.background = 'transparent'
+                                                e.currentTarget.style.color = 'rgba(255,255,255,0.85)'
+                                            }
+                                        }}
+                                    >
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                            <span style={{ fontSize: '16px' }}>{lang.flag}</span>
+                                            <span>{lang.name}</span>
+                                        </div>
+                                        {locale === lang.code && <span style={{ color: '#C9A84C', fontSize: '12px' }}>✓</span>}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
-                    {/* Mobile burger */}
+                    {/* Mobile Hamburger Toggle Button */}
                     <button
                         onClick={() => setMenuOpen(!menuOpen)}
                         className="burger-btn"
                         style={{
                             display: 'none',
                             flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
                             gap: '5px',
                             padding: '8px',
-                            background: 'transparent',
-                            border: 'none',
+                            background: 'rgba(201,168,76,0.12)',
+                            border: '1px solid rgba(201,168,76,0.3)',
+                            borderRadius: '8px',
                             cursor: 'pointer',
+                            width: '40px',
+                            height: '36px'
                         }}
+                        aria-label="Toggle navigation menu"
                     >
-                        {[0, 1, 2].map(i => (
-                            <span key={i} style={{
-                                display: 'block',
-                                width: '24px',
-                                height: '2px',
-                                background: '#C9A84C',
-                                borderRadius: '2px',
-                                transition: 'all 0.3s',
-                            }} />
-                        ))}
+                        <span style={{
+                            display: 'block',
+                            width: '20px',
+                            height: '2px',
+                            background: '#C9A84C',
+                            borderRadius: '2px',
+                            transition: 'all 0.3s',
+                            transform: menuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none'
+                        }} />
+                        <span style={{
+                            display: 'block',
+                            width: '20px',
+                            height: '2px',
+                            background: '#C9A84C',
+                            borderRadius: '2px',
+                            opacity: menuOpen ? 0 : 1,
+                            transition: 'all 0.3s'
+                        }} />
+                        <span style={{
+                            display: 'block',
+                            width: '20px',
+                            height: '2px',
+                            background: '#C9A84C',
+                            borderRadius: '2px',
+                            transition: 'all 0.3s',
+                            transform: menuOpen ? 'rotate(-45deg) translate(5px, -5px)' : 'none'
+                        }} />
                     </button>
                 </div>
             </div>
 
-            {/* Mobile Menu */}
+            {/* Mobile Hamburger Menu Drawer (All navigation links inside drawer) */}
             {menuOpen && (
                 <div style={{
-                    background: 'rgba(17,37,72,0.98)',
-                    borderTop: '1px solid rgba(201,168,76,0.2)',
+                    background: 'rgba(6,29,21,0.98)',
+                    borderTop: '1px solid rgba(201,168,76,0.25)',
                     padding: '20px 24px',
+                    backdropFilter: 'blur(20px)',
+                    boxShadow: '0 20px 40px rgba(0,0,0,0.5)'
                 }}>
-                    {navLinks.map(link => (
-                        <Link
-                            key={link.href}
-                            href={link.href}
-                            onClick={() => setMenuOpen(false)}
-                            style={{
-                                display: 'block',
-                                padding: '12px 0',
-                                fontFamily: 'var(--font-body)',
-                                fontSize: '17px',
-                                color: pathname === link.href ? '#C9A84C' : 'rgba(255,255,255,0.85)',
-                                borderBottom: '1px solid rgba(255,255,255,0.06)',
-                                textDecoration: 'none',
-                            }}
-                        >
-                            {link.label}
-                        </Link>
-                    ))}
-                    {/* Mobile locale switcher */}
-                    <div style={{ display: 'flex', gap: '8px', marginTop: '16px' }}>
-                        {['uz', 'ru', 'en'].map(loc => (
-                            <button
-                                key={loc}
-                                onClick={() => { changeLocale(loc); setMenuOpen(false) }}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        {navLinks.map(link => (
+                            <Link
+                                key={link.href}
+                                href={link.href}
+                                onClick={() => setMenuOpen(false)}
                                 style={{
-                                    padding: '6px 14px',
+                                    display: 'block',
+                                    padding: '12px 14px',
+                                    fontFamily: 'var(--font-body)',
+                                    fontSize: '17px',
+                                    fontWeight: pathname === link.href ? '700' : '500',
+                                    color: pathname === link.href ? '#C9A84C' : 'rgba(255,255,255,0.9)',
+                                    borderBottom: '1px solid rgba(255,255,255,0.06)',
                                     borderRadius: '6px',
-                                    border: '1px solid',
-                                    borderColor: locale === loc ? '#C9A84C' : 'rgba(255,255,255,0.15)',
-                                    background: locale === loc ? 'rgba(201,168,76,0.15)' : 'transparent',
-                                    color: locale === loc ? '#C9A84C' : 'rgba(255,255,255,0.5)',
-                                    fontFamily: 'var(--font-mono)',
-                                    fontSize: '12px',
-                                    cursor: 'pointer',
-                                    textTransform: 'uppercase',
+                                    background: pathname === link.href ? 'rgba(201,168,76,0.12)' : 'transparent',
+                                    textDecoration: 'none',
                                 }}
                             >
-                                {loc}
-                            </button>
+                                {link.label}
+                            </Link>
                         ))}
                     </div>
                 </div>
