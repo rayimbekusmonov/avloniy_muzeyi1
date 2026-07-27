@@ -67,11 +67,11 @@ export default function Navbar() {
                         background: '#fff',
                     }}>
                         <Image
-                            src="/logo.jpg"
+                            src="/logo.png"
                             alt="O'zbekiston Jadidlari Logo"
                             width={48}
                             height={48}
-                            style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                            style={{ objectFit: 'contain', width: '100%', height: '100%' }}
                         />
                     </div>
                     <div>
