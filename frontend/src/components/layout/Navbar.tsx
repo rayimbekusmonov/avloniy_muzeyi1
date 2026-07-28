@@ -114,10 +114,10 @@ export default function Navbar() {
             <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
 
                 {/* Logo */}
-                <Link href={`/${locale}`} style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
-                    <div style={{
-                        width: 48,
-                        height: 48,
+                <Link href={`/${locale}`} style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', minWidth: 0, flexShrink: 1 }}>
+                    <div className="brand-logo-wrapper" style={{
+                        width: 44,
+                        height: 44,
                         borderRadius: '50%',
                         overflow: 'hidden',
                         flexShrink: 0,
@@ -131,8 +131,8 @@ export default function Navbar() {
                         <Image
                             src="/logo.png"
                             alt="O'zbekiston Jadidlari Logo"
-                            width={68}
-                            height={68}
+                            width={64}
+                            height={64}
                             style={{
                                 objectFit: 'cover',
                                 transform: 'scale(1.4)',
@@ -140,7 +140,7 @@ export default function Navbar() {
                             }}
                         />
                     </div>
-                    <div>
+                    <div style={{ minWidth: 0 }}>
                         <div className="brand-title" style={{
                             fontFamily: 'var(--font-display)',
                             fontWeight: '800',
@@ -148,6 +148,9 @@ export default function Navbar() {
                             color: '#fff',
                             lineHeight: 1.1,
                             letterSpacing: '0.4px',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
                         }}>O&apos;zbekiston Jadidlari</div>
                         <div className="brand-subtitle" style={{
                             fontFamily: 'var(--font-mono)',
@@ -155,7 +158,10 @@ export default function Navbar() {
                             color: '#C9A84C',
                             letterSpacing: '2px',
                             textTransform: 'uppercase',
-                            fontWeight: '600'
+                            fontWeight: '600',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
                         }}>Ma&apos;rifat Portali</div>
                     </div>
                 </Link>
@@ -184,7 +190,7 @@ export default function Navbar() {
                 </div>
 
                 {/* Right Action Bar: Theme Toggle + SVG Flag Language Dropdown + Mobile Burger */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div className="nav-right-actions" style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
                     
                     {/* Theme Toggle Button */}
                     <ThemeToggle />
@@ -193,6 +199,7 @@ export default function Navbar() {
                     <div ref={dropdownRef} style={{ position: 'relative' }} className="locale-dropdown">
                         <button
                             onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+                            className="lang-btn"
                             style={{
                                 display: 'flex',
                                 alignItems: 'center',
@@ -207,12 +214,13 @@ export default function Navbar() {
                                 fontWeight: '700',
                                 cursor: 'pointer',
                                 transition: 'all 0.2s ease',
-                                boxShadow: '0 2px 10px rgba(0,0,0,0.2)'
+                                boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
+                                flexShrink: 0
                             }}
                         >
                             {currentLang.flagComponent}
-                            <span>{currentLang.short}</span>
-                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition: 'transform 0.2s ease', transform: langDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>
+                            <span className="lang-code-text">{currentLang.short}</span>
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition: 'transform 0.2s ease', transform: langDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)', flexShrink: 0 }}>
                                 <polyline points="6 9 12 15 18 9"/>
                             </svg>
                         </button>
@@ -300,7 +308,8 @@ export default function Navbar() {
                             borderRadius: '8px',
                             cursor: 'pointer',
                             width: '40px',
-                            height: '36px'
+                            height: '36px',
+                            flexShrink: 0
                         }}
                         aria-label="Toggle navigation menu"
                     >
@@ -340,9 +349,11 @@ export default function Navbar() {
                 <div style={{
                     background: 'rgba(6,29,21,0.98)',
                     borderTop: '1px solid rgba(201,168,76,0.25)',
-                    padding: '20px 24px',
+                    padding: '16px 20px',
                     backdropFilter: 'blur(20px)',
-                    boxShadow: '0 20px 40px rgba(0,0,0,0.5)'
+                    boxShadow: '0 20px 40px rgba(0,0,0,0.5)',
+                    maxHeight: 'calc(100vh - 70px)',
+                    overflowY: 'auto'
                 }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                         {navLinks.map(link => (
