@@ -347,6 +347,41 @@ textarea::placeholder {
 }
 
 /* ══════════════════════════════════════════════════════
+/* ── Responsive Utilities ────────────────────────────── */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 1rem;
+    border-radius: var(--radius-lg);
+}
+
+.table-responsive::-webkit-scrollbar {
+    height: 6px;
+}
+.table-responsive::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+.table-responsive::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border-radius: 3px;
+}
+
+.nav-tabs-scroll {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 4px;
+    white-space: nowrap;
+}
+.nav-tabs-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+/* ══════════════════════════════════════════════════════
    RESPONSIVE BREAKPOINTS
    ══════════════════════════════════════════════════════ */
 
@@ -376,16 +411,17 @@ textarea::placeholder {
     }
 
     .page-header h1 {
-        font-size: clamp(28px, 5vw, 42px);
+        font-size: clamp(26px, 5vw, 42px);
     }
 
     /* Grid helpers — tablet */
     .grid-2-col {
+        grid-template-columns: 1fr;
         gap: 32px;
     }
 
     .grid-2-col-uneven {
-        grid-template-columns: 1fr 1.5fr;
+        grid-template-columns: 1fr;
         gap: 32px;
     }
 
@@ -406,15 +442,15 @@ textarea::placeholder {
     }
 
     .section {
-        padding: 48px 0;
+        padding: 40px 0;
     }
 
     .page-header {
-        padding: 90px 0 40px;
+        padding: 85px 0 36px;
     }
 
     .page-header p {
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .page-header .label {
@@ -426,7 +462,7 @@ textarea::placeholder {
     .grid-2-col,
     .grid-2-col-uneven {
         grid-template-columns: 1fr;
-        gap: 32px;
+        gap: 24px;
     }
 
     .grid-featured {
@@ -436,12 +472,13 @@ textarea::placeholder {
 
     .grid-4-col {
         grid-template-columns: 1fr 1fr;
+        gap: 16px;
     }
 
     /* Buttons */
     .btn-primary,
     .btn-outline {
-        padding: 12px 20px;
+        padding: 12px 18px;
         font-size: 14px;
         width: 100%;
         justify-content: center;
@@ -459,36 +496,45 @@ textarea::placeholder {
 
     /* Timeline mobile */
     .timeline-year {
-        min-width: 48px !important;
-        font-size: 14px !important;
+        min-width: 44px !important;
+        font-size: 13px !important;
     }
 
     .timeline-line {
-        left: 63px !important;
+        left: 55px !important;
     }
 
     .timeline-dot {
-        width: 12px !important;
-        height: 12px !important;
+        width: 10px !important;
+        height: 10px !important;
     }
 
     .timeline-card {
-        padding: 16px !important;
+        padding: 14px !important;
     }
 }
 
-/* ── Very small screens (max 400px) ─────────────────── */
-@media (max-width: 400px) {
+/* ── Small Mobile (max 480px) ───────────────────────── */
+@media (max-width: 480px) {
     .grid-4-col {
         grid-template-columns: 1fr;
+        gap: 16px;
     }
 
     .page-header h1 {
-        font-size: 26px;
+        font-size: 24px;
     }
 
     .section {
-        padding: 36px 0;
+        padding: 32px 0;
+    }
+
+    .brand-title {
+        font-size: 14px !important;
+    }
+    
+    .brand-subtitle {
+        font-size: 8px !important;
     }
 }
 

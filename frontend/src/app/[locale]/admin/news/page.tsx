@@ -44,7 +44,6 @@ export default function AdminNewsPage() {
     const fetchNews = useCallback(async () => {
         setLoading(true)
         try {
-            // Admin uchun to'g'ri endpoint — barcha yangiliklar, barcha tillar
             const data = await newsService.getAllForAdmin(0, 50)
             setNews(data.content)
         } catch {
@@ -139,43 +138,43 @@ export default function AdminNewsPage() {
     }
 
     return (
-        <div style={{ minHeight: '100vh', background: 'var(--off-white)' }}>
-            <header style={{ background: 'var(--navy-dark)', padding: '0 24px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100 }}>
+        <div style={{ minHeight: '100vh', background: 'var(--bg-main)' }}>
+            <header style={{ background: 'var(--bg-header)', padding: '0 24px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--border-subtle)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <Link href="/admin/dashboard" style={{ color: 'rgba(255,255,255,0.5)', fontFamily: 'var(--font-mono)', fontSize: '12px', textDecoration: 'none' }}>← Dashboard</Link>
+                    <Link href="/admin/dashboard" style={{ color: 'rgba(255,255,255,0.7)', fontFamily: 'var(--font-mono)', fontSize: '12px', textDecoration: 'none' }}>← Dashboard</Link>
                     <div style={{ color: 'rgba(255,255,255,0.2)' }}>|</div>
                     <span style={{ fontFamily: 'var(--font-display)', fontSize: '15px', color: '#fff' }}>Yangiliklar</span>
                 </div>
-                <button onClick={() => { removeToken(); router.push('/admin') }} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.7)', padding: '8px 16px', borderRadius: '6px', fontFamily: 'var(--font-mono)', fontSize: '12px', cursor: 'pointer' }}>Chiqish</button>
+                <button onClick={() => { removeToken(); router.push('/admin') }} style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '8px 16px', borderRadius: '6px', fontFamily: 'var(--font-mono)', fontSize: '12px', cursor: 'pointer' }}>Chiqish</button>
             </header>
 
             <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 24px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
-                    <h1 style={{ fontSize: '26px', color: 'var(--navy-dark)' }}>Yangiliklar boshqaruvi</h1>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
+                    <h1 style={{ fontSize: '26px', color: 'var(--text-heading)' }}>Yangiliklar boshqaruvi</h1>
                     {!showForm && (
-                        <button onClick={() => { setShowForm(true); setActiveLang('uz') }} className="btn-primary" style={{ border: 'none', cursor: 'pointer' }}>+ Yangi qo'shish</button>
+                        <button onClick={() => { setShowForm(true); setEditItem(null); setForm(emptyForm); setActiveLang('uz') }} className="btn-primary" style={{ border: 'none', cursor: 'pointer' }}>+ Yangi qo'shish</button>
                     )}
                 </div>
 
                 {error && (
-                    <div style={{ background: 'rgba(220,38,38,0.08)', border: '1px solid rgba(220,38,38,0.2)', borderRadius: '8px', padding: '12px 16px', marginBottom: '24px', color: '#dc2626', fontSize: '14px' }}>{error}</div>
+                    <div style={{ background: 'rgba(220,38,38,0.1)', border: '1px solid rgba(220,38,38,0.3)', borderRadius: '8px', padding: '12px 16px', color: '#dc2626', marginBottom: '24px', fontSize: '14px' }}>{error}</div>
                 )}
 
                 {showForm && (
-                    <div style={{ background: '#fff', borderRadius: '12px', padding: '32px', marginBottom: '32px', border: '1px solid rgba(27,58,107,0.1)', boxShadow: '0 4px 20px rgba(27,58,107,0.08)' }}>
-                        <h2 style={{ fontSize: '20px', color: 'var(--navy-dark)', marginBottom: '28px' }}>
-                            {editItem ? 'Yangilikni tahrirlash' : 'Yangi yangilik qo\'shish'}
+                    <div style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '32px', marginBottom: '32px', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-md)' }}>
+                        <h2 style={{ fontSize: '20px', color: 'var(--text-heading)', marginBottom: '28px' }}>
+                            {editItem ? 'Yangilikni tahrirlash' : "Yangi yangilik qo'shish"}
                         </h2>
                         <form onSubmit={handleSubmit}>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
+                            <div className="grid-2-col" style={{ display: 'grid', gap: '16px', marginBottom: '20px' }}>
                                 <div>
-                                    <label style={labelStyle}>Kategoriya</label>
-                                    <select value={form.category} onChange={e => setForm(p => ({ ...p, category: e.target.value }))} style={{ ...inputStyle, cursor: 'pointer' }}>
+                                    <label style={labelStyle}>Kategoriya *</label>
+                                    <select value={form.category} onChange={e => setForm(p => ({ ...p, category: e.target.value }))} required style={{ ...inputStyle, cursor: 'pointer' }}>
                                         {CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
                                     </select>
                                 </div>
                                 <div>
-                                    <label style={labelStyle}>Rasm</label>
+                                    <label style={labelStyle}>Rasm URL / Fayl</label>
                                     <FileUpload folder="news" accept="image/*" label="Rasm yuklash" onUpload={(url) => setForm(p => ({ ...p, imageUrl: url }))} />
                                     {form.imageUrl && (
                                         <div style={{ marginTop: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -187,27 +186,27 @@ export default function AdminNewsPage() {
 
                             <div style={{ marginBottom: '24px' }}>
                                 <label style={{ ...labelStyle, marginBottom: '12px' }}>Til bo'yicha kontent</label>
-                                <div style={{ display: 'flex', gap: '0', marginBottom: '0', borderBottom: '2px solid rgba(27,58,107,0.1)' }}>
+                                <div className="nav-tabs-scroll" style={{ display: 'flex', gap: '0', marginBottom: '0', borderBottom: '2px solid var(--border-subtle)' }}>
                                     {LANGS.map(lang => {
                                         const status = getLangStatus(lang.key)
                                         return (
                                             <button key={lang.key} type="button" onClick={() => setActiveLang(lang.key as 'uz' | 'ru' | 'en')} style={{
                                                 padding: '10px 24px', border: 'none',
-                                                borderBottom: activeLang === lang.key ? '2px solid var(--navy)' : '2px solid transparent',
+                                                borderBottom: activeLang === lang.key ? '2px solid var(--gold)' : '2px solid transparent',
                                                 marginBottom: '-2px', background: 'none', cursor: 'pointer',
                                                 fontFamily: 'var(--font-mono)', fontSize: '13px',
-                                                color: activeLang === lang.key ? 'var(--navy-dark)' : 'var(--gray-400)',
+                                                color: activeLang === lang.key ? 'var(--text-heading)' : 'var(--text-muted)',
                                                 fontWeight: activeLang === lang.key ? '600' : '400',
                                                 display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.2s',
                                             }}>
                                                 <span>{lang.flag}</span><span>{lang.label}</span>
-                                                <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: status === 'done' ? '#16a34a' : status === 'partial' ? '#f59e0b' : 'rgba(27,58,107,0.2)' }} />
+                                                <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: status === 'done' ? '#16a34a' : status === 'partial' ? '#f59e0b' : 'var(--border-color)' }} />
                                             </button>
                                         )
                                     })}
                                 </div>
 
-                                <div style={{ background: 'rgba(27,58,107,0.02)', border: '1px solid rgba(27,58,107,0.08)', borderTop: 'none', borderRadius: '0 0 8px 8px', padding: '20px' }}>
+                                <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)', borderTop: 'none', borderRadius: '0 0 8px 8px', padding: '20px' }}>
                                     {activeLang === 'uz' && (
                                         <div style={{ marginBottom: '8px', fontSize: '12px', color: '#dc2626', fontFamily: 'var(--font-mono)' }}>* O'zbek tili majburiy</div>
                                     )}
@@ -231,11 +230,11 @@ export default function AdminNewsPage() {
 
                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '24px' }}>
                                 <input type="checkbox" id="published" checked={form.published} onChange={e => setForm(p => ({ ...p, published: e.target.checked }))}
-                                       style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: 'var(--navy)' }} />
-                                <label htmlFor="published" style={{ fontSize: '15px', color: 'var(--navy-dark)', cursor: 'pointer' }}>Nashr qilish</label>
+                                       style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: 'var(--gold)' }} />
+                                <label htmlFor="published" style={{ fontSize: '15px', color: 'var(--text-heading)', cursor: 'pointer' }}>Nashr qilish</label>
                             </div>
 
-                            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+                            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
                                 <button type="button" onClick={handleCancel} className="btn-outline" style={{ cursor: 'pointer' }}>Bekor qilish</button>
                                 <button type="submit" disabled={saving} className="btn-primary" style={{ border: 'none', cursor: saving ? 'not-allowed' : 'pointer', opacity: saving ? 0.7 : 1 }}>
                                     {saving ? 'Saqlanmoqda...' : 'Saqlash'}
@@ -246,20 +245,20 @@ export default function AdminNewsPage() {
                 )}
 
                 {loading ? (
-                    <div style={{ textAlign: 'center', padding: '60px', color: 'var(--gray-600)' }}>Yuklanmoqda...</div>
+                    <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-muted)' }}>Yuklanmoqda...</div>
                 ) : news.length === 0 ? (
-                    <div style={{ textAlign: 'center', padding: '60px', color: 'var(--gray-600)' }}>Hali yangiliklar yo'q</div>
+                    <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-muted)' }}>Hali yangiliklar yo'q</div>
                 ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                         {news.map(item => (
-                            <div key={item.id} style={{ background: '#fff', borderRadius: '12px', padding: '20px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', border: '1px solid rgba(27,58,107,0.08)' }}>
+                            <div key={item.id} style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '20px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', border: '1px solid var(--border-color)', flexWrap: 'wrap' }}>
                                 {item.imageUrl && <img src={item.imageUrl} alt="" style={{ width: '64px', height: '44px', objectFit: 'cover', borderRadius: '6px', flexShrink: 0 }} />}
-                                <div style={{ flex: 1, minWidth: 0 }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-                                        <h3 style={{ fontSize: '16px', color: 'var(--navy-dark)', fontFamily: 'var(--font-display)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                <div style={{ flex: 1, minWidth: '200px' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px', flexWrap: 'wrap' }}>
+                                        <h3 style={{ fontSize: '16px', color: 'var(--text-heading)', fontFamily: 'var(--font-display)' }}>
                                             {item.titleUz || item.title}
                                         </h3>
-                                        <span style={{ padding: '2px 10px', borderRadius: '20px', fontSize: '11px', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap', background: item.published ? 'rgba(34,197,94,0.12)' : 'rgba(156,163,175,0.15)', color: item.published ? '#16a34a' : '#6b7280' }}>
+                                        <span style={{ padding: '2px 10px', borderRadius: '20px', fontSize: '11px', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap', background: item.published ? 'rgba(34,197,94,0.12)' : 'rgba(156,163,175,0.15)', color: item.published ? '#16a34a' : 'var(--text-muted)' }}>
                                             {item.published ? 'Nashr' : 'Qoralama'}
                                         </span>
                                         <div style={{ display: 'flex', gap: '4px' }}>
@@ -269,12 +268,12 @@ export default function AdminNewsPage() {
                                             })}
                                         </div>
                                     </div>
-                                    <div style={{ fontSize: '12px', color: 'var(--gray-400)', fontFamily: 'var(--font-mono)' }}>
+                                    <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
                                         {item.category} · {new Date(item.createdAt).toLocaleDateString('uz-UZ')}
                                     </div>
                                 </div>
                                 <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
-                                    <button onClick={() => handleEdit(item)} style={{ padding: '8px 16px', background: 'rgba(27,58,107,0.08)', border: '1px solid rgba(27,58,107,0.15)', borderRadius: '6px', fontSize: '13px', color: 'var(--navy)', cursor: 'pointer' }}>Tahrirlash</button>
+                                    <button onClick={() => handleEdit(item)} style={{ padding: '8px 16px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '6px', fontSize: '13px', color: 'var(--text-heading)', cursor: 'pointer' }}>Tahrirlash</button>
                                     <button onClick={() => handleDelete(item.id)} style={{ padding: '8px 16px', background: 'rgba(220,38,38,0.08)', border: '1px solid rgba(220,38,38,0.2)', borderRadius: '6px', fontSize: '13px', color: '#dc2626', cursor: 'pointer' }}>O'chirish</button>
                                 </div>
                             </div>
@@ -286,5 +285,5 @@ export default function AdminNewsPage() {
     )
 }
 
-const labelStyle: React.CSSProperties = { display: 'block', fontSize: '12px', fontFamily: 'var(--font-mono)', color: 'var(--gray-600)', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '6px' }
-const inputStyle: React.CSSProperties = { width: '100%', padding: '10px 14px', border: '1px solid rgba(27,58,107,0.2)', borderRadius: '8px', fontSize: '15px', fontFamily: 'var(--font-body)', color: 'var(--navy-dark)', outline: 'none', background: '#fff' }
+const labelStyle: React.CSSProperties = { display: 'block', fontSize: '12px', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '6px' }
+const inputStyle: React.CSSProperties = { width: '100%', padding: '10px 14px', border: '1px solid var(--border-color)', borderRadius: '8px', fontSize: '15px', fontFamily: 'var(--font-body)', color: 'var(--text-heading)', outline: 'none', background: 'var(--bg-main)' }

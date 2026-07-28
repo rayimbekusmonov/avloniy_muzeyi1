@@ -141,7 +141,7 @@ export default function Navbar() {
                         />
                     </div>
                     <div>
-                        <div style={{
+                        <div className="brand-title" style={{
                             fontFamily: 'var(--font-display)',
                             fontWeight: '800',
                             fontSize: '17px',
@@ -149,7 +149,7 @@ export default function Navbar() {
                             lineHeight: 1.1,
                             letterSpacing: '0.4px',
                         }}>O&apos;zbekiston Jadidlari</div>
-                        <div style={{
+                        <div className="brand-subtitle" style={{
                             fontFamily: 'var(--font-mono)',
                             fontSize: '10px',
                             color: '#C9A84C',

@@ -238,11 +238,10 @@ export default function JadidDetailPage() {
 
             {/* Structure Tabs */}
             <div className="container" style={{ marginBottom: '32px' }}>
-                <div style={{
+                <div className="nav-tabs-scroll" style={{
                     display: 'flex', gap: '8px',
                     borderBottom: '1px solid var(--border-subtle)',
                     paddingBottom: '12px',
-                    overflowX: 'auto'
                 }}>
                     {[
                         { id: 'bio', label: labels.bioTab, icon: <Icons.Clock /> },

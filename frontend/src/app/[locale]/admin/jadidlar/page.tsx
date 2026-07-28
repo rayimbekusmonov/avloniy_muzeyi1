@@ -249,13 +249,13 @@ export default function AdminJadidlarPage() {
                 )}
 
                 {showForm && (
-                    <div style={{ background: '#fff', borderRadius: '12px', padding: '32px', marginBottom: '32px', border: '1px solid rgba(27,58,107,0.1)', boxShadow: '0 4px 20px rgba(27,58,107,0.08)' }}>
-                        <h2 style={{ fontSize: '20px', color: 'var(--navy-dark)', marginBottom: '28px' }}>
+                    <div style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '32px', marginBottom: '32px', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-md)' }}>
+                        <h2 style={{ fontSize: '20px', color: 'var(--text-heading)', marginBottom: '28px' }}>
                             {editItem ? 'Jadidni tahrirlash' : "Yangi jadid qo'shish"}
                         </h2>
                         <form onSubmit={handleSubmit}>
                             {/* Asosiy ma'lumotlar */}
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
+                            <div className="grid-2-col" style={{ display: 'grid', gap: '16px', marginBottom: '24px' }}>
                                 <div>
                                     <label style={labelStyle}>Rasm</label>
                                     <FileUpload folder="jadidlar" accept="image/*" label="Rasm yuklash" onUpload={(url) => setForm(p => ({ ...p, imageUrl: url }))} />
@@ -274,7 +274,7 @@ export default function AdminJadidlarPage() {
                             {/* Markaziy shaxs belgisi */}
                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '24px' }}>
                                 <input type="checkbox" id="featured" checked={form.featured} onChange={e => setForm(p => ({ ...p, featured: e.target.checked }))} style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: 'var(--gold)' }} />
-                                <label htmlFor="featured" style={{ fontSize: '15px', color: 'var(--navy-dark)', cursor: 'pointer' }}>Markaziy shaxs (bosh sahifada alohida ko'rsatiladi)</label>
+                                <label htmlFor="featured" style={{ fontSize: '15px', color: 'var(--text-heading)', cursor: 'pointer' }}>Markaziy shaxs (bosh sahifada alohida ko'rsatiladi)</label>
                             </div>
 
                             {/* Til tablari */}
