@@ -95,14 +95,14 @@ export default function NewsPage() {
                 </div>
             </div>
 
-            <section style={{ background: '#0d1f3c', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '0' }}>
+            <section style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-subtle)', padding: '0' }}>
                 <div className="container">
                     <div style={{ display: 'flex', gap: '0', overflowX: 'auto' }}>
                         {CATEGORIES.map(cat => (
                             <button key={cat.value} onClick={() => { setActiveCategory(cat.value); setPage(0) }} style={{
                                 padding: '16px 24px', border: 'none',
                                 borderBottom: activeCategory === cat.value ? '2px solid #C9A84C' : '2px solid transparent',
-                                background: 'none', color: activeCategory === cat.value ? '#C9A84C' : 'rgba(255,255,255,0.5)',
+                                background: 'none', color: activeCategory === cat.value ? '#C9A84C' : 'var(--text-muted)',
                                 fontFamily: 'var(--font-mono)', fontSize: '12px', letterSpacing: '2px',
                                 textTransform: 'uppercase', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all 0.2s',
                             }}>
@@ -113,15 +113,15 @@ export default function NewsPage() {
                 </div>
             </section>
 
-            <section className="section" style={{ background: 'var(--off-white)' }}>
+            <section className="section" style={{ background: 'var(--bg-main)' }}>
                 <div className="container">
                     {loading ? (
-                        <div style={{ textAlign: 'center', padding: '80px', color: 'var(--gray-600)' }}>
+                        <div style={{ textAlign: 'center', padding: '80px', color: 'var(--text-muted)' }}>
                             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px', opacity: 0.3 }}><Icons.Newspaper /></div>
                             <p>{t.loading}</p>
                         </div>
                     ) : news.length === 0 ? (
-                        <div style={{ textAlign: 'center', padding: '80px', color: 'var(--gray-600)' }}>
+                        <div style={{ textAlign: 'center', padding: '80px', color: 'var(--text-muted)' }}>
                             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px', opacity: 0.3 }}><Icons.Inbox /></div>
                             <p>{t.empty}</p>
                         </div>
@@ -130,34 +130,34 @@ export default function NewsPage() {
                             {news.map(item => (
                                 <Link key={item.id} href={`/${locale}/news/${item.slug}`} style={{ textDecoration: 'none' }}>
                                     <div className="card" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-                                         onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-6px)'; e.currentTarget.style.boxShadow = '0 20px 50px rgba(27,58,107,0.15)' }}
-                                         onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '' }}
+                                         onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-6px)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)' }}
+                                         onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--shadow-sm)' }}
                                     >
-                                        <div style={{ position: 'relative', height: '220px', background: 'linear-gradient(135deg, #112548, #1B3A6B)', overflow: 'hidden' }}>
+                                        <div style={{ position: 'relative', height: '220px', background: 'var(--bg-header)', overflow: 'hidden' }}>
                                             {item.imageUrl ? (
                                                 <Image src={item.imageUrl} alt={item.title} fill style={{ objectFit: 'cover' }} />
                                             ) : (
-                                                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.15)' }}>
+                                                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.3)' }}>
                                                     <Icons.Image />
                                                 </div>
                                             )}
-                                            <div style={{ position: 'absolute', top: '14px', left: '14px', background: 'rgba(201,168,76,0.9)', color: '#112548', fontFamily: 'var(--font-mono)', fontSize: '9px', letterSpacing: '2px', textTransform: 'uppercase', padding: '4px 10px', borderRadius: '2px' }}>
+                                            <div style={{ position: 'absolute', top: '14px', left: '14px', background: 'rgba(201,168,76,0.95)', color: '#061d15', fontFamily: 'var(--font-mono)', fontSize: '9px', letterSpacing: '2px', textTransform: 'uppercase', padding: '4px 10px', borderRadius: '2px', fontWeight: '700' }}>
                                                 {item.category}
                                             </div>
                                         </div>
                                         <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                                            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gray-400)', marginBottom: '10px' }}>
+                                            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '10px' }}>
                                                 {formatDate(item.createdAt, locale)}
                                             </div>
-                                            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '19px', color: 'var(--navy-dark)', marginBottom: '10px', lineHeight: '1.35', flex: 1 }}>
+                                            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '19px', color: 'var(--text-heading)', marginBottom: '10px', lineHeight: '1.35', flex: 1 }}>
                                                 {item.title}
                                             </h3>
                                             {item.excerpt && (
-                                                <p style={{ fontSize: '14px', color: 'var(--gray-600)', lineHeight: '1.75', marginBottom: '16px' }}>
+                                                <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.75', marginBottom: '16px' }}>
                                                     {item.excerpt.length > 120 ? item.excerpt.substring(0, 120) + '...' : item.excerpt}
                                                 </p>
                                             )}
-                                            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)', letterSpacing: '1px' }}>
+                                            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#C9A84C', letterSpacing: '1px', fontWeight: '700' }}>
                                                 {t.readMore} →
                                             </div>
                                         </div>
@@ -170,7 +170,7 @@ export default function NewsPage() {
                     {totalPages > 1 && (
                         <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', marginTop: '48px' }}>
                             <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0} className="btn-outline" style={{ opacity: page === 0 ? 0.4 : 1, cursor: page === 0 ? 'not-allowed' : 'pointer' }}>{t.prev}</button>
-                            <span style={{ display: 'flex', alignItems: 'center', fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--gray-600)' }}>{page + 1} / {totalPages}</span>
+                            <span style={{ display: 'flex', alignItems: 'center', fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--text-muted)' }}>{page + 1} / {totalPages}</span>
                             <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page === totalPages - 1} className="btn-outline" style={{ opacity: page === totalPages - 1 ? 0.4 : 1, cursor: page === totalPages - 1 ? 'not-allowed' : 'pointer' }}>{t.next}</button>
                         </div>
                     )}

@@ -66,9 +66,11 @@ export default function FileUpload({ folder, accept = "*", onUpload, label = "Fa
             style={{
               width: '100%',
               padding: '8px',
-              border: '1px solid rgba(27,58,107,0.2)',
+              border: '1px solid var(--border-color)',
               borderRadius: '6px',
               fontSize: '14px',
+              background: 'var(--bg-input)',
+              color: 'var(--text-main)',
               cursor: loading ? 'not-allowed' : 'pointer',
               opacity: loading ? 0.6 : 1,
             }}

@@ -188,7 +188,7 @@ export default function HomePage() {
     }
 
     return (
-        <div style={{ background: '#03120d', color: '#e2e8f0', minHeight: '100vh' }}>
+        <div style={{ background: 'var(--bg-main)', color: 'var(--text-main)', minHeight: '100vh', transition: 'background-color 0.3s ease, color 0.3s ease' }}>
             
             {/* HERO SECTION WITH BRIGHT & SHARP BACKGROUND SLIDES */}
             <section style={{ position: 'relative', minHeight: '90vh', display: 'flex', alignItems: 'center', paddingTop: '110px', paddingBottom: '60px', overflow: 'hidden' }}>
@@ -348,7 +348,7 @@ export default function HomePage() {
             </section>
 
             {/* NEW GEOGRAPHICAL MAP SECTION OF UZBEKISTAN JADIDS */}
-            <section style={{ padding: '80px 0', background: 'linear-gradient(180deg, #050c18 0%, #0c1a2e 50%, #050c18 100%)', borderTop: '1px solid rgba(201,168,76,0.2)', borderBottom: '1px solid rgba(201,168,76,0.2)' }}>
+            <section style={{ padding: '80px 0', background: 'var(--bg-secondary)', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)' }}>
                 <div className="container">
                     <div style={{ textAlign: 'center', maxWidth: '750px', margin: '0 auto 50px auto' }}>
                         <div style={{
@@ -360,10 +360,10 @@ export default function HomePage() {
                         }}>
                             <ModernIcons.Compass /> {labels.mapSectionTitle}
                         </div>
-                        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '38px', color: '#ffffff', fontWeight: '800', marginBottom: '12px' }}>
+                        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '38px', color: 'var(--text-heading)', fontWeight: '800', marginBottom: '12px' }}>
                             Jadidlarning Hududiy va Geografik Joylashuvi
                         </h2>
-                        <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.7)', lineHeight: 1.7 }}>
+                        <p style={{ fontSize: '16px', color: 'var(--text-muted)', lineHeight: 1.7 }}>
                             {labels.mapSectionDesc}
                         </p>
                     </div>
@@ -376,16 +376,16 @@ export default function HomePage() {
                         {/* Interactive Map Visual Container */}
                         <div style={{
                             position: 'relative',
-                            background: 'radial-gradient(circle, rgba(14,34,56,0.9) 0%, rgba(6,13,23,0.95) 100%)',
-                            border: '1px solid rgba(201,168,76,0.3)',
+                            background: 'var(--bg-card)',
+                            border: '1px solid var(--border-color)',
                             borderRadius: '16px', padding: '24px',
-                            boxShadow: '0 20px 60px rgba(0,0,0,0.6)',
+                            boxShadow: 'var(--shadow-md)',
                             overflow: 'hidden', minHeight: '380px',
                             display: 'flex', alignItems: 'center', justifyContent: 'center'
                         }}>
                             {/* SVG Map of Uzbekistan */}
                             <div style={{ position: 'relative', width: '100%', maxWidth: '650px', height: 'auto' }}>
-                                <img src="/uz.svg" alt="O'zbekiston Xaritasi" style={{ width: '100%', height: 'auto', filter: 'brightness(0.7) sepia(0.5) hue-rotate(180deg) saturate(2)' }} />
+                                <img src="/uz.svg" alt="O'zbekiston Xaritasi" style={{ width: '100%', height: 'auto', filter: 'brightness(0.8) sepia(0.5) hue-rotate(180deg) saturate(2)' }} />
 
                                 {/* Interactive Pulsing Hotspots on Map */}
                                 {mapRegions.map(reg => (
@@ -397,7 +397,7 @@ export default function HomePage() {
                                             top: reg.coords.top,
                                             left: reg.coords.left,
                                             transform: 'translate(-50%, -50%)',
-                                            background: selectedRegion === reg.id ? '#C9A84C' : 'rgba(10,24,41,0.9)',
+                                            background: selectedRegion === reg.id ? '#C9A84C' : 'var(--bg-main)',
                                             color: selectedRegion === reg.id ? '#050c18' : '#C9A84C',
                                             border: '2px solid #C9A84C',
                                             borderRadius: '20px',
@@ -406,7 +406,7 @@ export default function HomePage() {
                                             fontFamily: 'var(--font-mono)',
                                             fontWeight: '700',
                                             cursor: 'pointer',
-                                            boxShadow: selectedRegion === reg.id ? '0 0 20px #C9A84C' : '0 4px 14px rgba(0,0,0,0.5)',
+                                            boxShadow: selectedRegion === reg.id ? '0 0 20px #C9A84C' : 'var(--shadow-sm)',
                                             transition: 'all 0.3s ease',
                                             display: 'flex', alignItems: 'center', gap: '6px',
                                             zIndex: 20
@@ -420,10 +420,10 @@ export default function HomePage() {
 
                         {/* Region Information & Jadids List */}
                         <div style={{
-                            background: 'rgba(14,34,56,0.85)',
-                            border: '1px solid rgba(201,168,76,0.3)',
+                            background: 'var(--bg-card)',
+                            border: '1px solid var(--border-color)',
                             borderRadius: '16px', padding: '36px',
-                            boxShadow: '0 16px 40px rgba(0,0,0,0.4)'
+                            boxShadow: 'var(--shadow-md)'
                         }}>
                             <div style={{
                                 display: 'inline-flex', alignItems: 'center', gap: '6px',
@@ -433,11 +433,11 @@ export default function HomePage() {
                                 📍 {activeMapRegion.nameUz}
                             </div>
 
-                            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '28px', color: '#fff', fontWeight: '800', marginBottom: '12px' }}>
+                            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '28px', color: 'var(--text-heading)', fontWeight: '800', marginBottom: '12px' }}>
                                 {activeMapRegion.id} Jadidchilik Harakati
                             </h3>
 
-                            <p style={{ fontSize: '15px', color: 'rgba(255,255,255,0.75)', lineHeight: 1.8, marginBottom: '24px' }}>
+                            <p style={{ fontSize: '15px', color: 'var(--text-muted)', lineHeight: 1.8, marginBottom: '24px' }}>
                                 {activeMapRegion.desc}
                             </p>
 
@@ -447,7 +447,7 @@ export default function HomePage() {
 
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                                 {filteredJadids.length === 0 ? (
-                                    <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '14px', fontFamily: 'var(--font-mono)' }}>
+                                    <div style={{ color: 'var(--text-muted)', fontSize: '14px', fontFamily: 'var(--font-mono)' }}>
                                         {activeMapRegion.id} hududidagi jadidlar yuklanmoqda...
                                     </div>
                                 ) : (
@@ -457,17 +457,17 @@ export default function HomePage() {
                                             href={`/${locale}/jadidlar/${jadid.id}`}
                                             style={{
                                                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                                                padding: '14px 18px', background: 'rgba(255,255,255,0.04)',
-                                                border: '1px solid rgba(255,255,255,0.08)', borderRadius: '10px',
-                                                textDecoration: 'none', color: '#fff', transition: 'all 0.25s ease'
+                                                padding: '14px 18px', background: 'var(--bg-secondary)',
+                                                border: '1px solid var(--border-subtle)', borderRadius: '10px',
+                                                textDecoration: 'none', color: 'var(--text-main)', transition: 'all 0.25s ease'
                                             }}
                                             onMouseEnter={e => {
                                                 e.currentTarget.style.background = 'rgba(201,168,76,0.12)'
                                                 e.currentTarget.style.borderColor = 'rgba(201,168,76,0.3)'
                                             }}
                                             onMouseLeave={e => {
-                                                e.currentTarget.style.background = 'rgba(255,255,255,0.04)'
-                                                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'
+                                                e.currentTarget.style.background = 'var(--bg-secondary)'
+                                                e.currentTarget.style.borderColor = 'var(--border-subtle)'
                                             }}
                                         >
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
@@ -479,7 +479,7 @@ export default function HomePage() {
                                                     </div>
                                                 )}
                                                 <div>
-                                                    <div style={{ fontFamily: 'var(--font-display)', fontWeight: '700', fontSize: '16px', color: '#fff' }}>
+                                                    <div style={{ fontFamily: 'var(--font-display)', fontWeight: '700', fontSize: '16px', color: 'var(--text-heading)' }}>
                                                         {jadid.name}
                                                     </div>
                                                     <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#C9A84C' }}>
@@ -505,18 +505,19 @@ export default function HomePage() {
                         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: '#C9A84C', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '12px' }}>
                             Katalog
                         </div>
-                        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '38px', color: '#fff', fontWeight: '800', marginBottom: '12px' }}>
+                        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '38px', color: 'var(--text-heading)', fontWeight: '800', marginBottom: '12px' }}>
                             Barcha Jadid Ma&apos;rifatparvarlari
                         </h2>
                     </div>
 
                     {/* Interactive Search Bar */}
                     <div style={{
-                        background: 'rgba(15,28,45,0.85)',
-                        border: '1px solid rgba(201,168,76,0.3)',
+                        background: 'var(--bg-card)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '14px', padding: '24px',
                         marginBottom: '44px',
-                        display: 'flex', flexDirection: 'column', gap: '20px'
+                        display: 'flex', flexDirection: 'column', gap: '20px',
+                        boxShadow: 'var(--shadow-sm)'
                     }}>
                         <div style={{ position: 'relative' }}>
                             <div style={{ position: 'absolute', left: '18px', top: '50%', transform: 'translateY(-50%)', color: '#C9A84C' }}>
@@ -530,10 +531,10 @@ export default function HomePage() {
                                 style={{
                                     width: '100%',
                                     padding: '16px 20px 16px 52px',
-                                    background: 'rgba(5,12,24,0.9)',
-                                    border: '1px solid rgba(255,255,255,0.12)',
+                                    background: 'var(--bg-input)',
+                                    border: '1px solid var(--border-color)',
                                     borderRadius: '10px',
-                                    color: '#fff', fontSize: '15px', outline: 'none'
+                                    color: 'var(--text-main)', fontSize: '15px', outline: 'none'
                                 }}
                             />
                         </div>
@@ -546,29 +547,29 @@ export default function HomePage() {
                                 key={jadid.id}
                                 href={`/${locale}/jadidlar/${jadid.id}`}
                                 style={{
-                                    background: 'rgba(15,28,45,0.75)',
-                                    border: '1px solid rgba(255,255,255,0.08)',
+                                    background: 'var(--bg-card)',
+                                    border: '1px solid var(--border-color)',
                                     borderRadius: '14px', padding: '28px',
                                     textDecoration: 'none', color: 'inherit',
                                     display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
                                     transition: 'all 0.3s ease',
-                                    boxShadow: '0 8px 30px rgba(0,0,0,0.3)'
+                                    boxShadow: 'var(--shadow-sm)'
                                 }}
                                 onMouseEnter={e => {
-                                    e.currentTarget.style.background = 'rgba(22,44,72,0.95)'
-                                    e.currentTarget.style.borderColor = 'rgba(201,168,76,0.5)'
+                                    e.currentTarget.style.borderColor = '#C9A84C'
                                     e.currentTarget.style.transform = 'translateY(-6px)'
+                                    e.currentTarget.style.boxShadow = 'var(--shadow-md)'
                                 }}
                                 onMouseLeave={e => {
-                                    e.currentTarget.style.background = 'rgba(15,28,45,0.75)'
-                                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'
+                                    e.currentTarget.style.borderColor = 'var(--border-color)'
                                     e.currentTarget.style.transform = 'translateY(0)'
+                                    e.currentTarget.style.boxShadow = 'var(--shadow-sm)'
                                 }}
                             >
                                 <div>
                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
                                         {jadid.imageUrl ? (
-                                            <img src={jadid.imageUrl} alt={jadid.name} style={{ width: '68px', height: '68px', borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(201,168,76,0.4)', boxShadow: '0 4px 14px rgba(0,0,0,0.4)' }} />
+                                            <img src={jadid.imageUrl} alt={jadid.name} style={{ width: '68px', height: '68px', borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(201,168,76,0.4)', boxShadow: '0 4px 14px rgba(0,0,0,0.2)' }} />
                                         ) : (
                                             <div style={{ width: '68px', height: '68px', borderRadius: '50%', background: 'rgba(201,168,76,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#C9A84C' }}>
                                                 <ModernIcons.Feather />
@@ -586,20 +587,20 @@ export default function HomePage() {
                                         )}
                                     </div>
 
-                                    <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', color: '#ffffff', fontWeight: '700', marginBottom: '6px' }}>
+                                    <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', color: 'var(--text-heading)', fontWeight: '700', marginBottom: '6px' }}>
                                         {jadid.name}
                                     </h3>
                                     <div style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: '#C9A84C', marginBottom: '14px', fontWeight: '600' }}>
                                         ⏳ {jadid.years}
                                     </div>
-                                    <p style={{ fontSize: '14.5px', color: 'rgba(255,255,255,0.7)', lineHeight: 1.75, marginBottom: '24px', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                                    <p style={{ fontSize: '14.5px', color: 'var(--text-muted)', lineHeight: 1.75, marginBottom: '24px', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                                         {jadid.bio}
                                     </p>
                                 </div>
 
                                 <div style={{
                                     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                                    paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.08)',
+                                    paddingTop: '16px', borderTop: '1px solid var(--border-subtle)',
                                     fontFamily: 'var(--font-mono)', fontSize: '13px', color: '#C9A84C', fontWeight: '700'
                                 }}>
                                     <span>{labels.viewProfile}</span>

@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Crimson+Pro:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap');
 
+/* ── Light Mode Tokens (Default) ───────────────────── */
 :root {
     --navy: #0b2e22;
     --navy-light: #154836;
@@ -18,11 +19,44 @@
     --font-display: 'Playfair Display', Georgia, serif;
     --font-body: 'Crimson Pro', Georgia, serif;
     --font-mono: 'JetBrains Mono', monospace;
-    --shadow-sm: 0 2px 8px rgba(6,29,21,0.08);
-    --shadow-md: 0 8px 32px rgba(6,29,21,0.14);
-    --shadow-lg: 0 20px 60px rgba(6,29,21,0.22);
+
+    /* Semantic Theme Tokens */
+    --bg-main: #F4F8F5;
+    --bg-secondary: #e8f0eb;
+    --bg-card: #FFFFFF;
+    --bg-surface: #FFFFFF;
+    --bg-header: linear-gradient(135deg, #061d15 0%, #0b2e22 60%, #154836 100%);
+    --bg-input: #FFFFFF;
+    --text-main: #0f241d;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+    --text-heading: #061d15;
+    --border-color: rgba(11, 46, 34, 0.12);
+    --border-subtle: rgba(11, 46, 34, 0.08);
+    --shadow-sm: 0 2px 8px rgba(6, 29, 21, 0.08);
+    --shadow-md: 0 8px 32px rgba(6, 29, 21, 0.14);
+    --shadow-lg: 0 20px 60px rgba(6, 29, 21, 0.22);
     --radius: 4px;
     --radius-lg: 8px;
+}
+
+/* ── Dark Mode Tokens ──────────────────────────────── */
+[data-theme="dark"] {
+    --bg-main: #040f0b;
+    --bg-secondary: #081a14;
+    --bg-card: #0b241c;
+    --bg-surface: #0f3025;
+    --bg-header: linear-gradient(135deg, #030f0b 0%, #061912 60%, #0a251b 100%);
+    --bg-input: #081d15;
+    --text-main: #e2ede8;
+    --text-secondary: #9ec2b4;
+    --text-muted: #7ea395;
+    --text-heading: #ffffff;
+    --border-color: rgba(201, 168, 76, 0.25);
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.6);
 }
 
 *, *::before, *::after {
@@ -34,21 +68,24 @@
 html {
     scroll-behavior: smooth;
     font-size: 16px;
+    background: var(--bg-main);
+    color: var(--text-main);
 }
 
 body {
     font-family: var(--font-body);
-    color: var(--text-dark);
-    background: var(--off-white);
+    color: var(--text-main);
+    background: var(--bg-main);
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
     line-height: 1.2;
-    color: var(--navy-dark);
+    color: var(--text-heading);
 }
 
 a {
@@ -84,8 +121,8 @@ button {
 }
 
 .text-gold { color: var(--gold); }
-.text-navy { color: var(--navy); }
-.text-muted { color: var(--gray-600); }
+.text-navy { color: var(--text-heading); }
+.text-muted { color: var(--text-muted); }
 
 /* ── Buttons ────────────────────────────────────────── */
 .btn-primary {
@@ -93,7 +130,7 @@ button {
     align-items: center;
     gap: 8px;
     background: var(--gold);
-    color: var(--navy-dark);
+    color: #061d15;
     font-family: var(--font-display);
     font-weight: 600;
     font-size: 15px;
@@ -116,25 +153,26 @@ button {
     align-items: center;
     gap: 8px;
     background: transparent;
-    color: var(--navy);
+    color: var(--text-heading);
     font-family: var(--font-display);
     font-weight: 600;
     font-size: 15px;
     padding: 13px 27px;
     border-radius: var(--radius);
-    border: 2px solid var(--navy);
+    border: 2px solid var(--border-color);
     transition: all 0.3s ease;
 }
 
 .btn-outline:hover {
-    background: var(--navy);
-    color: var(--white);
+    background: var(--gold-pale);
+    border-color: var(--gold);
+    color: var(--gold);
     transform: translateY(-2px);
 }
 
 /* ── Page Header ────────────────────────────────────── */
 .page-header {
-    background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 60%, var(--navy-light) 100%);
+    background: var(--bg-header);
     padding: 110px 0 72px;
     position: relative;
     overflow: hidden;
@@ -175,7 +213,7 @@ button {
 
 .page-header p {
     font-size: 18px;
-    color: rgba(255,255,255,0.65);
+    color: rgba(255,255,255,0.75);
     font-weight: 300;
     max-width: 560px;
     line-height: 1.8;
@@ -183,17 +221,19 @@ button {
 
 /* ── Card ───────────────────────────────────────────── */
 .card {
-    background: var(--white);
+    background: var(--bg-card);
+    color: var(--text-main);
     border-radius: var(--radius);
     box-shadow: var(--shadow-sm);
     overflow: hidden;
     transition: all 0.3s ease;
-    border: 1px solid rgba(27,58,107,0.06);
+    border: 1px solid var(--border-color);
 }
 
 .card:hover {
     box-shadow: var(--shadow-md);
     transform: translateY(-4px);
+    border-color: var(--gold);
 }
 
 /* ── Gold Divider ───────────────────────────────────── */
@@ -230,6 +270,25 @@ button {
     grid-template-columns: 300px 1fr;
     gap: 60px;
     align-items: start;
+}
+
+/* ── Form Inputs Global Theme ───────────────────────── */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+    background-color: var(--bg-input) !important;
+    color: var(--text-main) !important;
+    border-color: var(--border-color) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: var(--text-muted) !important;
+    opacity: 0.7;
 }
 
 /* ── Animations ─────────────────────────────────────── */
@@ -277,14 +336,14 @@ button {
 
 /* ── Scrollbar ──────────────────────────────────────── */
 ::-webkit-scrollbar       { width: 8px; }
-::-webkit-scrollbar-track { background: var(--off-white); }
-::-webkit-scrollbar-thumb { background: rgba(27,58,107,0.3); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--navy-light); }
+::-webkit-scrollbar-track { background: var(--bg-main); }
+::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold); }
 
 /* ── Selection ──────────────────────────────────────── */
 ::selection {
     background: rgba(201,168,76,0.25);
-    color: var(--navy-dark);
+    color: var(--text-heading);
 }
 
 /* ══════════════════════════════════════════════════════
@@ -296,7 +355,7 @@ button {
     .burger-btn { display: none !important; }
 }
 
-/* ── Hero Quote (faqat katta ekranlarda) ────────────── */
+/* ── Hero Quote (katta ekranlarda) ───────────────────── */
 .hero-quote-card { display: none; }
 @media (min-width: 1100px) {
     .hero-quote-card { display: block !important; }
@@ -398,7 +457,7 @@ button {
         display: none;
     }
 
-    /* Timeline mobilda */
+    /* Timeline mobile */
     .timeline-year {
         min-width: 48px !important;
         font-size: 14px !important;

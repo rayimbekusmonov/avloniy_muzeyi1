@@ -95,35 +95,35 @@ export default function ContactPage() {
                 </div>
             </div>
 
-            <section className="section" style={{ background: 'var(--off-white)' }}>
+            <section className="section" style={{ background: 'var(--bg-main)' }}>
                 <div className="container">
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '60px', alignItems: 'start' }}>
                         <div>
-                            <h2 style={{ fontSize: '28px', marginBottom: '8px' }}>{t.infoTitle}<span style={{ color: 'var(--gold)' }}>{t.infoTitleGold}</span></h2>
+                            <h2 style={{ fontSize: '28px', marginBottom: '8px', color: 'var(--text-heading)' }}>{t.infoTitle}<span style={{ color: 'var(--gold)' }}>{t.infoTitleGold}</span></h2>
                             <div className="gold-divider" style={{ marginBottom: '32px' }} />
                             {contactItems.map((item, i) => (
-                                <div key={i} style={{ display: 'flex', gap: '16px', marginBottom: '16px', padding: '20px', background: '#fff', borderRadius: '12px', border: '1px solid rgba(27,58,107,0.08)', boxShadow: 'var(--shadow-sm)' }}>
+                                <div key={i} style={{ display: 'flex', gap: '16px', marginBottom: '16px', padding: '20px', background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-sm)' }}>
                                     <div style={{ color: 'var(--gold)', flexShrink: 0 }}><item.Icon /></div>
                                     <div>
                                         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '6px' }}>{item.title}</div>
-                                        <div style={{ fontSize: '15px', color: 'var(--navy-dark)', lineHeight: '1.7', whiteSpace: 'pre-line' }}>{item.text}</div>
+                                        <div style={{ fontSize: '15px', color: 'var(--text-heading)', lineHeight: '1.7', whiteSpace: 'pre-line' }}>{item.text}</div>
                                     </div>
                                 </div>
                             ))}
-                            <div style={{ borderRadius: '12px', overflow: 'hidden' }}>
+                            <div style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
                                 <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d636.0895257286825!2d69.21453237652102!3d41.35473189147808!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38ae8c3fa12f11a3%3A0xc849830383f1974d!2sA.AVLONIY%20NOMIDAGI%20PEDAGOGLARNI%20KASBIY%20RIVOJLANTIRISH%20VA%20YANGI%20METODIKALARGA%20O&#39;RGATISH%20MILLIY-TADQIQOT%20INSTITUTI!5e1!3m2!1sru!2s!4v1772104974302!5m2!1sru!2s" width="100%" height="300" style={{ border: 0, display: 'block' }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
                             </div>
                         </div>
 
-                        <div style={{ background: '#fff', borderRadius: '16px', padding: '40px', border: '1px solid rgba(27,58,107,0.08)', boxShadow: 'var(--shadow-md)' }}>
-                            <h2 style={{ fontSize: '24px', marginBottom: '8px' }}>{t.formTitle}<span style={{ color: 'var(--gold)' }}>{t.formTitleGold}</span></h2>
+                        <div style={{ background: 'var(--bg-card)', borderRadius: '16px', padding: '40px', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-md)' }}>
+                            <h2 style={{ fontSize: '24px', marginBottom: '8px', color: 'var(--text-heading)' }}>{t.formTitle}<span style={{ color: 'var(--gold)' }}>{t.formTitleGold}</span></h2>
                             <div className="gold-divider" style={{ marginBottom: '28px' }} />
 
                             {success ? (
                                 <div style={{ textAlign: 'center', padding: '40px 20px' }}>
                                     <div style={{ color: 'var(--gold)', display: 'flex', justifyContent: 'center', marginBottom: '16px' }}><Icons.Check /></div>
-                                    <h3 style={{ fontSize: '20px', color: 'var(--navy-dark)', marginBottom: '8px' }}>{t.successTitle}</h3>
-                                    <p style={{ color: 'var(--gray-600)', marginBottom: '24px' }}>{t.successDesc}</p>
+                                    <h3 style={{ fontSize: '20px', color: 'var(--text-heading)', marginBottom: '8px' }}>{t.successTitle}</h3>
+                                    <p style={{ color: 'var(--text-muted)', marginBottom: '24px' }}>{t.successDesc}</p>
                                     <button onClick={() => setSuccess(false)} className="btn-primary" style={{ border: 'none', cursor: 'pointer' }}>{t.sendAgain}</button>
                                 </div>
                             ) : (
@@ -161,5 +161,5 @@ export default function ContactPage() {
     )
 }
 
-const labelStyle: React.CSSProperties = { display: 'block', fontSize: '12px', fontFamily: 'var(--font-mono)', color: 'var(--gray-600)', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '6px' }
-const inputStyle: React.CSSProperties = { width: '100%', padding: '11px 16px', border: '1px solid rgba(27,58,107,0.2)', borderRadius: '8px', fontSize: '15px', fontFamily: 'var(--font-body)', color: 'var(--navy-dark)', outline: 'none', background: '#fff' }
+const labelStyle: React.CSSProperties = { display: 'block', fontSize: '12px', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '6px' }
+const inputStyle: React.CSSProperties = { width: '100%', padding: '11px 16px', border: '1px solid var(--border-color)', borderRadius: '8px', fontSize: '15px', fontFamily: 'var(--font-body)', color: 'var(--text-main)', outline: 'none', background: 'var(--bg-input)' }

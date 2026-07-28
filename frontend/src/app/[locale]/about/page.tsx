@@ -122,28 +122,28 @@ export default function AboutPage() {
             </div>
 
             {/* Muzey haqida */}
-            <section className="section" style={{ background: 'var(--off-white)' }}>
+            <section className="section" style={{ background: 'var(--bg-main)' }}>
                 <div className="container">
                     <div className="grid-2-col">
                         <div>
                             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '16px' }}>{t.museumLabel}</div>
-                            <h2 style={{ fontSize: 'clamp(26px, 4vw, 36px)', marginBottom: '16px' }}>{t.museumH2a}<span style={{ color: 'var(--gold)' }}>{t.museumH2b}</span></h2>
+                            <h2 style={{ fontSize: 'clamp(26px, 4vw, 36px)', marginBottom: '16px', color: 'var(--text-heading)' }}>{t.museumH2a}<span style={{ color: 'var(--gold)' }}>{t.museumH2b}</span></h2>
                             <div className="gold-divider" />
-                            <p style={{ fontSize: '16px', color: 'var(--gray-600)', lineHeight: '1.9', marginTop: '16px', marginBottom: '16px' }}>{t.museumDesc1}</p>
-                            <p style={{ fontSize: '16px', color: 'var(--gray-600)', lineHeight: '1.9', marginBottom: '24px' }}>{t.museumDesc2}</p>
+                            <p style={{ fontSize: '16px', color: 'var(--text-muted)', lineHeight: '1.9', marginTop: '16px', marginBottom: '16px' }}>{t.museumDesc1}</p>
+                            <p style={{ fontSize: '16px', color: 'var(--text-muted)', lineHeight: '1.9', marginBottom: '24px' }}>{t.museumDesc2}</p>
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '16px' }}>
                                 {infoItems.map((item, i) => (
-                                    <div key={i} style={{ padding: '16px', background: 'var(--white)', borderRadius: '10px', border: '1px solid rgba(27,58,107,0.08)' }}>
+                                    <div key={i} style={{ padding: '16px', background: 'var(--bg-card)', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--gold)', marginBottom: '6px' }}>
                                             <item.Icon />
                                             <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '1px', textTransform: 'uppercase' }}>{item.label}</span>
                                         </div>
-                                        <div style={{ fontSize: '14px', fontWeight: '500', color: 'var(--navy-dark)' }}>{item.value}</div>
+                                        <div style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text-heading)' }}>{item.value}</div>
                                     </div>
                                 ))}
                             </div>
                         </div>
-                        <div style={{ background: 'linear-gradient(135deg, var(--navy-dark), var(--navy))', borderRadius: '16px', minHeight: '380px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.2)', boxShadow: 'var(--shadow-lg)' }}>
+                        <div style={{ background: 'var(--bg-header)', borderRadius: '16px', minHeight: '380px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.4)', boxShadow: 'var(--shadow-lg)' }}>
                             <Icons.Museum />
                         </div>
                     </div>
@@ -151,21 +151,21 @@ export default function AboutPage() {
             </section>
 
             {/* Biografiya */}
-            <section className="section" style={{ background: 'var(--white)' }}>
+            <section className="section" style={{ background: 'var(--bg-secondary)' }}>
                 <div className="container">
                     <div style={{ textAlign: 'center', marginBottom: '56px' }}>
                         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '12px' }}>{t.personLabel}</div>
-                        <h2 style={{ fontSize: 'clamp(26px, 4vw, 36px)' }}>Abdulla <span style={{ color: 'var(--gold)' }}>Avloniy</span>{t.personH2c}</h2>
+                        <h2 style={{ fontSize: 'clamp(26px, 4vw, 36px)', color: 'var(--text-heading)' }}>Abdulla <span style={{ color: 'var(--gold)' }}>Avloniy</span>{t.personH2c}</h2>
                     </div>
                     <div className="grid-2-col-uneven">
-                        <div style={{ background: 'linear-gradient(135deg, var(--navy-dark), var(--navy))', borderRadius: '16px', minHeight: '320px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.2)' }}>
+                        <div style={{ background: 'var(--bg-header)', borderRadius: '16px', minHeight: '320px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.4)' }}>
                             <Icons.Person />
                         </div>
                         <div>
                             {bioSections.map((item, i) => (
                                 <div key={i} style={{ marginBottom: '32px', paddingLeft: '24px', borderLeft: '3px solid var(--gold)' }}>
-                                    <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '20px', color: 'var(--navy-dark)', marginBottom: '10px' }}>{item.title}</h3>
-                                    <p style={{ fontSize: '16px', color: 'var(--gray-600)', lineHeight: '1.9' }}>{item.text}</p>
+                                    <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '20px', color: 'var(--text-heading)', marginBottom: '10px' }}>{item.title}</h3>
+                                    <p style={{ fontSize: '16px', color: 'var(--text-muted)', lineHeight: '1.9' }}>{item.text}</p>
                                 </div>
                             ))}
                         </div>
@@ -174,21 +174,21 @@ export default function AboutPage() {
             </section>
 
             {/* Timeline */}
-            <section className="section" style={{ background: 'var(--off-white)' }}>
+            <section className="section" style={{ background: 'var(--bg-main)' }}>
                 <div className="container">
                     <div style={{ textAlign: 'center', marginBottom: '56px' }}>
                         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '12px' }}>{t.timelineLabel}</div>
-                        <h2 style={{ fontSize: 'clamp(26px, 4vw, 36px)' }}>{t.timelineH2a}<span style={{ color: 'var(--gold)' }}>{t.timelineH2b}</span></h2>
+                        <h2 style={{ fontSize: 'clamp(26px, 4vw, 36px)', color: 'var(--text-heading)' }}>{t.timelineH2a}<span style={{ color: 'var(--gold)' }}>{t.timelineH2b}</span></h2>
                     </div>
                     <div style={{ position: 'relative', maxWidth: '700px', margin: '0 auto' }}>
                         <div className="timeline-line" style={{ position: 'absolute', left: '79px', top: 0, bottom: 0, width: '2px', background: 'linear-gradient(to bottom, var(--gold), rgba(201,168,76,0.1))' }} />
                         {timeline.map((item, i) => (
                             <div key={i} style={{ display: 'flex', gap: '24px', marginBottom: '36px', alignItems: 'flex-start' }}>
                                 <div className="timeline-year" style={{ minWidth: '64px', fontFamily: 'var(--font-display)', fontSize: '18px', fontWeight: '700', color: 'var(--gold)', textAlign: 'right', paddingTop: '12px' }}>{item.year}</div>
-                                <div className="timeline-dot" style={{ width: '16px', height: '16px', borderRadius: '50%', background: 'var(--gold)', border: '3px solid var(--off-white)', flexShrink: 0, marginTop: '14px', zIndex: 1 }} />
-                                <div className="timeline-card" style={{ flex: 1, background: 'var(--white)', borderRadius: '12px', padding: '20px 24px', boxShadow: 'var(--shadow-sm)', border: '1px solid rgba(27,58,107,0.06)' }}>
-                                    <h4 style={{ fontFamily: 'var(--font-display)', fontSize: '17px', color: 'var(--navy-dark)', marginBottom: '6px' }}>{item.title}</h4>
-                                    <p style={{ fontSize: '14px', color: 'var(--gray-600)' }}>{item.desc}</p>
+                                <div className="timeline-dot" style={{ width: '16px', height: '16px', borderRadius: '50%', background: 'var(--gold)', border: '3px solid var(--bg-main)', flexShrink: 0, marginTop: '14px', zIndex: 1 }} />
+                                <div className="timeline-card" style={{ flex: 1, background: 'var(--bg-card)', borderRadius: '12px', padding: '20px 24px', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border-color)' }}>
+                                    <h4 style={{ fontFamily: 'var(--font-display)', fontSize: '17px', color: 'var(--text-heading)', marginBottom: '6px' }}>{item.title}</h4>
+                                    <p style={{ fontSize: '14px', color: 'var(--text-muted)' }}>{item.desc}</p>
                                 </div>
                             </div>
                         ))}

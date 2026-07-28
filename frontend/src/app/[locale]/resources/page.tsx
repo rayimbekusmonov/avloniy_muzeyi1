@@ -122,16 +122,16 @@ export default function ResourcesPage() {
                 </div>
             </div>
 
-            <section className="section" style={{ background: 'var(--off-white)' }}>
+            <section className="section" style={{ background: 'var(--bg-main)' }}>
                 <div className="container">
                     <div style={{ display: 'flex', gap: '16px', marginBottom: '40px', flexWrap: 'wrap', alignItems: 'center' }}>
                         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                             {RESOURCE_TYPES.map(rt => (
                                 <button key={rt.value} onClick={() => { setResourceType(rt.value); setPage(0) }} style={{
                                     padding: '8px 20px', borderRadius: '20px', border: '1px solid',
-                                    borderColor: resourceType === rt.value ? 'var(--gold)' : 'rgba(27,58,107,0.2)',
-                                    background: resourceType === rt.value ? 'var(--gold)' : '#fff',
-                                    color: resourceType === rt.value ? 'var(--navy-dark)' : 'var(--gray-600)',
+                                    borderColor: resourceType === rt.value ? 'var(--gold)' : 'var(--border-color)',
+                                    background: resourceType === rt.value ? 'var(--gold)' : 'var(--bg-card)',
+                                    color: resourceType === rt.value ? '#061d15' : 'var(--text-main)',
                                     fontFamily: 'var(--font-mono)', fontSize: '12px', cursor: 'pointer',
                                     transition: 'all 0.2s', letterSpacing: '1px',
                                     display: 'flex', alignItems: 'center', gap: '6px',
@@ -142,7 +142,7 @@ export default function ResourcesPage() {
                             ))}
                         </div>
                         <form onSubmit={e => { e.preventDefault(); setSearch(searchInput); setPage(0) }} style={{ display: 'flex', gap: '8px', marginLeft: 'auto' }}>
-                            <input value={searchInput} onChange={e => setSearchInput(e.target.value)} placeholder={t.search} style={{ padding: '8px 20px', border: '1px solid rgba(27,58,107,0.2)', borderRadius: '20px', fontSize: '14px', fontFamily: 'var(--font-body)', outline: 'none', minWidth: '220px', background: '#fff' }} />
+                            <input value={searchInput} onChange={e => setSearchInput(e.target.value)} placeholder={t.search} style={{ padding: '8px 20px', border: '1px solid var(--border-color)', borderRadius: '20px', fontSize: '14px', fontFamily: 'var(--font-body)', outline: 'none', minWidth: '220px', background: 'var(--bg-input)', color: 'var(--text-main)' }} />
                             <button type="submit" className="btn-primary" style={{ border: 'none', cursor: 'pointer', padding: '8px 20px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                                 <Icons.Search /> {t.searchBtn}
                             </button>
@@ -150,26 +150,26 @@ export default function ResourcesPage() {
                     </div>
 
                     {loading ? (
-                        <div style={{ textAlign: 'center', padding: '80px', color: 'var(--gray-600)' }}>{t.loading}</div>
+                        <div style={{ textAlign: 'center', padding: '80px', color: 'var(--text-muted)' }}>{t.loading}</div>
                     ) : items.length === 0 ? (
-                        <div style={{ textAlign: 'center', padding: '80px', color: 'var(--gray-400)' }}>
+                        <div style={{ textAlign: 'center', padding: '80px', color: 'var(--text-muted)' }}>
                             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px', opacity: 0.4 }}><Icons.Inbox /></div>
-                            <p style={{ color: 'var(--gray-600)' }}>{t.empty}</p>
+                            <p style={{ color: 'var(--text-muted)' }}>{t.empty}</p>
                         </div>
                     ) : (
                         <>
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px' }}>
                                 {items.map(item => (
                                     <div key={item.id} className="card" style={{ display: 'flex', flexDirection: 'column' }}>
-                                        <div style={{ height: '200px', background: item.coverUrl ? `url(${item.coverUrl}) center/cover` : 'linear-gradient(135deg, var(--navy-dark), var(--navy))', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                                        <div style={{ height: '200px', background: item.coverUrl ? `url(${item.coverUrl}) center/cover` : 'var(--bg-header)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
                                             {!item.coverUrl && <div style={{ color: 'rgba(255,255,255,0.3)' }}>{getPlaceholderIcon(item.resourceType)}</div>}
-                                            <div style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(201,168,76,0.9)', color: 'var(--navy-dark)', padding: '3px 10px', borderRadius: '10px', fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '1px' }}>{item.resourceType}</div>
+                                            <div style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(201,168,76,0.95)', color: '#061d15', padding: '3px 10px', borderRadius: '10px', fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '1px', fontWeight: '700' }}>{item.resourceType}</div>
                                         </div>
                                         <div style={{ padding: '20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                                            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '17px', color: 'var(--navy-dark)', marginBottom: '6px', lineHeight: '1.3' }}>{item.title}</h3>
+                                            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '17px', color: 'var(--text-heading)', marginBottom: '6px', lineHeight: '1.3' }}>{item.title}</h3>
                                             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)', marginBottom: '8px', letterSpacing: '1px' }}>{item.author}</div>
-                                            {item.description && <p style={{ fontSize: '13px', color: 'var(--gray-600)', lineHeight: '1.7', marginBottom: '12px', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' as const }}>{item.description}</p>}
-                                            <div style={{ display: 'flex', gap: '12px', fontSize: '12px', color: 'var(--gray-400)', fontFamily: 'var(--font-mono)', marginBottom: '16px' }}>
+                                            {item.description && <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.7', marginBottom: '12px', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' as const }}>{item.description}</p>}
+                                            <div style={{ display: 'flex', gap: '12px', fontSize: '12px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', marginBottom: '16px' }}>
                                                 {item.publishedYear && <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Icons.Calendar /> {item.publishedYear}</span>}
                                                 {item.pageCount && <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Icons.Pages /> {item.pageCount} {t.pages}</span>}
                                             </div>
@@ -183,11 +183,11 @@ export default function ResourcesPage() {
 
                             {totalPages > 1 && (
                                 <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '48px' }}>
-                                    <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0} style={{ padding: '10px 20px', border: '1px solid rgba(27,58,107,0.2)', borderRadius: '8px', background: '#fff', color: page === 0 ? 'var(--gray-400)' : 'var(--navy)', cursor: page === 0 ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-mono)', fontSize: '13px' }}>{t.prev}</button>
+                                    <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0} style={{ padding: '10px 20px', border: '1px solid var(--border-color)', borderRadius: '8px', background: 'var(--bg-card)', color: page === 0 ? 'var(--text-muted)' : 'var(--text-heading)', cursor: page === 0 ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-mono)', fontSize: '13px' }}>{t.prev}</button>
                                     {Array.from({ length: totalPages }, (_, i) => (
-                                        <button key={i} onClick={() => setPage(i)} style={{ padding: '10px 16px', border: '1px solid', borderColor: page === i ? 'var(--gold)' : 'rgba(27,58,107,0.2)', borderRadius: '8px', background: page === i ? 'var(--gold)' : '#fff', color: page === i ? 'var(--navy-dark)' : 'var(--navy)', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '13px' }}>{i + 1}</button>
+                                        <button key={i} onClick={() => setPage(i)} style={{ padding: '10px 16px', border: '1px solid', borderColor: page === i ? 'var(--gold)' : 'var(--border-color)', borderRadius: '8px', background: page === i ? 'var(--gold)' : 'var(--bg-card)', color: page === i ? '#061d15' : 'var(--text-heading)', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '13px' }}>{i + 1}</button>
                                     ))}
-                                    <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page === totalPages - 1} style={{ padding: '10px 20px', border: '1px solid rgba(27,58,107,0.2)', borderRadius: '8px', background: '#fff', color: page === totalPages - 1 ? 'var(--gray-400)' : 'var(--navy)', cursor: page === totalPages - 1 ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-mono)', fontSize: '13px' }}>{t.next}</button>
+                                    <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page === totalPages - 1} style={{ padding: '10px 20px', border: '1px solid var(--border-color)', borderRadius: '8px', background: 'var(--bg-card)', color: page === totalPages - 1 ? 'var(--text-muted)' : 'var(--text-heading)', cursor: page === totalPages - 1 ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-mono)', fontSize: '13px' }}>{t.next}</button>
                                 </div>
                             )}
                         </>

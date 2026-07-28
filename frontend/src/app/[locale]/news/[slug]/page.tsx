@@ -112,29 +112,29 @@ export default function NewsDetailPage() {
                 </div>
             </div>
 
-            <section style={{ background: 'var(--off-white)', padding: '60px 0' }}>
+            <section style={{ background: 'var(--bg-main)', padding: '60px 0' }}>
                 <div className="container" style={{ maxWidth: '800px' }}>
                     {news.excerpt && (
-                        <p style={{ fontSize: '20px', color: 'var(--navy)', lineHeight: '1.8', fontStyle: 'italic', borderLeft: '4px solid var(--gold)', paddingLeft: '24px', marginBottom: '40px' }}>
+                        <p style={{ fontSize: '20px', color: 'var(--text-heading)', lineHeight: '1.8', fontStyle: 'italic', borderLeft: '4px solid var(--gold)', paddingLeft: '24px', marginBottom: '40px' }}>
                             {news.excerpt}
                         </p>
                     )}
                     <div className="news-content" dangerouslySetInnerHTML={{ __html: news.content }} />
-                    <div style={{ marginTop: '48px', paddingTop: '32px', borderTop: '1px solid rgba(27,58,107,0.1)' }}>
+                    <div style={{ marginTop: '48px', paddingTop: '32px', borderTop: '1px solid var(--border-subtle)' }}>
                         <Link href={`/${locale}/news`} className="btn-outline">{t.all}</Link>
                     </div>
                 </div>
             </section>
 
             <style>{`
-                .news-content { font-size: 17px; color: var(--text-dark); line-height: 1.9; }
+                .news-content { font-size: 17px; color: var(--text-main); line-height: 1.9; }
                 .news-content p { margin-bottom: 20px; }
-                .news-content h1, .news-content h2, .news-content h3 { font-family: var(--font-display); color: var(--navy-dark); margin: 32px 0 16px; }
+                .news-content h1, .news-content h2, .news-content h3 { font-family: var(--font-display); color: var(--text-heading); margin: 32px 0 16px; }
                 .news-content ul, .news-content ol { padding-left: 24px; margin-bottom: 20px; }
                 .news-content li { margin-bottom: 8px; }
                 .news-content img { max-width: 100%; border-radius: 4px; margin: 24px 0; }
-                .news-content a { color: var(--navy); text-decoration: underline; }
-                .news-content blockquote { border-left: 4px solid var(--gold); padding-left: 20px; font-style: italic; color: var(--navy); margin: 24px 0; }
+                .news-content a { color: var(--gold); text-decoration: underline; }
+                .news-content blockquote { border-left: 4px solid var(--gold); padding-left: 20px; font-style: italic; color: var(--text-heading); margin: 24px 0; }
                 .news-content span[style*="background-color: rgb(255, 255, 255)"] { background-color: transparent !important; }
                 .news-content span[style*="color: rgb(0, 0, 0)"] { color: inherit !important; }
             `}</style>

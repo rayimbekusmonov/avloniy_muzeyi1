@@ -86,7 +86,7 @@ export default function JadidDetailPage() {
 
     if (loading) {
         return (
-            <div style={{ minHeight: '70vh', background: '#0a1829', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#C9A84C', fontFamily: 'var(--font-mono)' }}>
+            <div style={{ minHeight: '70vh', background: 'var(--bg-main)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#C9A84C', fontFamily: 'var(--font-mono)' }}>
                 {labels.loading}
             </div>
         )
@@ -94,7 +94,7 @@ export default function JadidDetailPage() {
 
     if (!figure) {
         return (
-            <div style={{ minHeight: '70vh', background: '#0a1829', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+            <div style={{ minHeight: '70vh', background: 'var(--bg-main)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text-main)' }}>
                 <h2>{labels.notFound}</h2>
                 <Link href={`/${locale}/jadidlar`} style={{ marginTop: '20px', color: '#C9A84C', textDecoration: 'none' }}>
                     ← {labels.back}
@@ -104,16 +104,16 @@ export default function JadidDetailPage() {
     }
 
     return (
-        <div style={{ background: '#060d17', color: '#e2e8f0', minHeight: '100vh', paddingTop: '100px', paddingBottom: '80px' }}>
+        <div style={{ background: 'var(--bg-main)', color: 'var(--text-main)', minHeight: '100vh', paddingTop: '100px', paddingBottom: '80px', transition: 'background-color 0.3s ease, color 0.3s ease' }}>
             
             {/* Navigation back button */}
             <div className="container" style={{ marginBottom: '24px' }}>
                 <Link href={`/${locale}/jadidlar`} style={{
                     display: 'inline-flex', alignItems: 'center', gap: '8px',
-                    color: 'rgba(201,168,76,0.9)', textDecoration: 'none',
+                    color: '#C9A84C', textDecoration: 'none',
                     fontFamily: 'var(--font-mono)', fontSize: '13px',
-                    padding: '8px 16px', background: 'rgba(255,255,255,0.04)',
-                    border: '1px solid rgba(201,168,76,0.2)', borderRadius: '6px',
+                    padding: '8px 16px', background: 'var(--bg-card)',
+                    border: '1px solid var(--border-color)', borderRadius: '6px',
                     transition: 'all 0.2s ease'
                 }}>
                     <Icons.ArrowLeft /> {labels.back}
@@ -123,14 +123,14 @@ export default function JadidDetailPage() {
             {/* Profile Hero Header */}
             <div className="container" style={{ marginBottom: '40px' }}>
                 <div style={{
-                    background: 'linear-gradient(145deg, #0e2238 0%, #163252 100%)',
-                    border: '1px solid rgba(201,168,76,0.25)',
+                    background: 'var(--bg-card)',
+                    border: '1px solid var(--border-color)',
                     borderRadius: '16px',
                     padding: '40px',
                     display: 'grid',
                     gridTemplateColumns: 'minmax(200px, 260px) 1fr',
                     gap: '40px',
-                    boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+                    boxShadow: 'var(--shadow-md)',
                     position: 'relative',
                     overflow: 'hidden'
                 }}>
@@ -193,7 +193,7 @@ export default function JadidDetailPage() {
                         <h1 style={{
                             fontFamily: 'var(--font-display)',
                             fontSize: '38px', fontWeight: '700',
-                            color: '#ffffff', lineHeight: 1.15,
+                            color: 'var(--text-heading)', lineHeight: 1.15,
                             marginBottom: '12px'
                         }}>
                             {figure.name}
@@ -201,7 +201,7 @@ export default function JadidDetailPage() {
 
                         {figure.title && (
                             <div style={{
-                                fontSize: '16px', color: 'rgba(201,168,76,0.9)',
+                                fontSize: '16px', color: '#C9A84C',
                                 fontFamily: 'var(--font-body)', fontWeight: '500',
                                 marginBottom: '20px'
                             }}>
@@ -211,13 +211,13 @@ export default function JadidDetailPage() {
 
                         {figure.quote && (
                             <div style={{
-                                background: 'rgba(10,24,41,0.6)',
+                                background: 'var(--bg-secondary)',
                                 borderLeft: '4px solid #C9A84C',
                                 padding: '16px 20px',
                                 borderRadius: '0 8px 8px 0',
                                 fontStyle: 'italic',
                                 fontSize: '15px',
-                                color: 'rgba(255,255,255,0.9)',
+                                color: 'var(--text-main)',
                                 marginBottom: '24px',
                                 lineHeight: 1.7
                             }}>
@@ -240,7 +240,7 @@ export default function JadidDetailPage() {
             <div className="container" style={{ marginBottom: '32px' }}>
                 <div style={{
                     display: 'flex', gap: '8px',
-                    borderBottom: '1px solid rgba(255,255,255,0.1)',
+                    borderBottom: '1px solid var(--border-subtle)',
                     paddingBottom: '12px',
                     overflowX: 'auto'
                 }}>
@@ -258,9 +258,9 @@ export default function JadidDetailPage() {
                                 padding: '12px 24px',
                                 background: activeTab === tab.id ? 'rgba(201,168,76,0.15)' : 'transparent',
                                 border: '1px solid',
-                                borderColor: activeTab === tab.id ? 'rgba(201,168,76,0.4)' : 'transparent',
+                                borderColor: activeTab === tab.id ? '#C9A84C' : 'transparent',
                                 borderRadius: '8px',
-                                color: activeTab === tab.id ? '#C9A84C' : 'rgba(255,255,255,0.6)',
+                                color: activeTab === tab.id ? '#C9A84C' : 'var(--text-muted)',
                                 fontFamily: 'var(--font-display)',
                                 fontWeight: activeTab === tab.id ? '600' : '400',
                                 fontSize: '15px',
@@ -285,14 +285,15 @@ export default function JadidDetailPage() {
                         
                         {/* Biography text */}
                         <div style={{
-                            background: 'rgba(15,28,45,0.7)',
-                            border: '1px solid rgba(255,255,255,0.08)',
-                            borderRadius: '12px', padding: '36px'
+                            background: 'var(--bg-card)',
+                            border: '1px solid var(--border-color)',
+                            borderRadius: '12px', padding: '36px',
+                            boxShadow: 'var(--shadow-sm)'
                         }}>
-                            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', color: '#fff', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', color: 'var(--text-heading)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                                 📖 {labels.bioTab}
                             </h3>
-                            <div style={{ fontSize: '16px', lineHeight: '1.9', color: 'rgba(255,255,255,0.85)', whiteSpace: 'pre-line' }}>
+                            <div style={{ fontSize: '16px', lineHeight: '1.9', color: 'var(--text-main)', whiteSpace: 'pre-line' }}>
                                 {figure.bio}
                             </div>
                         </div>
@@ -300,11 +301,12 @@ export default function JadidDetailPage() {
                         {/* Timeline */}
                         {figure.timeline && figure.timeline.length > 0 && (
                             <div style={{
-                                background: 'rgba(15,28,45,0.7)',
-                                border: '1px solid rgba(255,255,255,0.08)',
-                                borderRadius: '12px', padding: '36px'
+                                background: 'var(--bg-card)',
+                                border: '1px solid var(--border-color)',
+                                borderRadius: '12px', padding: '36px',
+                                boxShadow: 'var(--shadow-sm)'
                             }}>
-                                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', color: '#fff', marginBottom: '28px' }}>
+                                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', color: 'var(--text-heading)', marginBottom: '28px' }}>
                                     ⏳ Hayot yo'li va bosqichlari
                                 </h3>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', position: 'relative' }}>
@@ -319,10 +321,10 @@ export default function JadidDetailPage() {
                                                 {item.year}
                                             </div>
                                             <div style={{ flex: 1 }}>
-                                                <h4 style={{ fontSize: '17px', color: '#fff', fontWeight: '600', marginBottom: '4px' }}>
+                                                <h4 style={{ fontSize: '17px', color: 'var(--text-heading)', fontWeight: '600', marginBottom: '4px' }}>
                                                     {item.title}
                                                 </h4>
-                                                <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.65)', lineHeight: 1.7 }}>
+                                                <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.7 }}>
                                                     {item.desc}
                                                 </p>
                                             </div>
@@ -337,22 +339,23 @@ export default function JadidDetailPage() {
                 {/* 2. Literary & Scientific Heritage (Works) */}
                 {activeTab === 'works' && (
                     <div style={{
-                        background: 'rgba(15,28,45,0.7)',
-                        border: '1px solid rgba(255,255,255,0.08)',
-                        borderRadius: '12px', padding: '36px'
+                        background: 'var(--bg-card)',
+                        border: '1px solid var(--border-color)',
+                        borderRadius: '12px', padding: '36px',
+                        boxShadow: 'var(--shadow-sm)'
                     }}>
-                        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', color: '#fff', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', color: 'var(--text-heading)', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                             📚 {labels.worksTab}
                         </h3>
 
                         {(!figure.figureWorks || figure.figureWorks.length === 0) ? (
-                            <p style={{ color: 'rgba(255,255,255,0.5)', fontFamily: 'var(--font-mono)' }}>{labels.noWorks}</p>
+                            <p style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>{labels.noWorks}</p>
                         ) : (
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '20px' }}>
                                 {figure.figureWorks.map(work => (
                                     <div key={work.id} style={{
-                                        background: 'rgba(255,255,255,0.03)',
-                                        border: '1px solid rgba(255,255,255,0.08)',
+                                        background: 'var(--bg-secondary)',
+                                        border: '1px solid var(--border-subtle)',
                                         borderRadius: '10px',
                                         padding: '24px',
                                         display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
@@ -371,7 +374,7 @@ export default function JadidDetailPage() {
                                                     </span>
                                                 )}
                                             </div>
-                                            <h4 style={{ fontFamily: 'var(--font-display)', fontSize: '18px', color: '#fff', marginBottom: '8px' }}>
+                                            <h4 style={{ fontFamily: 'var(--font-display)', fontSize: '18px', color: 'var(--text-heading)', marginBottom: '8px' }}>
                                                 {work.title}
                                             </h4>
                                         </div>
@@ -404,33 +407,34 @@ export default function JadidDetailPage() {
                 {/* 3. Photo & Document Archive */}
                 {activeTab === 'gallery' && (
                     <div style={{
-                        background: 'rgba(15,28,45,0.7)',
-                        border: '1px solid rgba(255,255,255,0.08)',
-                        borderRadius: '12px', padding: '36px'
+                        background: 'var(--bg-card)',
+                        border: '1px solid var(--border-color)',
+                        borderRadius: '12px', padding: '36px',
+                        boxShadow: 'var(--shadow-sm)'
                     }}>
-                        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', color: '#fff', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', color: 'var(--text-heading)', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                             🖼️ {labels.galleryTab}
                         </h3>
 
                         {(!figure.galleryPhotos || figure.galleryPhotos.length === 0) ? (
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
-                                <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px dashed rgba(201,168,76,0.3)', borderRadius: '10px', padding: '30px', textAlign: 'center' }}>
+                                <div style={{ background: 'var(--bg-secondary)', border: '1px dashed rgba(201,168,76,0.4)', borderRadius: '10px', padding: '30px', textAlign: 'center' }}>
                                     <div style={{ fontSize: '32px', marginBottom: '8px' }}>📷</div>
-                                    <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '14px' }}>{figure.name} surati va qo'lyazmalari</p>
+                                    <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>{figure.name} surati va qo'lyazmalari</p>
                                 </div>
                             </div>
                         ) : (
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px' }}>
                                 {figure.galleryPhotos.map((photo, i) => (
                                     <div key={i} style={{
-                                        background: 'rgba(255,255,255,0.03)',
-                                        border: '1px solid rgba(255,255,255,0.08)',
+                                        background: 'var(--bg-secondary)',
+                                        border: '1px solid var(--border-color)',
                                         borderRadius: '10px', overflow: 'hidden'
                                     }}>
-                                        <div style={{ height: '200px', background: '#0a1829', overflow: 'hidden' }}>
+                                        <div style={{ height: '200px', background: 'var(--bg-main)', overflow: 'hidden' }}>
                                             <img src={photo.url} alt={photo.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                         </div>
-                                        <div style={{ padding: '16px', fontSize: '14px', color: 'rgba(255,255,255,0.8)', fontFamily: 'var(--font-body)' }}>
+                                        <div style={{ padding: '16px', fontSize: '14px', color: 'var(--text-main)', fontFamily: 'var(--font-body)' }}>
                                             {photo.title}
                                         </div>
                                     </div>
@@ -443,23 +447,24 @@ export default function JadidDetailPage() {
                 {/* 4. Quotes & Philosophy */}
                 {activeTab === 'quotes' && (
                     <div style={{
-                        background: 'rgba(15,28,45,0.7)',
-                        border: '1px solid rgba(255,255,255,0.08)',
-                        borderRadius: '12px', padding: '36px'
+                        background: 'var(--bg-card)',
+                        border: '1px solid var(--border-color)',
+                        borderRadius: '12px', padding: '36px',
+                        boxShadow: 'var(--shadow-sm)'
                     }}>
-                        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', color: '#fff', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', color: 'var(--text-heading)', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                             💬 {labels.quotesTab}
                         </h3>
 
                         <div style={{
-                            background: 'linear-gradient(135deg, rgba(201,168,76,0.1) 0%, rgba(10,24,41,0.4) 100%)',
+                            background: 'var(--bg-secondary)',
                             border: '1px solid rgba(201,168,76,0.3)',
                             borderRadius: '12px', padding: '32px', position: 'relative'
                         }}>
                             <div style={{ fontSize: '48px', color: 'rgba(201,168,76,0.4)', position: 'absolute', top: '16px', left: '20px', fontFamily: 'serif' }}>&ldquo;</div>
                             <p style={{
                                 fontFamily: 'var(--font-display)', fontSize: '20px', fontStyle: 'italic',
-                                color: '#ffffff', lineHeight: '1.8', paddingLeft: '24px', position: 'relative', zIndex: 1
+                                color: 'var(--text-heading)', lineHeight: '1.8', paddingLeft: '24px', position: 'relative', zIndex: 1
                             }}>
                                 {figure.quote || "Har bir millat o'z tilida va o'z ma'rifati bilan yashaydi."}
                             </p>

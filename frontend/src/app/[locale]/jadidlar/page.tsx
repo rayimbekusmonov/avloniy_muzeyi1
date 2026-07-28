@@ -99,15 +99,10 @@ export default function JadidlarPage() {
     const featuredFigure = figures.find(f => f.featured) || figures[0]
 
     return (
-        <div style={{ background: '#060d17', color: '#e2e8f0', minHeight: '100vh', paddingTop: '100px', paddingBottom: '80px' }}>
+        <div style={{ background: 'var(--bg-main)', color: 'var(--text-main)', minHeight: '100vh', paddingTop: '100px', paddingBottom: '80px', transition: 'background-color 0.3s ease, color 0.3s ease' }}>
             
             {/* Page Header */}
-            <div style={{
-                background: 'linear-gradient(135deg, #0d1f35 0%, #152d4d 50%, #1a2333 100%)',
-                padding: '60px 0 50px 0',
-                borderBottom: '1px solid rgba(201,168,76,0.2)',
-                position: 'relative'
-            }}>
+            <div className="page-header" style={{ padding: '60px 0 50px 0' }}>
                 <div className="container" style={{ position: 'relative', zIndex: 1 }}>
                     <div style={{
                         display: 'inline-flex', alignItems: 'center', gap: '8px',
@@ -138,13 +133,13 @@ export default function JadidlarPage() {
                             style={{
                                 width: '100%',
                                 padding: '16px 20px 16px 48px',
-                                background: 'rgba(10,24,41,0.8)',
-                                border: '1px solid rgba(201,168,76,0.4)',
+                                background: 'var(--bg-input)',
+                                border: '1px solid var(--border-color)',
                                 borderRadius: '10px',
-                                color: '#ffffff',
+                                color: 'var(--text-main)',
                                 fontSize: '15px',
                                 outline: 'none',
-                                boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
+                                boxShadow: 'var(--shadow-sm)',
                                 transition: 'all 0.3s ease'
                             }}
                         />
@@ -153,9 +148,9 @@ export default function JadidlarPage() {
             </div>
 
             {/* Region Filters Bar */}
-            <div style={{ background: 'rgba(10,24,41,0.6)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '16px 0' }}>
+            <div style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-subtle)', padding: '16px 0' }}>
                 <div className="container" style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'rgba(255,255,255,0.5)' }}>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--text-muted)' }}>
                         {t.filterRegion}
                     </span>
                     <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
@@ -165,10 +160,10 @@ export default function JadidlarPage() {
                                 onClick={() => setSelectedRegion(region)}
                                 style={{
                                     padding: '6px 16px',
-                                    background: selectedRegion === region ? '#C9A84C' : 'rgba(255,255,255,0.04)',
-                                    color: selectedRegion === region ? '#060d17' : 'rgba(255,255,255,0.8)',
+                                    background: selectedRegion === region ? '#C9A84C' : 'var(--bg-card)',
+                                    color: selectedRegion === region ? '#060d17' : 'var(--text-main)',
                                     border: '1px solid',
-                                    borderColor: selectedRegion === region ? '#C9A84C' : 'rgba(255,255,255,0.1)',
+                                    borderColor: selectedRegion === region ? '#C9A84C' : 'var(--border-color)',
                                     borderRadius: '6px',
                                     fontSize: '13px',
                                     fontFamily: 'var(--font-mono)',
@@ -198,11 +193,11 @@ export default function JadidlarPage() {
                         </div>
 
                         <div style={{
-                            background: 'linear-gradient(145deg, #0e2238 0%, #17375c 100%)',
-                            border: '1px solid rgba(201,168,76,0.3)',
+                            background: 'var(--bg-card)',
+                            border: '1px solid var(--border-color)',
                             borderRadius: '12px', overflow: 'hidden',
                             display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                            boxShadow: '0 12px 40px rgba(0,0,0,0.4)'
+                            boxShadow: 'var(--shadow-md)'
                         }}>
                             <div style={{ padding: '40px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                                 {featuredFigure.region && (
@@ -210,13 +205,13 @@ export default function JadidlarPage() {
                                         📍 {featuredFigure.region}
                                     </div>
                                 )}
-                                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '32px', color: '#fff', marginBottom: '8px' }}>
+                                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '32px', color: 'var(--text-heading)', marginBottom: '8px' }}>
                                     {featuredFigure.name}
                                 </h2>
                                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '14px', color: '#C9A84C', marginBottom: '16px' }}>
                                     {featuredFigure.years}
                                 </div>
-                                <p style={{ fontSize: '15px', color: 'rgba(255,255,255,0.8)', lineHeight: 1.8, marginBottom: '24px' }}>
+                                <p style={{ fontSize: '15px', color: 'var(--text-muted)', lineHeight: 1.8, marginBottom: '24px' }}>
                                     {featuredFigure.bio}
                                 </p>
                                 <div>
@@ -233,11 +228,11 @@ export default function JadidlarPage() {
                                     </Link>
                                 </div>
                             </div>
-                            <div style={{ background: '#0a1829', minHeight: '280px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '30px' }}>
+                            <div style={{ background: 'var(--bg-secondary)', minHeight: '280px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '30px' }}>
                                 {featuredFigure.imageUrl ? (
                                     <img src={featuredFigure.imageUrl} alt={featuredFigure.name} style={{ width: '180px', height: '220px', borderRadius: '8px', objectFit: 'cover', border: '3px solid rgba(201,168,76,0.4)' }} />
                                 ) : (
-                                    <div style={{ color: 'rgba(255,255,255,0.2)' }}><Icons.Person /></div>
+                                    <div style={{ color: 'var(--text-muted)' }}><Icons.Person /></div>
                                 )}
                             </div>
                         </div>
@@ -249,7 +244,7 @@ export default function JadidlarPage() {
             <section style={{ padding: '40px 0' }}>
                 <div className="container">
                     {filteredFigures.length === 0 ? (
-                        <div style={{ textAlign: 'center', padding: '80px 20px', color: 'rgba(255,255,255,0.5)', fontFamily: 'var(--font-mono)' }}>
+                        <div style={{ textAlign: 'center', padding: '80px 20px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
                             {t.empty}
                         </div>
                     ) : (
@@ -259,25 +254,25 @@ export default function JadidlarPage() {
                                     key={jadid.id}
                                     href={`/${locale}/jadidlar/${jadid.id}`}
                                     style={{
-                                        background: 'rgba(15,28,45,0.7)',
-                                        border: '1px solid rgba(255,255,255,0.08)',
+                                        background: 'var(--bg-card)',
+                                        border: '1px solid var(--border-color)',
                                         borderRadius: '10px',
                                         padding: '28px',
                                         textDecoration: 'none',
                                         color: 'inherit',
                                         display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
                                         transition: 'all 0.3s ease',
-                                        boxShadow: '0 4px 20px rgba(0,0,0,0.2)'
+                                        boxShadow: 'var(--shadow-sm)'
                                     }}
                                     onMouseEnter={e => {
-                                        e.currentTarget.style.background = 'rgba(22,42,68,0.9)'
-                                        e.currentTarget.style.borderColor = 'rgba(201,168,76,0.4)'
+                                        e.currentTarget.style.borderColor = '#C9A84C'
                                         e.currentTarget.style.transform = 'translateY(-4px)'
+                                        e.currentTarget.style.boxShadow = 'var(--shadow-md)'
                                     }}
                                     onMouseLeave={e => {
-                                        e.currentTarget.style.background = 'rgba(15,28,45,0.7)'
-                                        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'
+                                        e.currentTarget.style.borderColor = 'var(--border-color)'
                                         e.currentTarget.style.transform = 'translateY(0)'
+                                        e.currentTarget.style.boxShadow = 'var(--shadow-sm)'
                                     }}
                                 >
                                     <div>
@@ -302,7 +297,7 @@ export default function JadidlarPage() {
                                         </div>
 
                                         {/* Name & Years */}
-                                        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '20px', color: '#ffffff', fontWeight: '700', marginBottom: '4px' }}>
+                                        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '20px', color: 'var(--text-heading)', fontWeight: '700', marginBottom: '4px' }}>
                                             {jadid.name}
                                         </h3>
                                         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: '#C9A84C', marginBottom: '12px' }}>
@@ -310,7 +305,7 @@ export default function JadidlarPage() {
                                         </div>
 
                                         {/* Bio Snippet */}
-                                        <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.65)', lineHeight: 1.7, marginBottom: '20px', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                                        <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: '20px', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                                             {jadid.bio}
                                         </p>
                                     </div>
@@ -318,7 +313,7 @@ export default function JadidlarPage() {
                                     {/* Action link */}
                                     <div style={{
                                         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                                        paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.06)',
+                                        paddingTop: '16px', borderTop: '1px solid var(--border-subtle)',
                                         fontFamily: 'var(--font-mono)', fontSize: '12px', color: '#C9A84C', fontWeight: '600'
                                     }}>
                                         <span>{t.explore}</span>

@@ -77,46 +77,63 @@ export default function RichTextEditor({ value, onChange, placeholder }: RichTex
 
     return (
         <div ref={containerRef} style={{
-            background: '#fff',
+            background: 'var(--bg-input)',
             borderRadius: '8px',
-            border: '1px solid rgba(27,58,107,0.2)',
+            border: '1px solid var(--border-color)',
             overflow: 'hidden',
         }}>
             <div ref={editorRef} style={{ minHeight: '300px', fontSize: '15px', lineHeight: '1.7' }} />
             <style>{`
                 .ql-toolbar {
                     border: none !important;
-                    border-bottom: 1px solid rgba(27,58,107,0.15) !important;
-                    background: #f8f9fc;
+                    border-bottom: 1px solid var(--border-color) !important;
+                    background: var(--bg-secondary) !important;
                     flex-wrap: wrap;
                     padding: 8px !important;
+                }
+                .ql-toolbar button, .ql-toolbar .ql-picker {
+                    color: var(--text-main) !important;
+                }
+                .ql-stroke {
+                    stroke: var(--text-main) !important;
+                }
+                .ql-fill {
+                    fill: var(--text-main) !important;
+                }
+                .ql-picker-options {
+                    background-color: var(--bg-card) !important;
+                    border-color: var(--border-color) !important;
+                    color: var(--text-main) !important;
                 }
                 .ql-container {
                     border: none !important;
                     font-size: 15px !important;
                     font-family: inherit !important;
+                    color: var(--text-main) !important;
                 }
                 .ql-editor {
                     min-height: 300px;
                     padding: 16px !important;
                     line-height: 1.8 !important;
+                    color: var(--text-main) !important;
                 }
                 .ql-editor.ql-blank::before {
-                    color: #aaa !important;
+                    color: var(--text-muted) !important;
                     font-style: normal !important;
                 }
-                .ql-editor h1 { font-size: 2em; font-weight: 700; margin: 16px 0 8px; }
-                .ql-editor h2 { font-size: 1.5em; font-weight: 600; margin: 14px 0 6px; }
-                .ql-editor h3 { font-size: 1.2em; font-weight: 600; margin: 12px 0 4px; }
+                .ql-editor h1, .ql-editor h2, .ql-editor h3 {
+                    color: var(--text-heading) !important;
+                }
                 .ql-editor blockquote {
-                    border-left: 4px solid #C9A84C;
+                    border-left: 4px solid var(--gold) !important;
                     padding-left: 16px;
-                    color: #555;
+                    color: var(--text-muted) !important;
                     font-style: italic;
                     margin: 16px 0;
                 }
                 .ql-editor code, .ql-editor pre {
-                    background: #f4f4f4;
+                    background: var(--bg-secondary) !important;
+                    color: var(--text-main) !important;
                     border-radius: 4px;
                     padding: 2px 6px;
                     font-family: monospace;

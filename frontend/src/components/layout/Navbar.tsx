@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
+import ThemeToggle from '@/components/theme/ThemeToggle'
 
 // Modern Vector SVG Country Flag Icons (100% Cross-Platform Compatible for Windows, iOS, Android, Mac, Linux)
 const FlagUZ = () => (
@@ -182,9 +183,12 @@ export default function Navbar() {
                     ))}
                 </div>
 
-                {/* Right Action Bar: SVG Flag Language Dropdown + Mobile Burger */}
+                {/* Right Action Bar: Theme Toggle + SVG Flag Language Dropdown + Mobile Burger */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     
+                    {/* Theme Toggle Button */}
+                    <ThemeToggle />
+
                     {/* LANGUAGE DROPDOWN (Stays on main bar on mobile) */}
                     <div ref={dropdownRef} style={{ position: 'relative' }} className="locale-dropdown">
                         <button

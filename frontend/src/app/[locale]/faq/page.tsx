@@ -18,13 +18,13 @@ const Icons = {
 function AccordionItem({ q, a }: { q: string; a: string }) {
     const [open, setOpen] = useState(false)
     return (
-        <div style={{ border: '1px solid rgba(27,58,107,0.1)', borderRadius: '10px', overflow: 'hidden', marginBottom: '10px', boxShadow: open ? 'var(--shadow-sm)' : 'none' }}>
-            <button onClick={() => setOpen(!open)} style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '18px 24px', background: open ? 'var(--navy)' : 'var(--white)', border: 'none', cursor: 'pointer', textAlign: 'left', transition: 'background 0.2s', gap: '16px' }}>
-                <span style={{ fontFamily: 'var(--font-display)', fontSize: '17px', color: open ? '#fff' : 'var(--navy-dark)', fontWeight: '600', lineHeight: '1.4' }}>{q}</span>
-                <span style={{ color: open ? 'var(--gold)' : 'var(--navy)', fontSize: '22px', flexShrink: 0, transition: 'transform 0.3s', transform: open ? 'rotate(45deg)' : 'none', fontWeight: '300', lineHeight: 1 }}>+</span>
+        <div style={{ border: '1px solid var(--border-color)', borderRadius: '10px', overflow: 'hidden', marginBottom: '10px', boxShadow: open ? 'var(--shadow-sm)' : 'none' }}>
+            <button onClick={() => setOpen(!open)} style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '18px 24px', background: open ? 'var(--gold-pale)' : 'var(--bg-card)', border: 'none', cursor: 'pointer', textAlign: 'left', transition: 'background 0.2s', gap: '16px' }}>
+                <span style={{ fontFamily: 'var(--font-display)', fontSize: '17px', color: open ? '#C9A84C' : 'var(--text-heading)', fontWeight: '600', lineHeight: '1.4' }}>{q}</span>
+                <span style={{ color: '#C9A84C', fontSize: '22px', flexShrink: 0, transition: 'transform 0.3s', transform: open ? 'rotate(45deg)' : 'none', fontWeight: '300', lineHeight: 1 }}>+</span>
             </button>
             {open && (
-                <div style={{ padding: '20px 24px', background: 'rgba(248,246,240,0.8)', borderTop: '1px solid rgba(201,168,76,0.2)', fontSize: '16px', color: 'var(--gray-600)', lineHeight: '1.8' }}>{a}</div>
+                <div style={{ padding: '20px 24px', background: 'var(--bg-secondary)', borderTop: '1px solid var(--border-subtle)', fontSize: '16px', color: 'var(--text-main)', lineHeight: '1.8' }}>{a}</div>
             )}
         </div>
     )
@@ -115,7 +115,7 @@ export default function FAQPage() {
                         <div key={gi} style={{ marginBottom: '48px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
                                 <div style={{ width: '4px', height: '24px', background: 'var(--gold)', borderRadius: '2px' }} />
-                                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', color: 'var(--navy-dark)' }}>{group.category}</h2>
+                                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', color: 'var(--text-heading)' }}>{group.category}</h2>
                             </div>
                             {group.items.map((item, ii) => (
                                 <AccordionItem key={ii} q={item.q} a={item.a} />

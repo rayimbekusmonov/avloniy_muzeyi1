@@ -86,29 +86,29 @@ export default function VirtualTourPage() {
                 </div>
             </div>
 
-            <section style={{ background: '#0d1f3c', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+            <section style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-subtle)' }}>
                 <div className="container">
                     <div className="grid-4-col">
                         {t.features.map((f, i) => (
-                            <div key={i} style={{ padding: '28px 24px', textAlign: 'center', borderRight: i < 3 ? '1px solid rgba(255,255,255,0.06)' : 'none' }}>
-                                <div style={{ color: 'rgba(201,168,76,0.7)', display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
+                            <div key={i} style={{ padding: '28px 24px', textAlign: 'center', borderRight: i < 3 ? '1px solid var(--border-subtle)' : 'none' }}>
+                                <div style={{ color: 'var(--gold)', display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
                                     <f.Icon />
                                 </div>
-                                <div style={{ fontFamily: 'var(--font-display)', fontSize: '15px', color: '#fff', marginBottom: '4px' }}>{f.title}</div>
-                                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'rgba(255,255,255,0.4)', letterSpacing: '1px' }}>{f.desc}</div>
+                                <div style={{ fontFamily: 'var(--font-display)', fontSize: '15px', color: 'var(--text-heading)', marginBottom: '4px' }}>{f.title}</div>
+                                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-muted)', letterSpacing: '1px' }}>{f.desc}</div>
                             </div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            <section style={{ background: '#060f1e', padding: '60px 0' }}>
+            <section style={{ background: 'var(--bg-main)', padding: '60px 0' }}>
                 <div className="container" style={{ maxWidth: '1100px' }}>
                     <div style={{
                         position: 'relative', aspectRatio: '16/9', background: '#000',
-                        borderRadius: '4px', overflow: 'hidden',
-                        boxShadow: '0 40px 120px rgba(0,0,0,0.8)',
-                        border: '1px solid rgba(201,168,76,0.15)',
+                        borderRadius: '8px', overflow: 'hidden',
+                        boxShadow: 'var(--shadow-lg)',
+                        border: '1px solid var(--border-color)',
                     }}>
                         {!started ? (
                             <div style={{ position: 'absolute', inset: 0 }}>
@@ -148,21 +148,21 @@ export default function VirtualTourPage() {
                         )}
                     </div>
 
-                    <div style={{ textAlign: 'center', marginTop: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'rgba(255,255,255,0.25)', letterSpacing: '2px' }}>
+                    <div style={{ textAlign: 'center', marginTop: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)', letterSpacing: '2px' }}>
                         <Icons.Lightbulb /> {t.tip}
                     </div>
                 </div>
             </section>
 
-            <section style={{ background: 'var(--off-white)', padding: '60px 0', textAlign: 'center' }}>
+            <section style={{ background: 'var(--bg-secondary)', padding: '60px 0', textAlign: 'center' }}>
                 <div className="container">
-                    <h3 style={{ fontSize: 'clamp(22px, 3vw, 28px)', marginBottom: '12px' }}>
+                    <h3 style={{ fontSize: 'clamp(22px, 3vw, 28px)', marginBottom: '12px', color: 'var(--text-heading)' }}>
                         {locale === 'ru' ? 'Хотите посетить лично?' : locale === 'en' ? 'Want to visit in person?' : 'Shaxsan tashrif buyurmoqchimisiz?'}
                     </h3>
-                    <p style={{ color: 'var(--gray-600)', marginBottom: '28px', fontSize: '16px' }}>
+                    <p style={{ color: 'var(--text-muted)', marginBottom: '28px', fontSize: '16px' }}>
                         {locale === 'ru' ? 'Музей открыт ежедневно с 9:00 до 17:00' : locale === 'en' ? 'Museum is open daily from 9:00 to 17:00' : 'Muzey har kuni 9:00 dan 17:00 gacha ochiq'}
                     </p>
-                    <a href={`/${locale}/contact`} className="btn-primary" style={{ textDecoration: 'none', borderRadius: '2px' }}>
+                    <a href={`/${locale}/contact`} className="btn-primary" style={{ textDecoration: 'none', borderRadius: '4px' }}>
                         {locale === 'ru' ? 'Связаться →' : locale === 'en' ? 'Contact us →' : "Bog'lanish →"}
                     </a>
                 </div>

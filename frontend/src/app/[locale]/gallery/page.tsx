@@ -102,15 +102,15 @@ export default function GalleryPage() {
                 </div>
             </div>
 
-            <section className="section" style={{ background: 'var(--off-white)' }}>
+            <section className="section" style={{ background: 'var(--bg-main)' }}>
                 <div className="container">
                     <div style={{ display: 'flex', gap: '8px', marginBottom: '40px', flexWrap: 'wrap' }}>
                         {MEDIA_TYPES.map(mt => (
                             <button key={mt.value} onClick={() => { setMediaType(mt.value); setPage(0) }} style={{
                                 padding: '8px 20px', borderRadius: '20px', border: '1px solid',
-                                borderColor: mediaType === mt.value ? 'var(--gold)' : 'rgba(27,58,107,0.2)',
-                                background: mediaType === mt.value ? 'var(--gold)' : '#fff',
-                                color: mediaType === mt.value ? 'var(--navy-dark)' : 'var(--gray-600)',
+                                borderColor: mediaType === mt.value ? 'var(--gold)' : 'var(--border-color)',
+                                background: mediaType === mt.value ? 'var(--gold)' : 'var(--bg-card)',
+                                color: mediaType === mt.value ? '#061d15' : 'var(--text-main)',
                                 fontFamily: 'var(--font-mono)', fontSize: '12px', cursor: 'pointer',
                                 transition: 'all 0.2s', letterSpacing: '1px',
                                 display: 'flex', alignItems: 'center', gap: '6px',
@@ -122,20 +122,20 @@ export default function GalleryPage() {
                     </div>
 
                     {loading ? (
-                        <div style={{ textAlign: 'center', padding: '80px', color: 'var(--gray-600)' }}>{t.loading}</div>
+                        <div style={{ textAlign: 'center', padding: '80px', color: 'var(--text-muted)' }}>{t.loading}</div>
                     ) : items.length === 0 ? (
-                        <div style={{ textAlign: 'center', padding: '80px', color: 'var(--gray-400)' }}>
+                        <div style={{ textAlign: 'center', padding: '80px', color: 'var(--text-muted)' }}>
                             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px', opacity: 0.4 }}><Icons.ImageLg /></div>
-                            <p style={{ color: 'var(--gray-600)' }}>{t.empty}</p>
+                            <p style={{ color: 'var(--text-muted)' }}>{t.empty}</p>
                         </div>
                     ) : (
                         <>
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
                                 {items.map(item => (
                                     <div key={item.id} className="card" style={{ cursor: 'pointer' }} onClick={() => setSelected(item)}>
-                                        <div style={{ height: '220px', background: item.thumbnailUrl || item.fileUrl ? `url(${item.thumbnailUrl || item.fileUrl}) center/cover` : 'linear-gradient(135deg, var(--navy-dark), var(--navy))', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                                        <div style={{ height: '220px', background: item.thumbnailUrl || item.fileUrl ? `url(${item.thumbnailUrl || item.fileUrl}) center/cover` : 'var(--bg-header)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
                                             {!item.thumbnailUrl && !item.fileUrl && (
-                                                <div style={{ color: 'rgba(255,255,255,0.3)' }}>{getPlaceholderIcon(item.mediaType)}</div>
+                                                <div style={{ color: 'rgba(255,255,255,0.4)' }}>{getPlaceholderIcon(item.mediaType)}</div>
                                             )}
                                             {item.mediaType === 'VIDEO' && (
                                                 <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.3)' }}>
@@ -144,13 +144,13 @@ export default function GalleryPage() {
                                                     </div>
                                                 </div>
                                             )}
-                                            <div style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(0,0,0,0.5)', color: '#fff', padding: '3px 8px', borderRadius: '10px', fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '1px' }}>
+                                            <div style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(0,0,0,0.6)', color: '#fff', padding: '3px 8px', borderRadius: '10px', fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '1px' }}>
                                                 {item.mediaType}
                                             </div>
                                         </div>
                                         <div style={{ padding: '16px 20px' }}>
-                                            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '16px', color: 'var(--navy-dark)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.title}</h3>
-                                            {item.description && <p style={{ fontSize: '13px', color: 'var(--gray-600)', marginTop: '6px', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{item.description}</p>}
+                                            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '16px', color: 'var(--text-heading)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.title}</h3>
+                                            {item.description && <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '6px', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{item.description}</p>}
                                         </div>
                                     </div>
                                 ))}
@@ -158,11 +158,11 @@ export default function GalleryPage() {
 
                             {totalPages > 1 && (
                                 <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '48px' }}>
-                                    <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0} style={{ padding: '10px 20px', border: '1px solid rgba(27,58,107,0.2)', borderRadius: '8px', background: '#fff', color: page === 0 ? 'var(--gray-400)' : 'var(--navy)', cursor: page === 0 ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-mono)', fontSize: '13px' }}>{t.prev}</button>
+                                    <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0} style={{ padding: '10px 20px', border: '1px solid var(--border-color)', borderRadius: '8px', background: 'var(--bg-card)', color: page === 0 ? 'var(--text-muted)' : 'var(--text-heading)', cursor: page === 0 ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-mono)', fontSize: '13px' }}>{t.prev}</button>
                                     {Array.from({ length: totalPages }, (_, i) => (
-                                        <button key={i} onClick={() => setPage(i)} style={{ padding: '10px 16px', border: '1px solid', borderColor: page === i ? 'var(--gold)' : 'rgba(27,58,107,0.2)', borderRadius: '8px', background: page === i ? 'var(--gold)' : '#fff', color: page === i ? 'var(--navy-dark)' : 'var(--navy)', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '13px' }}>{i + 1}</button>
+                                        <button key={i} onClick={() => setPage(i)} style={{ padding: '10px 16px', border: '1px solid', borderColor: page === i ? 'var(--gold)' : 'var(--border-color)', borderRadius: '8px', background: page === i ? 'var(--gold)' : 'var(--bg-card)', color: page === i ? '#061d15' : 'var(--text-heading)', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '13px' }}>{i + 1}</button>
                                     ))}
-                                    <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page === totalPages - 1} style={{ padding: '10px 20px', border: '1px solid rgba(27,58,107,0.2)', borderRadius: '8px', background: '#fff', color: page === totalPages - 1 ? 'var(--gray-400)' : 'var(--navy)', cursor: page === totalPages - 1 ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-mono)', fontSize: '13px' }}>{t.next}</button>
+                                    <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page === totalPages - 1} style={{ padding: '10px 20px', border: '1px solid var(--border-color)', borderRadius: '8px', background: 'var(--bg-card)', color: page === totalPages - 1 ? 'var(--text-muted)' : 'var(--text-heading)', cursor: page === totalPages - 1 ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-mono)', fontSize: '13px' }}>{t.next}</button>
                                 </div>
                             )}
                         </>
