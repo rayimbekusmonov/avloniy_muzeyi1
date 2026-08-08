@@ -59,18 +59,25 @@ export default function JadidlarPage() {
     const regions = ['Barchasi', 'Toshkent', 'Samarqand', 'Buxoro', 'Farg\'ona']
     const categories = ['Barchasi', 'Ta\'lim & Matbuot', 'Matbuot & Teatr', 'Adabiyot & She\'riyat', 'Adabiyot & Fan']
 
-    const filteredFigures = useMemo(() => {
-        return figures.filter(figure => {
-            const matchesSearch = searchQuery === '' || 
-                figure.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                (figure.title && figure.title.toLowerCase().includes(searchQuery.toLowerCase())) ||
-                (figure.bio && figure.bio.toLowerCase().includes(searchQuery.toLowerCase()))
-            
-            const matchesRegion = selectedRegion === 'Barchasi' || (figure.region && figure.region.includes(selectedRegion))
-            const matchesCategory = selectedCategory === 'Barchasi' || (figure.category && figure.category.includes(selectedCategory))
+    const getBirthYear = (years: string): number => {
+        const match = years && years.match(/(\d{4})/)
+        return match ? parseInt(match[1], 10) : 9999
+    }
 
-            return matchesSearch && matchesRegion && matchesCategory
-        })
+    const filteredFigures = useMemo(() => {
+        return figures
+            .filter(figure => {
+                const matchesSearch = searchQuery === '' || 
+                    figure.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    (figure.title && figure.title.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                    (figure.bio && figure.bio.toLowerCase().includes(searchQuery.toLowerCase()))
+                
+                const matchesRegion = selectedRegion === 'Barchasi' || (figure.region && figure.region.includes(selectedRegion))
+                const matchesCategory = selectedCategory === 'Barchasi' || (figure.category && figure.category.includes(selectedCategory))
+
+                return matchesSearch && matchesRegion && matchesCategory
+            })
+            .sort((a, b) => getBirthYear(a.years) - getBirthYear(b.years))
     }, [figures, searchQuery, selectedRegion, selectedCategory])
 
     const t = {
@@ -85,7 +92,6 @@ export default function JadidlarPage() {
         searchPlaceholder: locale === 'ru' ? 'Поиск джадида по имени или трудам...' : locale === 'en' ? 'Search Jadids by name or works...' : 'Jadid ma\'rifatparvarini qidirish...',
         filterRegion: locale === 'ru' ? 'Регион:' : locale === 'en' ? 'Region:' : 'Harakat markazi:',
         explore: locale === 'ru' ? 'Открыть профиль' : locale === 'en' ? 'Explore Profile' : 'Profilni ko\'rish',
-        featuredTitle: locale === 'ru' ? 'Центральная фигура' : locale === 'en' ? 'Central Figure' : 'Markaziy shaxsiyat',
         loading: locale === 'ru' ? 'Загрузка...' : locale === 'en' ? 'Loading...' : 'Yuklanmoqda...',
         empty: locale === 'ru' ? 'Ничего не найдено' : locale === 'en' ? 'No figures found' : "Mos keladigan jadid ma'lumoti topilmadi",
     }
@@ -96,7 +102,6 @@ export default function JadidlarPage() {
         </div>
     )
 
-    const featuredFigure = figures.find(f => f.featured) || figures[0]
 
     return (
         <div style={{ background: 'var(--bg-main)', color: 'var(--text-main)', minHeight: '100vh', paddingTop: '100px', paddingBottom: '80px', transition: 'background-color 0.3s ease, color 0.3s ease' }}>
@@ -179,66 +184,7 @@ export default function JadidlarPage() {
                 </div>
             </div>
 
-            {/* Featured Central Jadid Highlight (when no active filter) */}
-            {searchQuery === '' && selectedRegion === 'Barchasi' && featuredFigure && (
-                <section style={{ padding: '48px 0 24px 0' }}>
-                    <div className="container">
-                        <div style={{
-                            fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#C9A84C',
-                            letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '16px',
-                            display: 'flex', alignItems: 'center', gap: '8px'
-                        }}>
-                            <div style={{ width: '20px', height: '1px', background: '#C9A84C' }} />
-                            {t.featuredTitle}
-                        </div>
 
-                        <div style={{
-                            background: 'var(--bg-card)',
-                            border: '1px solid var(--border-color)',
-                            borderRadius: '12px', overflow: 'hidden',
-                            display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                            boxShadow: 'var(--shadow-md)'
-                        }}>
-                            <div style={{ padding: '40px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                                {featuredFigure.region && (
-                                    <div style={{ color: '#C9A84C', fontFamily: 'var(--font-mono)', fontSize: '12px', marginBottom: '8px' }}>
-                                        📍 {featuredFigure.region}
-                                    </div>
-                                )}
-                                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '32px', color: 'var(--text-heading)', marginBottom: '8px' }}>
-                                    {featuredFigure.name}
-                                </h2>
-                                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '14px', color: '#C9A84C', marginBottom: '16px' }}>
-                                    {featuredFigure.years}
-                                </div>
-                                <p style={{ fontSize: '15px', color: 'var(--text-muted)', lineHeight: 1.8, marginBottom: '24px' }}>
-                                    {featuredFigure.bio}
-                                </p>
-                                <div>
-                                    <Link
-                                        href={`/${locale}/jadidlar/${featuredFigure.id}`}
-                                        style={{
-                                            display: 'inline-flex', alignItems: 'center', gap: '10px',
-                                            padding: '12px 24px', background: '#C9A84C', color: '#060d17',
-                                            borderRadius: '6px', fontFamily: 'var(--font-display)',
-                                            fontWeight: '700', textDecoration: 'none'
-                                        }}
-                                    >
-                                        {t.explore} <Icons.ArrowRight />
-                                    </Link>
-                                </div>
-                            </div>
-                            <div style={{ background: 'var(--bg-secondary)', minHeight: '280px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '30px' }}>
-                                {featuredFigure.imageUrl ? (
-                                    <img src={featuredFigure.imageUrl} alt={featuredFigure.name} style={{ width: '180px', height: '220px', borderRadius: '8px', objectFit: 'cover', border: '3px solid rgba(201,168,76,0.4)' }} />
-                                ) : (
-                                    <div style={{ color: 'var(--text-muted)' }}><Icons.Person /></div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            )}
 
             {/* Main Grid View of All Jadids */}
             <section style={{ padding: '40px 0' }}>

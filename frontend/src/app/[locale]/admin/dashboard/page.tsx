@@ -62,7 +62,7 @@ export default function AdminDashboardPage() {
                     </div>
                     <div>
                         <div style={{ fontFamily: 'var(--font-display)', fontSize: '15px', color: '#fff', fontWeight: '600' }}>Admin Panel</div>
-                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'rgba(255,255,255,0.6)', letterSpacing: '1px' }}>AVLONIY MUZEYI</div>
+                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'rgba(255,255,255,0.6)', letterSpacing: '1px' }}>O&apos;ZBEKISTON JADIDLARI</div>
                     </div>
                 </div>
                 <button onClick={() => { removeToken(); router.push('/admin') }} style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '8px 16px', borderRadius: '6px', fontFamily: 'var(--font-mono)', fontSize: '12px', cursor: 'pointer' }}>

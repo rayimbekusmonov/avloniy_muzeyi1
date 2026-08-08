@@ -52,7 +52,7 @@ public class Resource {
     }
 
     public enum ResourceType {
-        EBOOK, ARTICLE, RESEARCH
+        EBOOK, ARTICLE, RESEARCH, DOCUMENT
     }
 }
 

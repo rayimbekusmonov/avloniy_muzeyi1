@@ -90,7 +90,6 @@ export default function Navbar() {
         { href: `/${locale}/jadidlar`, label: jadidlarLabel },
         { href: `/${locale}/about`, label: historyLabel },
         { href: `/${locale}/resources`, label: libraryLabel },
-        { href: `/${locale}/gallery`, label: t('gallery') },
         { href: `/${locale}/news`, label: t('news') },
         { href: `/${locale}/faq`, label: t('faq') },
         { href: `/${locale}/contact`, label: t('contact') },

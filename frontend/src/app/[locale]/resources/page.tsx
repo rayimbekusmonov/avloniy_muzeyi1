@@ -61,6 +61,20 @@ const Icons = {
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
         </svg>
     ),
+    Scroll: () => (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M14 4h4a2 2 0 0 1 0 4h-4"/>
+            <path d="M3 4h11v12a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V6a2 2 0 0 1 2-2z"/>
+            <line x1="9" y1="4" x2="9" y2="16"/>
+        </svg>
+    ),
+    ScrollLg: () => (
+        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M14 4h4a2 2 0 0 1 0 4h-4"/>
+            <path d="M3 4h11v12a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V6a2 2 0 0 1 2-2z"/>
+            <line x1="9" y1="4" x2="9" y2="16"/>
+        </svg>
+    ),
 }
 
 export default function ResourcesPage() {
@@ -75,9 +89,10 @@ export default function ResourcesPage() {
 
     const RESOURCE_TYPES = [
         { value: '', label: locale === 'ru' ? 'Все' : locale === 'en' ? 'All' : 'Barchasi' },
-        { value: 'EBOOK',    Icon: Icons.Book,       label: locale === 'ru' ? 'Э-книги'      : locale === 'en' ? 'E-books'  : 'E-kitoblar' },
-        { value: 'ARTICLE',  Icon: Icons.FileText,   label: locale === 'ru' ? 'Статьи'       : locale === 'en' ? 'Articles' : 'Maqolalar' },
-        { value: 'RESEARCH', Icon: Icons.Microscope, label: locale === 'ru' ? 'Исследования' : locale === 'en' ? 'Research' : 'Ilmiy ishlar' },
+        { value: 'EBOOK',    Icon: Icons.Book,       label: locale === 'ru' ? 'Э-книги'      : locale === 'en' ? 'E-books'   : 'E-kitoblar' },
+        { value: 'ARTICLE',  Icon: Icons.FileText,   label: locale === 'ru' ? 'Статьи'       : locale === 'en' ? 'Articles'  : 'Maqolalar' },
+        { value: 'RESEARCH', Icon: Icons.Microscope, label: locale === 'ru' ? 'Исследования' : locale === 'en' ? 'Research'  : 'Ilmiy ishlar' },
+        { value: 'DOCUMENT', Icon: Icons.Scroll,     label: locale === 'ru' ? 'Документы'    : locale === 'en' ? 'Documents' : 'Hujjatlar' },
     ]
 
     const t = {
@@ -109,6 +124,7 @@ export default function ResourcesPage() {
     const getPlaceholderIcon = (type: string) => {
         if (type === 'ARTICLE') return <Icons.FileTextLg />
         if (type === 'RESEARCH') return <Icons.MicroscopeLg />
+        if (type === 'DOCUMENT') return <Icons.ScrollLg />
         return <Icons.BookLg />
     }
 

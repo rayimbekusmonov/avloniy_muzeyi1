@@ -11,15 +11,18 @@ const Icons = {
     Book: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>,
     FileText: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>,
     Microscope: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0 0-14h-1"/><path d="M9 14h2"/><path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z"/></svg>,
+    Scroll: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 4h4a2 2 0 0 1 0 4h-4"/><path d="M3 4h11v12a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V6a2 2 0 0 1 2-2z"/><line x1="9" y1="4" x2="9" y2="16"/></svg>,
     BookLg: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>,
     FileTextLg: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>,
     MicroscopeLg: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0 0-14h-1"/></svg>,
+    ScrollLg: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 4h4a2 2 0 0 1 0 4h-4"/><path d="M3 4h11v12a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V6a2 2 0 0 1 2-2z"/><line x1="9" y1="4" x2="9" y2="16"/></svg>,
 }
 
 const RESOURCE_TYPES = [
     { value: 'EBOOK',    Icon: Icons.Book,       label: 'E-kitob' },
     { value: 'ARTICLE',  Icon: Icons.FileText,   label: 'Maqola' },
     { value: 'RESEARCH', Icon: Icons.Microscope, label: 'Ilmiy ish' },
+    { value: 'DOCUMENT', Icon: Icons.Scroll,     label: 'Hujjat' },
 ]
 
 const emptyForm = { title: '', author: '', description: '', fileUrl: '', coverUrl: '', resourceType: 'EBOOK', publishedYear: new Date().getFullYear(), pageCount: 0 }
@@ -75,6 +78,7 @@ export default function AdminResourcesPage() {
     const getIconLg = (type: string) => {
         if (type === 'ARTICLE') return <Icons.FileTextLg />
         if (type === 'RESEARCH') return <Icons.MicroscopeLg />
+        if (type === 'DOCUMENT') return <Icons.ScrollLg />
         return <Icons.BookLg />
     }
 

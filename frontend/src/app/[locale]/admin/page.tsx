@@ -160,7 +160,7 @@ function AdminLoginContent() {
                         </svg>
                     </div>
                     <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', color: 'var(--text-heading)', marginBottom: '6px' }}>Boshqaruv Paneli</h1>
-                    <p style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-muted)', letterSpacing: '3px', textTransform: 'uppercase' }}>Avloniy Muzeyi · CMS</p>
+                    <p style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-muted)', letterSpacing: '3px', textTransform: 'uppercase' }}>O&apos;zbekiston Jadidlari · CMS</p>
                 </div>
 
                 {/* Mode Selector Tabs */}

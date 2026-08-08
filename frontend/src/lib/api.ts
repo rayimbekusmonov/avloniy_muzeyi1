@@ -128,7 +128,7 @@ export interface ResourceItem {
     description: string;
     fileUrl: string;
     coverUrl: string;
-    resourceType: 'EBOOK' | 'ARTICLE' | 'RESEARCH';
+    resourceType: 'EBOOK' | 'ARTICLE' | 'RESEARCH' | 'DOCUMENT';
     publishedYear: number;
     pageCount: number;
     createdAt: string;
