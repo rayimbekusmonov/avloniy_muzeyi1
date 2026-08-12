@@ -82,7 +82,7 @@ export default function Navbar() {
     const currentLang = LANGUAGES.find(l => l.code === locale) || LANGUAGES[0]
 
     const jadidlarLabel = locale === 'ru' ? 'Джадиды' : locale === 'en' ? 'Jadids' : 'Jadidlar'
-    const historyLabel = locale === 'ru' ? 'История движения' : locale === 'en' ? 'History' : 'Harakat Tarixi'
+    const historyLabel = locale === 'ru' ? 'История джадидов' : locale === 'en' ? 'Jadid History' : 'Jadidlar Tarixi'
     const libraryLabel = locale === 'ru' ? 'Библиотека' : locale === 'en' ? 'Library' : 'Kutubxona'
 
     const navLinks = [
@@ -91,8 +91,9 @@ export default function Navbar() {
         { href: `/${locale}/about`, label: historyLabel },
         { href: `/${locale}/resources`, label: libraryLabel },
         { href: `/${locale}/news`, label: t('news') },
-        { href: `/${locale}/faq`, label: t('faq') },
-        { href: `/${locale}/contact`, label: t('contact') },
+        // FAQ and Contact are hidden from the menu but their pages remain available
+        // { href: `/${locale}/faq`, label: t('faq') },
+        // { href: `/${locale}/contact`, label: t('contact') },
     ]
 
     return (

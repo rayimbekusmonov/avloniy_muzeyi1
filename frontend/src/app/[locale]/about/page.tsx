@@ -2,14 +2,25 @@
 import { useLocale } from 'next-intl'
 
 const Icons = {
-    Museum: () => (
+    Movement: () => (
         <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 10v11M12 10v11M16 10v11"/>
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
         </svg>
     ),
-    Person: () => (
+    Book: () => (
         <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+        </svg>
+    ),
+    Star: () => (
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+    ),
+    Torch: () => (
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
         </svg>
     ),
     Clock: () => (
@@ -17,19 +28,20 @@ const Icons = {
             <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
         </svg>
     ),
-    Tag: () => (
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>
-        </svg>
-    ),
-    Phone: () => (
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.83a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16.92z"/>
-        </svg>
-    ),
     MapPin: () => (
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+        </svg>
+    ),
+    Globe: () => (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+    ),
+    Pen: () => (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
         </svg>
     ),
 }
@@ -38,77 +50,157 @@ export default function AboutPage() {
     const locale = useLocale()
 
     const timeline = locale === 'ru' ? [
-        { year: '1878', title: "Родился", desc: "Родился в Ташкенте." },
-        { year: '1904', title: "Открыл школы", desc: "Организовал школы нового метода." },
-        { year: '1907', title: '"Адиб"', desc: "Написал первое учебное пособие." },
-        { year: '1913', title: "Драматургия", desc: "Активно работал в области драматургии." },
-        { year: '1917', title: "Джадидизм", desc: "Стал активным участником просветительского движения." },
-        { year: '1934', title: "Скончался", desc: "Скончался в Ташкенте." },
+        { year: '1880', title: "Зарождение идей", desc: "В Центральной Азии начали распространяться идеи исламского реформизма и просвещения, пришедшие из Крыма и Османской империи." },
+        { year: '1893', title: "Новометодные школы", desc: "Исмаил Гаспринский разработал новый метод обучения — «усул-и-джадид». Первые такие школы появились в Туркестане." },
+        { year: '1900', title: "Расцвет движения", desc: "Джадидские школы распространились по всему Туркестану, Бухаре и Хиве. Издавались газеты, журналы, ставились театральные пьесы." },
+        { year: '1905', title: "Политизация", desc: "После русской революции 1905 года джадиды перешли от культурного просветительства к политическим требованиям реформ." },
+        { year: '1917', title: "Автономия", desc: "Джадиды создали Туркестанскую автономию в Коканде — первое демократическое государство в Центральной Азии." },
+        { year: '1920e', title: "Наследие", desc: "Несмотря на репрессии советского режима, идеи джадидов о просвещении, языке и нации легли в основу современной узбекской идентичности." },
     ] : locale === 'en' ? [
-        { year: '1878', title: "Born", desc: "Born in Tashkent." },
-        { year: '1904', title: "Opened schools", desc: "Organized new-method schools." },
-        { year: '1907', title: '"Adib"', desc: "Wrote the first educational manual." },
-        { year: '1913', title: "Dramaturgy", desc: "Actively worked in dramaturgy." },
-        { year: '1917', title: "Jadidism", desc: "Became an active participant in the enlightenment movement." },
-        { year: '1934', title: "Passed away", desc: "Passed away in Tashkent." },
+        { year: '1880', title: "Birth of Ideas", desc: "Ideas of Islamic reformism and enlightenment began spreading in Central Asia, inspired by thinkers from Crimea and the Ottoman Empire." },
+        { year: '1893', title: "New-Method Schools", desc: "Ismail Gasprinsky developed a new teaching method — 'usul-i-jadid'. The first such schools appeared in Turkestan." },
+        { year: '1900', title: "Movement Flourishes", desc: "Jadid schools spread across Turkestan, Bukhara and Khiva. Newspapers, journals were published and theatrical plays were staged." },
+        { year: '1905', title: "Politicization", desc: "After the 1905 Russian revolution, Jadids moved from cultural enlightenment to political demands for reform." },
+        { year: '1917', title: "Autonomy", desc: "Jadids established the Turkestan Autonomy in Kokand — the first democratic state in Central Asia." },
+        { year: '1920s', title: "Legacy", desc: "Despite Soviet repression, Jadid ideas about enlightenment, language and nation became the foundation of modern Uzbek identity." },
     ] : [
-        { year: '1878', title: "Tug'ildi", desc: "Toshkent shahrida tavallud topdi." },
-        { year: '1904', title: "Maktab ocha boshladi", desc: "Yangi usul maktablarini tashkil etdi." },
-        { year: '1907', title: '"Adib" asari', desc: "Birinchi o'quv qo'llanmasini yozdi." },
-        { year: '1913', title: "Sahna asarlari", desc: "Dramaturgiya sohasida faol ijod qildi." },
-        { year: '1917', title: "Jadidchilik", desc: "Ma'rifat harakatining faol ishtirokchisi bo'ldi." },
-        { year: '1934', title: "Vafot etdi", desc: "Toshkentda hayotdan ko'z yumdi." },
+        { year: '1880', title: "G'oyalarning tug'ilishi", desc: "Qrim va Usmonli imperiyasidan ilhomlanib, Markaziy Osiyoda islomiy islohotchilik va ma'rifatchilik g'oyalari tarqala boshladi." },
+        { year: '1893', title: "Yangi usul maktablari", desc: "Ismoil Gasprinsky 'usul-i-jadid' nomli yangi o'qitish usulini ishlab chiqdi. Birinchi bunday maktablar Turkistonda paydo bo'ldi." },
+        { year: '1900', title: "Harakat gullab-yashnashi", desc: "Jadid maktablari butun Turkiston, Buxoro va Xivaga tarqaldi. Gazetalar, jurnallar chiqarildi va teatr pyesalari sahnalashtirildi." },
+        { year: '1905', title: "Siyosiylashuv", desc: "1905-yilgi rus inqilobidan so'ng jadidlar madaniy ma'rifatchilikdan islohotga bo'lgan siyosiy talablarga o'tdi." },
+        { year: '1917', title: "Muxtoriyat", desc: "Jadidlar Qo'qonda Turkiston muxtoriyatini tuzdi — Markaziy Osiyodagi birinchi demokratik davlat." },
+        { year: '1920', title: "Meros", desc: "Sovet repressiyalariga qaramay, jadidlarning ma'rifat, til va millat haqidagi g'oyalari zamonaviy o'zbek identitetining asosiga aylandi." },
     ]
 
-    const infoItems = locale === 'ru' ? [
-        { Icon: Icons.Clock, label: 'Часы работы', value: 'Пн–Вс: 9:00–17:00' },
-        { Icon: Icons.Tag,   label: 'Вход',         value: 'Бесплатно' },
-        { Icon: Icons.Phone, label: 'Телефон',       value: '+998 (71) 000-00-00' },
-        { Icon: Icons.MapPin,label: 'Адрес',         value: 'г. Ташкент' },
+    const goals = locale === 'ru' ? [
+        { Icon: Icons.Book, label: 'Просвещение', value: 'Распространение грамотности и современного образования среди народа' },
+        { Icon: Icons.Globe, label: 'Язык', value: 'Реформа и унификация тюркских языков, создание единой литературной нормы' },
+        { Icon: Icons.Pen, label: 'Пресса', value: 'Издание газет и журналов для пробуждения национального самосознания' },
+        { Icon: Icons.MapPin, label: 'Реформы', value: 'Модернизация религиозных и государственных институтов' },
     ] : locale === 'en' ? [
-        { Icon: Icons.Clock, label: 'Working hours', value: 'Mon–Sun: 9:00–17:00' },
-        { Icon: Icons.Tag,   label: 'Admission',     value: 'Free' },
-        { Icon: Icons.Phone, label: 'Phone',          value: '+998 (71) 000-00-00' },
-        { Icon: Icons.MapPin,label: 'Address',        value: 'Tashkent city' },
+        { Icon: Icons.Book, label: 'Education', value: 'Spreading literacy and modern education among the people' },
+        { Icon: Icons.Globe, label: 'Language', value: 'Reform and unification of Turkic languages, creating a unified literary standard' },
+        { Icon: Icons.Pen, label: 'Press', value: 'Publishing newspapers and journals to awaken national consciousness' },
+        { Icon: Icons.MapPin, label: 'Reforms', value: 'Modernization of religious and state institutions' },
     ] : [
-        { Icon: Icons.Clock, label: 'Ish vaqti',     value: 'Du–Yak: 9:00–17:00' },
-        { Icon: Icons.Tag,   label: 'Kirish narxi',  value: 'Bepul' },
-        { Icon: Icons.Phone, label: 'Telefon',        value: '+998 (71) 000-00-00' },
-        { Icon: Icons.MapPin,label: 'Manzil',         value: 'Toshkent shahri' },
+        { Icon: Icons.Book, label: "Ta'lim", value: "Xalq orasida savodxonlik va zamonaviy ma'lumotni tarqatish" },
+        { Icon: Icons.Globe, label: 'Til', value: "Turkiy tillarni isloh qilish va birlashtirish, yagona adabiy me'yor yaratish" },
+        { Icon: Icons.Pen, label: 'Matbuot', value: "Milliy ongni uyg'otish uchun gazeta va jurnallar nashr etish" },
+        { Icon: Icons.MapPin, label: 'Islohotlar', value: "Diniy va davlat institutlarini modernizatsiya qilish" },
     ]
 
-    const bioSections = locale === 'ru' ? [
-        { title: "Жизнь", text: "Абдулла Авлоний родился в 1878 году в Ташкенте. Рос в семье бедного ремесленника. С детства проявлял интерес к знаниям и самостоятельно учился." },
-        { title: "Просветительская деятельность", text: "Авлоний активно участвовал в организации школ нового метода. Внедрял современные методы обучения, создавал учебники и открывал новые направления в воспитании детей." },
-        { title: "Литературное наследие", text: "Автор более ста стихотворений, драматических произведений и статей. Среди его работ особое место занимают «Туркий Гулистон ёхуд ахлоқ», «Адиб» и многие сценические произведения." },
-        { title: "Журналистская деятельность", text: "Авлоний редактировал газеты «Шухрат» и «Осиё». Через прессу призывал народ к просвещению, боролся против угнетения и невежества." },
+    const figures = locale === 'ru' ? [
+        {
+            name: 'Abdulla Авлоний',
+            years: '1878–1934',
+            role: 'Просветитель, поэт, педагог',
+            desc: 'Основал новометодные школы в Ташкенте, создал знаменитые педагогические труды «Туркий Гулистон» и «Адиб», редактировал джадидские газеты.',
+        },
+        {
+            name: 'Махмудхўжа Беҳбудий',
+            years: '1875–1919',
+            role: 'Мыслитель, драматург, журналист',
+            desc: 'Один из главных идеологов джадидизма. Автор первой узбекской драмы «Падаркуш». Основал газету «Самарканд» и журнал «Ойна».',
+        },
+        {
+            name: 'Мунаввар Қори',
+            years: '1878–1931',
+            role: 'Педагог, политик, реформатор',
+            desc: 'Открыл первые новометодные школы в Ташкенте, активно участвовал в политической жизни, основал ряд джадидских изданий.',
+        },
+        {
+            name: 'Абдулла Қодирий',
+            years: '1894–1938',
+            role: 'Писатель, журналист',
+            desc: 'Автор первых узбекских романов «Ўтган кунлар» и «Меҳробдан чаён». Своими произведениями отразил дух эпохи и идеалы джадидизма.',
+        },
     ] : locale === 'en' ? [
-        { title: "Life", text: "Abdulla Avloniy was born in 1878 in Tashkent. He grew up in a poor craftsman family. From childhood he showed interest in knowledge and studied independently." },
-        { title: "Enlightenment activities", text: "Avloniy actively participated in organizing new-method schools. He introduced modern teaching methods, created textbooks and opened new directions in children's education." },
-        { title: "Literary heritage", text: "Author of over a hundred poems, dramatic works and articles. Among his works, 'Turkiy Guliston yokhud Akhlok', 'Adib' and many stage works hold a special place." },
-        { title: "Journalistic activities", text: "Avloniy edited the newspapers 'Shuhrat' and 'Osiyo'. Through the press he called people to enlightenment, fought against oppression and ignorance." },
+        {
+            name: 'Abdulla Avloniy',
+            years: '1878–1934',
+            role: 'Enlightener, poet, educator',
+            desc: 'Founded new-method schools in Tashkent, created the famous pedagogical works "Turkiy Guliston" and "Adib", edited Jadid newspapers.',
+        },
+        {
+            name: 'Mahmudxo\'ja Behbudi',
+            years: '1875–1919',
+            role: 'Thinker, playwright, journalist',
+            desc: 'One of the main ideologists of Jadidism. Author of the first Uzbek drama "Padarkush". Founded the newspaper "Samarqand" and journal "Oyna".',
+        },
+        {
+            name: 'Munavvar Qori',
+            years: '1878–1931',
+            role: 'Educator, politician, reformer',
+            desc: 'Opened the first new-method schools in Tashkent, actively participated in political life, founded several Jadid publications.',
+        },
+        {
+            name: 'Abdulla Qodiriy',
+            years: '1894–1938',
+            role: 'Writer, journalist',
+            desc: 'Author of the first Uzbek novels "O\'tgan kunlar" and "Mehrobdan chayon". His works reflected the spirit of the era and ideals of Jadidism.',
+        },
     ] : [
-        { title: "Hayoti", text: "Abdulla Avloniy 1878-yil Toshkent shahrida tug'ilgan. U kambag'al hunarmand oilasida o'sib-ulg'aydi. Bolaligidanoq ilmga qiziqish bildirdi va o'zi mustaqil ta'lim oldi." },
-        { title: "Ma'rifatchilik faoliyati", text: "Avloniy yangi usul maktablarini tashkil etishda faol ishtirok etdi. U zamonaviy ta'lim usullarini joriy qilish, darsliklar yaratish va bolalar tarbiyasida yangi yo'nalishlar ocha boshladi." },
-        { title: "Adabiy merosi", text: "U yuzdan ortiq she'r, dramatik asar va maqolalar muallifi. Uning asarlari orasida \"Turkiy Guliston yoxud axloq\", \"Adib\" va ko'plab sahna asarlari alohida ahamiyatga ega." },
-        { title: "Jurnalistik faoliyati", text: "Avloniy \"Shuhrat\" va \"Osiyo\" gazetalarini tahrir qildi. Matbuot orqali xalqni ma'rifatga chorladi, zulm va jaholatga qarshi kurashdi." },
+        {
+            name: 'Abdulla Avloniy',
+            years: '1878–1934',
+            role: "Ma'rifatchi, shoir, pedagog",
+            desc: "Toshkentda yangi usul maktablarini tashkil etdi, mashhur pedagogik asarlar \"Turkiy Guliston\" va \"Adib\"ni yaratdi, jadid gazetalarini tahrir qildi.",
+        },
+        {
+            name: "Mahmudxo'ja Behbudiy",
+            years: '1875–1919',
+            role: "Mutafakkir, dramaturg, jurnalist",
+            desc: "Jadidizmning asosiy mafkurachilaridan biri. Birinchi o'zbek dramasi \"Padarkush\"ning muallifi. \"Samarqand\" gazetasi va \"Oyna\" jurnalini asos soldi.",
+        },
+        {
+            name: 'Munavvar Qori',
+            years: '1878–1931',
+            role: "Pedagog, siyosatchi, islohotchi",
+            desc: "Toshkentda birinchi yangi usul maktablarini ochdi, siyosiy hayotda faol ishtirok etdi, bir qator jadid nashrlari tashkil etdi.",
+        },
+        {
+            name: 'Abdulla Qodiriy',
+            years: '1894–1938',
+            role: "Yozuvchi, jurnalist",
+            desc: "Birinchi o'zbek romanlari \"O'tgan kunlar\" va \"Mehrobdan chayon\"ning muallifi. Asarlari davr ruhini va jadidizm ideallarini aks ettirdi.",
+        },
     ]
 
     const t = {
-        label:         locale === 'ru' ? 'О музее'        : locale === 'en' ? 'About Museum'   : 'Muzey Haqida',
-        h1a:           locale === 'ru' ? 'История и '     : locale === 'en' ? 'History & '     : 'Tarix va ',
-        h1b:           locale === 'ru' ? 'Информация'     : locale === 'en' ? 'Information'    : "Ma'lumot",
-        desc:          locale === 'ru' ? 'О музее Абдуллы Авлония, его жизни и важной роли в Ташкенте.' : locale === 'en' ? 'About Abdulla Avloniy museum, his life and important role in Tashkent.' : "Abdulla Avloniy muzeyi, uning hayoti va Toshkentdagi muhim o'rni haqida.",
-        museumLabel:   locale === 'ru' ? 'История музея'  : locale === 'en' ? 'Museum history'  : 'Muzey tarixi',
-        museumH2a:     locale === 'ru' ? 'О '             : locale === 'en' ? 'About the '     : 'Muzey ',
-        museumH2b:     locale === 'ru' ? 'Музее'          : locale === 'en' ? 'Museum'         : 'Haqida',
-        museumDesc1:   locale === 'ru' ? 'Музей Абдуллы Авлония был основан в 1934 году и посвящён жизни, творчеству и педагогической деятельности великого просветителя. В фонде музея хранится более 500 экспонатов.' : locale === 'en' ? 'Abdulla Avloniy Museum was established in 1934 and is dedicated to the life, creative work and pedagogical activities of the great enlightener. The museum holds over 500 exhibits.' : "Abdulla Avloniy muzeyi 1934-yilda tashkil etilgan bo'lib, buyuk ma'rifatparvarning hayoti, ijodi va pedagogik faoliyatiga bag'ishlangan. Muzey fondida 500 dan ortiq eksponat saqlanadi.",
-        museumDesc2:   locale === 'ru' ? 'Музей продолжает работу по сохранению и передаче национального духовного наследия будущим поколениям.' : locale === 'en' ? 'The museum continues its work to preserve and pass on the national spiritual heritage to future generations.' : "Muzey milliy ma'naviy merosni saqlash va kelajak avlodlarga yetkazish maqsadida faoliyat ko'rsatib kelmoqda.",
-        personLabel:   locale === 'ru' ? 'Личность'       : locale === 'en' ? 'Personality'    : 'Shaxsiyat',
-        personH2c:     locale === 'ru' ? ' — кто он?'     : locale === 'en' ? ' — who is he?'  : ' Kim?',
-        timelineLabel: locale === 'ru' ? 'Жизненный путь' : locale === 'en' ? "Life's journey" : "Hayot yo'li",
-        timelineH2a:   locale === 'ru' ? 'Важные '        : locale === 'en' ? 'Important '     : 'Muhim ',
-        timelineH2b:   locale === 'ru' ? 'Даты'           : locale === 'en' ? 'Dates'          : 'Sanalar',
+        label:         locale === 'ru' ? 'История движения' : locale === 'en' ? 'Movement History' : 'Harakat Tarixi',
+        h1a:           locale === 'ru' ? 'Джадиды — '       : locale === 'en' ? 'Jadids — '        : 'Jadidlar — ',
+        h1b:           locale === 'ru' ? 'Просветители Востока' : locale === 'en' ? 'Enlighteners of the East' : "Sharq Ma'rifatparvarlari",
+        desc:          locale === 'ru'
+            ? 'История великого просветительского движения Центральной Азии конца XIX — начала XX века, его идеи, деятели и наследие.'
+            : locale === 'en'
+            ? 'The history of the great enlightenment movement of Central Asia in the late 19th – early 20th century, its ideas, figures and legacy.'
+            : "XIX asr oxiri — XX asr boshlarida Markaziy Osiyo buyuk ma'rifat harakatining tarixi, g'oyalari, arboblari va merosi.",
+
+        whatLabel:     locale === 'ru' ? 'Что такое джадидизм?' : locale === 'en' ? 'What is Jadidism?' : 'Jadidizm nima?',
+        whatH2a:       locale === 'ru' ? 'Движение '        : locale === 'en' ? 'The '             : 'Jadid ',
+        whatH2b:       locale === 'ru' ? 'Просвещения'      : locale === 'en' ? 'Jadid Movement'   : 'Harakati',
+        whatDesc1:     locale === 'ru'
+            ? 'Джадидизм (от арабского «джадид» — «новый») — реформаторское и просветительское движение, возникшее в конце XIX века среди тюркоязычных мусульман России и Средней Азии.'
+            : locale === 'en'
+            ? 'Jadidism (from Arabic "jadid" — "new") was a reformist and enlightenment movement that emerged in the late 19th century among Turkic-speaking Muslims of Russia and Central Asia.'
+            : "Jadidizm (arabcha \"jadid\" — \"yangi\"dan) — XIX asr oxirida Rossiya va O'rta Osiyoning turkiy tilli musulmonlari orasida paydo bo'lgan islohotchilik va ma'rifatchilik harakati.",
+        whatDesc2:     locale === 'ru'
+            ? 'Джадиды выступали за реформу системы образования, развитие национальных языков, свободу прессы и политические преобразования. Они сыграли ключевую роль в формировании современной центральноазиатской идентичности.'
+            : locale === 'en'
+            ? 'Jadids advocated for the reform of the education system, development of national languages, freedom of the press and political transformation. They played a key role in shaping modern Central Asian identity.'
+            : "Jadidlar ta'lim tizimini isloh qilish, milliy tillarni rivojlantirish, matbuot erkinligi va siyosiy o'zgarishlarni himoya qildi. Ular zamonaviy Markaziy Osiyo identitetini shakllantirishda muhim rol o'ynadi.",
+
+        goalsLabel:    locale === 'ru' ? 'Цели движения'    : locale === 'en' ? 'Movement Goals'  : 'Harakat maqsadlari',
+        goalsH2a:      locale === 'ru' ? 'Ключевые '        : locale === 'en' ? 'Key '             : 'Asosiy ',
+        goalsH2b:      locale === 'ru' ? 'Идеи'             : locale === 'en' ? 'Ideas'            : "G'oyalar",
+
+        timelineLabel: locale === 'ru' ? 'Хронология'      : locale === 'en' ? 'Timeline'        : 'Xronologiya',
+        timelineH2a:   locale === 'ru' ? 'История '         : locale === 'en' ? 'History of '      : 'Harakat ',
+        timelineH2b:   locale === 'ru' ? 'Движения'         : locale === 'en' ? 'the Movement'     : 'Tarixi',
+
+        figuresLabel:  locale === 'ru' ? 'Видные деятели'   : locale === 'en' ? 'Key Figures'     : 'Yetakchi arboblar',
+        figuresH2a:    locale === 'ru' ? 'Джадидские '      : locale === 'en' ? 'Jadid '          : 'Jadid ',
+        figuresH2b:    locale === 'ru' ? 'Просветители'     : locale === 'en' ? 'Enlighteners'    : "Ma'rifatchilar",
     }
 
     return (
@@ -121,60 +213,37 @@ export default function AboutPage() {
                 </div>
             </div>
 
-            {/* Muzey haqida */}
+            {/* What is Jadidism */}
             <section className="section" style={{ background: 'var(--bg-main)' }}>
                 <div className="container">
                     <div className="grid-2-col">
                         <div>
-                            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '16px' }}>{t.museumLabel}</div>
-                            <h2 style={{ fontSize: 'clamp(26px, 4vw, 36px)', marginBottom: '16px', color: 'var(--text-heading)' }}>{t.museumH2a}<span style={{ color: 'var(--gold)' }}>{t.museumH2b}</span></h2>
+                            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '16px' }}>{t.whatLabel}</div>
+                            <h2 style={{ fontSize: 'clamp(26px, 4vw, 36px)', marginBottom: '16px', color: 'var(--text-heading)' }}>{t.whatH2a}<span style={{ color: 'var(--gold)' }}>{t.whatH2b}</span></h2>
                             <div className="gold-divider" />
-                            <p style={{ fontSize: '16px', color: 'var(--text-muted)', lineHeight: '1.9', marginTop: '16px', marginBottom: '16px' }}>{t.museumDesc1}</p>
-                            <p style={{ fontSize: '16px', color: 'var(--text-muted)', lineHeight: '1.9', marginBottom: '24px' }}>{t.museumDesc2}</p>
+                            <p style={{ fontSize: '16px', color: 'var(--text-muted)', lineHeight: '1.9', marginTop: '16px', marginBottom: '16px' }}>{t.whatDesc1}</p>
+                            <p style={{ fontSize: '16px', color: 'var(--text-muted)', lineHeight: '1.9', marginBottom: '24px' }}>{t.whatDesc2}</p>
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '16px' }}>
-                                {infoItems.map((item, i) => (
+                                {goals.map((item, i) => (
                                     <div key={i} style={{ padding: '16px', background: 'var(--bg-card)', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--gold)', marginBottom: '6px' }}>
                                             <item.Icon />
                                             <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '1px', textTransform: 'uppercase' }}>{item.label}</span>
                                         </div>
-                                        <div style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text-heading)' }}>{item.value}</div>
+                                        <div style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.6' }}>{item.value}</div>
                                     </div>
                                 ))}
                             </div>
                         </div>
                         <div style={{ background: 'var(--bg-header)', borderRadius: '16px', minHeight: '380px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.4)', boxShadow: 'var(--shadow-lg)' }}>
-                            <Icons.Museum />
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Biografiya */}
-            <section className="section" style={{ background: 'var(--bg-secondary)' }}>
-                <div className="container">
-                    <div style={{ textAlign: 'center', marginBottom: '56px' }}>
-                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '12px' }}>{t.personLabel}</div>
-                        <h2 style={{ fontSize: 'clamp(26px, 4vw, 36px)', color: 'var(--text-heading)' }}>Abdulla <span style={{ color: 'var(--gold)' }}>Avloniy</span>{t.personH2c}</h2>
-                    </div>
-                    <div className="grid-2-col-uneven">
-                        <div style={{ background: 'var(--bg-header)', borderRadius: '16px', minHeight: '320px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.4)' }}>
-                            <Icons.Person />
-                        </div>
-                        <div>
-                            {bioSections.map((item, i) => (
-                                <div key={i} style={{ marginBottom: '32px', paddingLeft: '24px', borderLeft: '3px solid var(--gold)' }}>
-                                    <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '20px', color: 'var(--text-heading)', marginBottom: '10px' }}>{item.title}</h3>
-                                    <p style={{ fontSize: '16px', color: 'var(--text-muted)', lineHeight: '1.9' }}>{item.text}</p>
-                                </div>
-                            ))}
+                            <Icons.Torch />
                         </div>
                     </div>
                 </div>
             </section>
 
             {/* Timeline */}
-            <section className="section" style={{ background: 'var(--bg-main)' }}>
+            <section className="section" style={{ background: 'var(--bg-secondary)' }}>
                 <div className="container">
                     <div style={{ textAlign: 'center', marginBottom: '56px' }}>
                         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '12px' }}>{t.timelineLabel}</div>
@@ -185,11 +254,58 @@ export default function AboutPage() {
                         {timeline.map((item, i) => (
                             <div key={i} style={{ display: 'flex', gap: '24px', marginBottom: '36px', alignItems: 'flex-start' }}>
                                 <div className="timeline-year" style={{ minWidth: '64px', fontFamily: 'var(--font-display)', fontSize: '18px', fontWeight: '700', color: 'var(--gold)', textAlign: 'right', paddingTop: '12px' }}>{item.year}</div>
-                                <div className="timeline-dot" style={{ width: '16px', height: '16px', borderRadius: '50%', background: 'var(--gold)', border: '3px solid var(--bg-main)', flexShrink: 0, marginTop: '14px', zIndex: 1 }} />
+                                <div className="timeline-dot" style={{ width: '16px', height: '16px', borderRadius: '50%', background: 'var(--gold)', border: '3px solid var(--bg-secondary)', flexShrink: 0, marginTop: '14px', zIndex: 1 }} />
                                 <div className="timeline-card" style={{ flex: 1, background: 'var(--bg-card)', borderRadius: '12px', padding: '20px 24px', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border-color)' }}>
                                     <h4 style={{ fontFamily: 'var(--font-display)', fontSize: '17px', color: 'var(--text-heading)', marginBottom: '6px' }}>{item.title}</h4>
                                     <p style={{ fontSize: '14px', color: 'var(--text-muted)' }}>{item.desc}</p>
                                 </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Key Figures */}
+            <section className="section" style={{ background: 'var(--bg-main)' }}>
+                <div className="container">
+                    <div style={{ textAlign: 'center', marginBottom: '56px' }}>
+                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '12px' }}>{t.figuresLabel}</div>
+                        <h2 style={{ fontSize: 'clamp(26px, 4vw, 36px)', color: 'var(--text-heading)' }}>{t.figuresH2a}<span style={{ color: 'var(--gold)' }}>{t.figuresH2b}</span></h2>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
+                        {figures.map((fig, i) => (
+                            <div key={i} style={{
+                                background: 'var(--bg-card)',
+                                borderRadius: '16px',
+                                padding: '28px 24px',
+                                border: '1px solid var(--border-color)',
+                                boxShadow: 'var(--shadow-sm)',
+                                transition: 'transform 0.2s, box-shadow 0.2s',
+                            }}
+                                onMouseEnter={e => {
+                                    (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-4px)'
+                                    ;(e.currentTarget as HTMLDivElement).style.boxShadow = 'var(--shadow-lg)'
+                                }}
+                                onMouseLeave={e => {
+                                    (e.currentTarget as HTMLDivElement).style.transform = 'none'
+                                    ;(e.currentTarget as HTMLDivElement).style.boxShadow = 'var(--shadow-sm)'
+                                }}
+                            >
+                                <div style={{
+                                    width: '56px', height: '56px', borderRadius: '50%',
+                                    background: 'linear-gradient(135deg, rgba(201,168,76,0.3), rgba(201,168,76,0.05))',
+                                    border: '2px solid rgba(201,168,76,0.4)',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    marginBottom: '16px', color: 'var(--gold)',
+                                    fontSize: '20px', fontFamily: 'var(--font-display)', fontWeight: '700'
+                                }}>
+                                    {fig.name.charAt(0)}
+                                </div>
+                                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '20px', color: 'var(--text-heading)', marginBottom: '4px' }}>{fig.name}</h3>
+                                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--gold)', letterSpacing: '1px', marginBottom: '8px' }}>{fig.years}</div>
+                                <div style={{ fontSize: '12px', color: 'rgba(201,168,76,0.7)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '14px', fontFamily: 'var(--font-mono)' }}>{fig.role}</div>
+                                <div className="gold-divider" style={{ marginBottom: '14px' }} />
+                                <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.8' }}>{fig.desc}</p>
                             </div>
                         ))}
                     </div>
