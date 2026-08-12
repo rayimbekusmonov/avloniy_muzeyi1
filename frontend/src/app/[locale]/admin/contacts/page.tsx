@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useLocale } from 'next-intl'
 import { isAuthenticated, removeToken, api } from '@/lib/api'
 import { ContactResponse, Page } from '@/lib/api'
 
@@ -18,6 +19,7 @@ async function deleteContact(id: number): Promise<void> { return api.delete(`/ap
 
 export default function AdminContactsPage() {
     const router = useRouter()
+    const locale = useLocale()
     const [contacts, setContacts] = useState<ContactResponse[]>([])
     const [loading, setLoading] = useState(true)
     const [page, setPage] = useState(0)
@@ -26,9 +28,9 @@ export default function AdminContactsPage() {
     const [error, setError] = useState('')
 
     useEffect(() => {
-        if (!isAuthenticated()) { router.push('/admin'); return }
+        if (!isAuthenticated()) { router.push(`/${locale}/admin`); return }
         fetchData()
-    }, [router, page])
+    }, [router, page, locale])
 
     const fetchData = async () => {
         setLoading(true)
@@ -62,12 +64,12 @@ export default function AdminContactsPage() {
         <div style={{ minHeight: '100vh', background: 'var(--bg-main)' }}>
             <header style={{ background: 'var(--bg-header)', padding: '0 24px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--border-subtle)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <Link href="/admin/dashboard" style={{ color: 'rgba(255,255,255,0.7)', fontFamily: 'var(--font-mono)', fontSize: '12px', textDecoration: 'none' }}>← Dashboard</Link>
+                    <Link href={`/${locale}/admin/dashboard`} style={{ color: 'rgba(255,255,255,0.7)', fontFamily: 'var(--font-mono)', fontSize: '12px', textDecoration: 'none' }}>← Dashboard</Link>
                     <div style={{ color: 'rgba(255,255,255,0.2)' }}>|</div>
                     <span style={{ fontFamily: 'var(--font-display)', fontSize: '15px', color: '#fff' }}>Xabarlar</span>
                     {unreadCount > 0 && <span style={{ background: 'var(--gold)', color: '#061d15', fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: '700', padding: '2px 8px', borderRadius: '10px' }}>{unreadCount} yangi</span>}
                 </div>
-                <button onClick={() => { removeToken(); router.push('/admin') }} style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '8px 16px', borderRadius: '6px', fontFamily: 'var(--font-mono)', fontSize: '12px', cursor: 'pointer' }}>Chiqish</button>
+                <button onClick={() => { removeToken(); router.push(`/${locale}/admin`) }} style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '8px 16px', borderRadius: '6px', fontFamily: 'var(--font-mono)', fontSize: '12px', cursor: 'pointer' }}>Chiqish</button>
             </header>
 
             <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 24px' }}>

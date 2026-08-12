@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useLocale } from 'next-intl'
 import { authService } from '@/lib/services'
 import { setToken } from '@/lib/api'
 
@@ -46,6 +47,7 @@ function formatTimeLeft(ms: number): string {
 function AdminLoginContent() {
     const router = useRouter()
     const searchParams = useSearchParams()
+    const locale = useLocale()
 
     const [mode, setMode] = useState<'login' | 'setup'>('login')
     const [username, setUsername] = useState('')
@@ -110,7 +112,7 @@ function AdminLoginContent() {
             const response = await authService.login(username, password)
             setToken(response.token)
             resetAttempts()
-            router.push('/admin/dashboard')
+            router.push(`/${locale}/admin/dashboard`)
         } catch (err: any) {
             const data = getAttemptData()
             const newCount = data.count + 1

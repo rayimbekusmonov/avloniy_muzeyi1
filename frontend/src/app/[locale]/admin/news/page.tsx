@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useLocale } from 'next-intl'
 import { isAuthenticated, removeToken } from '@/lib/api'
 import { newsService } from '@/lib/services'
 import { NewsItem } from '@/lib/api'
@@ -32,6 +33,7 @@ const emptyForm = {
 
 export default function AdminNewsPage() {
     const router = useRouter()
+    const locale = useLocale()
     const [news, setNews] = useState<NewsItem[]>([])
     const [loading, setLoading] = useState(true)
     const [showForm, setShowForm] = useState(false)
@@ -55,11 +57,11 @@ export default function AdminNewsPage() {
 
     useEffect(() => {
         if (!isAuthenticated()) {
-            router.push('/admin')
+            router.push(`/${locale}/admin`)
             return
         }
         fetchNews()
-    }, [fetchNews, router])
+    }, [fetchNews, router, locale])
 
     const handleEdit = (item: NewsItem) => {
         setEditItem(item)
@@ -141,11 +143,11 @@ export default function AdminNewsPage() {
         <div style={{ minHeight: '100vh', background: 'var(--bg-main)' }}>
             <header style={{ background: 'var(--bg-header)', padding: '0 24px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--border-subtle)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <Link href="/admin/dashboard" style={{ color: 'rgba(255,255,255,0.7)', fontFamily: 'var(--font-mono)', fontSize: '12px', textDecoration: 'none' }}>← Dashboard</Link>
+                    <Link href={`/${locale}/admin/dashboard`} style={{ color: 'rgba(255,255,255,0.7)', fontFamily: 'var(--font-mono)', fontSize: '12px', textDecoration: 'none' }}>← Dashboard</Link>
                     <div style={{ color: 'rgba(255,255,255,0.2)' }}>|</div>
                     <span style={{ fontFamily: 'var(--font-display)', fontSize: '15px', color: '#fff' }}>Yangiliklar</span>
                 </div>
-                <button onClick={() => { removeToken(); router.push('/admin') }} style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '8px 16px', borderRadius: '6px', fontFamily: 'var(--font-mono)', fontSize: '12px', cursor: 'pointer' }}>Chiqish</button>
+                <button onClick={() => { removeToken(); router.push(`/${locale}/admin`) }} style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '8px 16px', borderRadius: '6px', fontFamily: 'var(--font-mono)', fontSize: '12px', cursor: 'pointer' }}>Chiqish</button>
             </header>
 
             <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 24px' }}>

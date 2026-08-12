@@ -2,6 +2,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useLocale } from 'next-intl'
 import { isAuthenticated, removeToken } from '@/lib/api'
 
 const Icons = {
@@ -38,20 +39,21 @@ const Icons = {
     ),
 }
 
-const menuItems = [
-    { href: '/admin/news',      Icon: Icons.Newspaper, title: 'Yangiliklar',  desc: "Yangilik qo'shish, tahrirlash, o'chirish" },
-    { href: '/admin/gallery',   Icon: Icons.Image,     title: 'Galereya',     desc: 'Rasm, video, audio boshqaruvi' },
-    { href: '/admin/resources', Icon: Icons.Book,      title: 'Manbalar',     desc: 'E-kitob va maqolalar' },
-    { href: '/admin/jadidlar',  Icon: Icons.Pen,       title: 'Jadidlar',     desc: "Tarixiy shaxslar ma'lumotlari" },
-    { href: '/admin/contacts',  Icon: Icons.Mail,      title: 'Xabarlar',     desc: 'Foydalanuvchilardan kelgan xabarlar' },
-]
-
 export default function AdminDashboardPage() {
     const router = useRouter()
+    const locale = useLocale()
+
+    const menuItems = [
+        { href: `/${locale}/admin/news`,      Icon: Icons.Newspaper, title: 'Yangiliklar',  desc: "Yangilik qo'shish, tahrirlash, o'chirish" },
+        { href: `/${locale}/admin/gallery`,   Icon: Icons.Image,     title: 'Galereya',     desc: 'Rasm, video, audio boshqaruvi' },
+        { href: `/${locale}/admin/resources`, Icon: Icons.Book,      title: 'Manbalar',     desc: 'E-kitob va maqolalar' },
+        { href: `/${locale}/admin/jadidlar`,  Icon: Icons.Pen,       title: 'Jadidlar',     desc: "Tarixiy shaxslar ma'lumotlari" },
+        { href: `/${locale}/admin/contacts`,  Icon: Icons.Mail,      title: 'Xabarlar',     desc: 'Foydalanuvchilardan kelgan xabarlar' },
+    ]
 
     useEffect(() => {
-        if (!isAuthenticated()) router.push('/admin')
-    }, [router])
+        if (!isAuthenticated()) router.push(`/${locale}/admin`)
+    }, [router, locale])
 
     return (
         <div style={{ minHeight: '100vh', background: 'var(--bg-main)' }}>
@@ -65,7 +67,7 @@ export default function AdminDashboardPage() {
                         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'rgba(255,255,255,0.6)', letterSpacing: '1px' }}>O&apos;ZBEKISTON JADIDLARI</div>
                     </div>
                 </div>
-                <button onClick={() => { removeToken(); router.push('/admin') }} style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '8px 16px', borderRadius: '6px', fontFamily: 'var(--font-mono)', fontSize: '12px', cursor: 'pointer' }}>
+                <button onClick={() => { removeToken(); router.push(`/${locale}/admin`) }} style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '8px 16px', borderRadius: '6px', fontFamily: 'var(--font-mono)', fontSize: '12px', cursor: 'pointer' }}>
                     Chiqish
                 </button>
             </header>

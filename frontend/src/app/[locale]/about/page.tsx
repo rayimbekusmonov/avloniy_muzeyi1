@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image'
 import { useLocale } from 'next-intl'
 
 const Icons = {
@@ -235,8 +236,26 @@ export default function AboutPage() {
                                 ))}
                             </div>
                         </div>
-                        <div style={{ background: 'var(--bg-header)', borderRadius: '16px', minHeight: '380px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.4)', boxShadow: 'var(--shadow-lg)' }}>
-                            <Icons.Torch />
+                        <div style={{ borderRadius: '16px', overflow: 'hidden', minHeight: '380px', position: 'relative', boxShadow: 'var(--shadow-lg)' }}>
+                            <Image
+                                src="/slide2.png"
+                                alt="Jadidlar tarixi"
+                                fill
+                                style={{ objectFit: 'cover' }}
+                                sizes="(max-width: 768px) 100vw, 50vw"
+                            />
+                            <div style={{
+                                position: 'absolute', inset: 0,
+                                background: 'linear-gradient(to top, rgba(6,29,21,0.7) 0%, transparent 60%)',
+                            }} />
+                            <div style={{
+                                position: 'absolute', bottom: '20px', left: '20px',
+                                fontFamily: 'var(--font-mono)', fontSize: '11px',
+                                color: 'rgba(255,255,255,0.7)', letterSpacing: '2px',
+                                textTransform: 'uppercase',
+                            }}>
+                                {locale === 'ru' ? 'Туркестан · XIX–XX вв.' : locale === 'en' ? 'Turkestan · XIX–XX c.' : 'Turkiston · XIX–XX asr'}
+                            </div>
                         </div>
                     </div>
                 </div>

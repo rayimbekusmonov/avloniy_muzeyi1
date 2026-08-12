@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useLocale } from 'next-intl'
 import { isAuthenticated, removeToken } from '@/lib/api'
 import { figureService } from '@/lib/services'
 import { HistoricalFigure } from '@/lib/api'
@@ -50,6 +51,7 @@ const emptyWorkForm = (): LocalWork => ({
 
 export default function AdminJadidlarPage() {
     const router = useRouter()
+    const locale = useLocale()
     const [figures, setFigures] = useState<HistoricalFigure[]>([])
     const [loading, setLoading] = useState(true)
     const [showForm, setShowForm] = useState(false)
@@ -78,9 +80,9 @@ export default function AdminJadidlarPage() {
     }, [])
 
     useEffect(() => {
-        if (!isAuthenticated()) { router.push('/admin'); return }
+        if (!isAuthenticated()) { router.push(`/${locale}/admin`); return }
         fetchFigures()
-    }, [fetchFigures, router])
+    }, [fetchFigures, router, locale])
 
     const handleEdit = (item: HistoricalFigure) => {
         setEditItem(item)
@@ -226,19 +228,19 @@ export default function AdminJadidlarPage() {
     }
 
     return (
-        <div style={{ minHeight: '100vh', background: 'var(--off-white)' }}>
-            <header style={{ background: 'var(--navy-dark)', padding: '0 24px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100 }}>
+        <div style={{ minHeight: '100vh', background: 'var(--bg-main)' }}>
+            <header style={{ background: 'var(--bg-header)', padding: '0 24px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--border-subtle)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <Link href="/admin/dashboard" style={{ color: 'rgba(255,255,255,0.5)', fontFamily: 'var(--font-mono)', fontSize: '12px', textDecoration: 'none' }}>← Dashboard</Link>
+                    <Link href={`/${locale}/admin/dashboard`} style={{ color: 'rgba(255,255,255,0.5)', fontFamily: 'var(--font-mono)', fontSize: '12px', textDecoration: 'none' }}>← Dashboard</Link>
                     <div style={{ color: 'rgba(255,255,255,0.2)' }}>|</div>
                     <span style={{ fontFamily: 'var(--font-display)', fontSize: '15px', color: '#fff' }}>Jadidlar</span>
                 </div>
-                <button onClick={() => { removeToken(); router.push('/admin') }} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.7)', padding: '8px 16px', borderRadius: '6px', fontFamily: 'var(--font-mono)', fontSize: '12px', cursor: 'pointer' }}>Chiqish</button>
+                <button onClick={() => { removeToken(); router.push(`/${locale}/admin`) }} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.7)', padding: '8px 16px', borderRadius: '6px', fontFamily: 'var(--font-mono)', fontSize: '12px', cursor: 'pointer' }}>Chiqish</button>
             </header>
 
             <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 24px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
-                    <h1 style={{ fontSize: '26px', color: 'var(--navy-dark)' }}>Jadidlar boshqaruvi</h1>
+                    <h1 style={{ fontSize: '26px', color: 'var(--text-heading)' }}>Jadidlar boshqaruvi</h1>
                     {!showForm && (
                         <button onClick={handleNewFigure} className="btn-primary" style={{ border: 'none', cursor: 'pointer' }}>+ Yangi qo'shish</button>
                     )}
@@ -279,25 +281,25 @@ export default function AdminJadidlarPage() {
 
                             {/* Til tablari */}
                             <div style={{ marginBottom: '24px' }}>
-                                <div style={{ display: 'flex', gap: '0', borderBottom: '2px solid rgba(27,58,107,0.1)' }}>
+                                <div style={{ display: 'flex', gap: '0', borderBottom: '2px solid var(--border-subtle)' }}>
                                     {LANGS.map(lang => {
                                         const status = getLangStatus(lang.key)
                                         return (
                                             <button key={lang.key} type="button" onClick={() => setActiveLang(lang.key as any)} style={{
                                                 padding: '10px 24px', border: 'none',
-                                                borderBottom: activeLang === lang.key ? '2px solid var(--navy)' : '2px solid transparent',
+                                                borderBottom: activeLang === lang.key ? '2px solid var(--gold)' : '2px solid transparent',
                                                 background: 'none', cursor: 'pointer',
                                                 fontFamily: 'var(--font-mono)', fontSize: '13px',
-                                                color: activeLang === lang.key ? 'var(--navy-dark)' : 'var(--gray-400)',
+                                                color: activeLang === lang.key ? 'var(--text-heading)' : 'var(--text-muted)',
                                                 display: 'flex', alignItems: 'center', gap: '8px',
                                             }}>
                                                 <span>{lang.flag}</span><span>{lang.label}</span>
-                                                <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: status === 'done' ? '#16a34a' : status === 'partial' ? '#f59e0b' : 'rgba(27,58,107,0.2)' }} />
+                                                <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: status === 'done' ? '#16a34a' : status === 'partial' ? '#f59e0b' : 'var(--border-color)' }} />
                                             </button>
                                         )
                                     })}
                                 </div>
-                                <div style={{ background: 'rgba(27,58,107,0.02)', border: '1px solid rgba(27,58,107,0.08)', padding: '20px', borderRadius: '0 0 8px 8px' }}>
+                                <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)', padding: '20px', borderRadius: '0 0 8px 8px' }}>
                                     <div style={{ marginBottom: '16px' }}>
                                         <label style={labelStyle}>Ism {activeLang === 'uz' ? '*' : '(ixtiyoriy)'}</label>
                                         <input value={getLangField('name')} onChange={e => setLangField('name', e.target.value)} style={inputStyle} placeholder={activeLang === 'uz' ? 'Abdulla Avloniy' : activeLang === 'ru' ? 'Абдулла Авлоний' : 'Abdulla Avloniy'} />
@@ -333,7 +335,7 @@ export default function AdminJadidlarPage() {
 
                                 {/* Yangi asar qo'shish formasi */}
                                 {addingWork && (
-                                    <div style={{ background: '#fff', borderRadius: '8px', padding: '16px', marginBottom: '16px', border: '1px solid rgba(27,58,107,0.1)' }}>
+                                    <div style={{ background: 'var(--bg-card)', borderRadius: '8px', padding: '16px', marginBottom: '16px', border: '1px solid var(--border-color)' }}>
                                         <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '12px', marginBottom: '12px' }}>
                                             <div>
                                                 <label style={labelStyle}>Asar nomi *</label>
@@ -376,7 +378,7 @@ export default function AdminJadidlarPage() {
                                             <p style={{ fontSize: '13px', color: '#dc2626', marginBottom: '10px' }}>{workError}</p>
                                         )}
                                         <div style={{ display: 'flex', gap: '10px' }}>
-                                            <button type="button" onClick={handleAddWorkToList} style={{ padding: '8px 20px', background: 'var(--navy)', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '13px', cursor: 'pointer', fontFamily: 'var(--font-mono)' }}>
+                                            <button type="button" onClick={handleAddWorkToList} style={{ padding: '8px 20px', background: 'var(--gold)', color: '#061d15', border: 'none', borderRadius: '6px', fontSize: '13px', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontWeight: '600' }}>
                                                 ✓ Qo'shish
                                             </button>
                                             <button type="button" onClick={() => { setAddingWork(false); setNewWork(emptyWorkForm()); setWorkError('') }} style={{ padding: '8px 16px', background: 'rgba(220,38,38,0.08)', border: '1px solid rgba(220,38,38,0.2)', color: '#dc2626', borderRadius: '6px', fontSize: '13px', cursor: 'pointer' }}>
@@ -390,19 +392,19 @@ export default function AdminJadidlarPage() {
                                 {works.length > 0 ? (
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                                         {works.map((work, idx) => (
-                                            <div key={work.tempId} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: '#fff', borderRadius: '8px', border: '1px solid rgba(27,58,107,0.08)' }}>
+                                            <div key={work.tempId} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
                                                 <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gray-400)', minWidth: '20px' }}>{idx + 1}</span>
                                                 <span style={{ fontSize: '18px' }}>📄</span>
                                                 <div style={{ flex: 1 }}>
-                                                    <div style={{ fontSize: '14px', color: 'var(--navy-dark)', fontWeight: '600' }}>{work.title}</div>
-                                                    <div style={{ fontSize: '12px', color: 'var(--gray-400)', marginTop: '2px', display: 'flex', gap: '12px' }}>
+                                                    <div style={{ fontSize: '14px', color: 'var(--text-heading)', fontWeight: '600' }}>{work.title}</div>
+                                                    <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px', display: 'flex', gap: '12px' }}>
                                                         {work.year && <span>📅 {work.year}-yil</span>}
                                                         {work.pdfUrl && <span style={{ color: '#16a34a' }}>✓ PDF mavjud</span>}
                                                         {work.saved && <span style={{ color: 'var(--gold)' }}>Saqlangan</span>}
                                                     </div>
                                                 </div>
                                                 {work.pdfUrl && (
-                                                    <a href={work.pdfUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: '12px', color: 'var(--navy)', textDecoration: 'none', padding: '4px 10px', background: 'rgba(27,58,107,0.08)', borderRadius: '4px' }}>
+                                                    <a href={work.pdfUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: '12px', color: 'var(--gold)', textDecoration: 'none', padding: '4px 10px', background: 'rgba(201,168,76,0.1)', borderRadius: '4px' }}>
                                                         Ko'rish ↗
                                                     </a>
                                                 )}
@@ -439,13 +441,13 @@ export default function AdminJadidlarPage() {
                 ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                         {figures.map(item => (
-                            <div key={item.id} style={{ background: '#fff', borderRadius: '12px', padding: '20px 24px', display: 'flex', alignItems: 'center', gap: '16px', border: '1px solid rgba(27,58,107,0.08)', boxShadow: 'var(--shadow-sm)' }}>
+                            <div key={item.id} style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '20px 24px', display: 'flex', alignItems: 'center', gap: '16px', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-sm)' }}>
                                 <div style={{ width: '60px', height: '60px', borderRadius: '8px', overflow: 'hidden', background: 'linear-gradient(135deg, var(--navy-dark), var(--navy))', flexShrink: 0 }}>
                                     {item.imageUrl && <img src={item.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
                                 </div>
                                 <div style={{ flex: 1 }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                                        <h3 style={{ fontSize: '16px', color: 'var(--navy-dark)' }}>{item.nameUz}</h3>
+                                        <h3 style={{ fontSize: '16px', color: 'var(--text-heading)' }}>{item.nameUz}</h3>
                                         {item.featured && <span style={{ fontSize: '10px', color: 'var(--gold)', border: '1px solid var(--gold)', padding: '1px 6px', borderRadius: '4px' }}>MARKAZIY</span>}
                                         <span style={{ fontSize: '12px', color: 'var(--gray-400)' }}>{item.years}</span>
                                         {item.figureWorks && item.figureWorks.length > 0 && (
@@ -454,10 +456,10 @@ export default function AdminJadidlarPage() {
                                             </span>
                                         )}
                                     </div>
-                                    {item.titleUz && <div style={{ fontSize: '13px', color: 'var(--gray-600)', marginTop: '2px' }}>{item.titleUz}</div>}
+                                    {item.titleUz && <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '2px' }}>{item.titleUz}</div>}
                                 </div>
                                 <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
-                                    <button onClick={() => handleEdit(item)} style={{ padding: '8px 16px', background: 'rgba(27,58,107,0.08)', border: '1px solid rgba(27,58,107,0.15)', borderRadius: '6px', fontSize: '13px', color: 'var(--navy)', cursor: 'pointer' }}>Tahrirlash</button>
+                                    <button onClick={() => handleEdit(item)} style={{ padding: '8px 16px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '6px', fontSize: '13px', color: 'var(--text-heading)', cursor: 'pointer' }}>Tahrirlash</button>
                                     <button onClick={() => handleDelete(item.id)} style={{ padding: '8px 16px', background: 'rgba(220,38,38,0.08)', border: '1px solid rgba(220,38,38,0.2)', borderRadius: '6px', fontSize: '13px', color: '#dc2626', cursor: 'pointer' }}>O'chirish</button>
                                 </div>
                             </div>
@@ -471,9 +473,9 @@ export default function AdminJadidlarPage() {
 
 const labelStyle: React.CSSProperties = {
     display: 'block', fontSize: '12px', fontFamily: 'var(--font-mono)',
-    color: 'var(--gray-600)', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.5px'
+    color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.5px'
 }
 const inputStyle: React.CSSProperties = {
-    width: '100%', padding: '10px 14px', border: '1px solid rgba(27,58,107,0.2)',
-    borderRadius: '8px', fontSize: '15px', color: 'var(--navy-dark)', outline: 'none', background: '#fff'
+    width: '100%', padding: '10px 14px', border: '1px solid var(--border-color)',
+    borderRadius: '8px', fontSize: '15px', color: 'var(--text-heading)', outline: 'none', background: 'var(--bg-main)'
 }

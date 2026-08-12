@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useLocale } from 'next-intl'
 import { isAuthenticated, removeToken } from '@/lib/api'
 import { galleryService } from '@/lib/services'
 import { GalleryItem } from '@/lib/api'
@@ -26,6 +27,7 @@ const emptyForm = { title: '', fileUrl: '', thumbnailUrl: '', description: '', m
 
 export default function AdminGalleryPage() {
     const router = useRouter()
+    const locale = useLocale()
     const [items, setItems] = useState<GalleryItem[]>([])
     const [loading, setLoading] = useState(true)
     const [showForm, setShowForm] = useState(false)
@@ -36,9 +38,9 @@ export default function AdminGalleryPage() {
     const [filterType, setFilterType] = useState('')
 
     useEffect(() => {
-        if (!isAuthenticated()) { router.push('/admin'); return }
+        if (!isAuthenticated()) { router.push(`/${locale}/admin`); return }
         fetchItems()
-    }, [router])
+    }, [router, locale])
 
     const fetchItems = async () => {
         setLoading(true)
@@ -83,11 +85,11 @@ export default function AdminGalleryPage() {
         <div style={{ minHeight: '100vh', background: 'var(--bg-main)' }}>
             <header style={{ background: 'var(--bg-header)', padding: '0 24px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--border-subtle)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <Link href="/admin/dashboard" style={{ color: 'rgba(255,255,255,0.7)', fontFamily: 'var(--font-mono)', fontSize: '12px', textDecoration: 'none' }}>← Dashboard</Link>
+                    <Link href={`/${locale}/admin/dashboard`} style={{ color: 'rgba(255,255,255,0.7)', fontFamily: 'var(--font-mono)', fontSize: '12px', textDecoration: 'none' }}>← Dashboard</Link>
                     <div style={{ color: 'rgba(255,255,255,0.2)' }}>|</div>
                     <span style={{ fontFamily: 'var(--font-display)', fontSize: '15px', color: '#fff' }}>Galereya</span>
                 </div>
-                <button onClick={() => { removeToken(); router.push('/admin') }} style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '8px 16px', borderRadius: '6px', fontFamily: 'var(--font-mono)', fontSize: '12px', cursor: 'pointer' }}>Chiqish</button>
+                <button onClick={() => { removeToken(); router.push(`/${locale}/admin`) }} style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '8px 16px', borderRadius: '6px', fontFamily: 'var(--font-mono)', fontSize: '12px', cursor: 'pointer' }}>Chiqish</button>
             </header>
 
             <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 24px' }}>
@@ -174,5 +176,5 @@ export default function AdminGalleryPage() {
     )
 }
 
-const labelStyle: React.CSSProperties = { display: 'block', fontSize: '12px', fontFamily: 'var(--font-mono)', color: 'var(--gray-600)', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '6px' }
-const inputStyle: React.CSSProperties = { width: '100%', padding: '10px 14px', border: '1px solid rgba(27,58,107,0.2)', borderRadius: '8px', fontSize: '15px', fontFamily: 'var(--font-body)', color: 'var(--navy-dark)', outline: 'none', background: '#fff' }
+const labelStyle: React.CSSProperties = { display: 'block', fontSize: '12px', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '6px' }
+const inputStyle: React.CSSProperties = { width: '100%', padding: '10px 14px', border: '1px solid var(--border-color)', borderRadius: '8px', fontSize: '15px', fontFamily: 'var(--font-body)', color: 'var(--text-heading)', outline: 'none', background: 'var(--bg-main)' }
