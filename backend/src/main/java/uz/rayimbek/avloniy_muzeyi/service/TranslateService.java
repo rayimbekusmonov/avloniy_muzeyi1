@@ -1,7 +1,5 @@
 package uz.rayimbek.avloniy_muzeyi.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,16 +14,19 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class TranslateService {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
     private final HttpClient httpClient = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(10))
             .build();
+
+    private static final Pattern SENTENCE_PATTERN = Pattern.compile("\\[\"((?:[^\"\\\\]|\\\\.)*)\",\"((?:[^\"\\\\]|\\\\.)*)\"");
 
     /**
      * Translates a single text or batch map of texts from source language (default "uz")
@@ -106,21 +107,50 @@ public class TranslateService {
     }
 
     private String parseGtxResponse(String json) {
+        if (json == null || !json.startsWith("[[[")) return "";
         try {
-            JsonNode root = objectMapper.readTree(json);
-            JsonNode sentences = root.get(0);
-            if (sentences != null && sentences.isArray()) {
-                StringBuilder sb = new StringBuilder();
-                for (JsonNode sentence : sentences) {
-                    if (sentence.isArray() && sentence.size() > 0 && !sentence.get(0).isNull()) {
-                        sb.append(sentence.get(0).asText());
-                    }
-                }
-                return sb.toString();
+            StringBuilder sb = new StringBuilder();
+            Matcher matcher = SENTENCE_PATTERN.matcher(json);
+            while (matcher.find()) {
+                String translatedSentence = matcher.group(1);
+                translatedSentence = unescapeJavaString(translatedSentence);
+                sb.append(translatedSentence);
             }
+            return sb.toString();
         } catch (Exception e) {
             log.warn("Failed to parse translation response: {}", e.getMessage());
         }
         return "";
+    }
+
+    private String unescapeJavaString(String st) {
+        if (st == null) return "";
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < st.length(); i++) {
+            char ch = st.charAt(i);
+            if (ch == '\\' && i + 1 < st.length()) {
+                char next = st.charAt(i + 1);
+                if (next == 'n') { sb.append('\n'); i++; }
+                else if (next == 'r') { sb.append('\r'); i++; }
+                else if (next == 't') { sb.append('\t'); i++; }
+                else if (next == '"') { sb.append('\"'); i++; }
+                else if (next == '\\') { sb.append('\\'); i++; }
+                else if (next == 'u' && i + 5 < st.length()) {
+                    try {
+                        int code = Integer.parseInt(st.substring(i + 2, i + 6), 16);
+                        sb.append((char) code);
+                        i += 5;
+                    } catch (Exception e) {
+                        sb.append(ch);
+                    }
+                } else {
+                    sb.append(next);
+                    i++;
+                }
+            } else {
+                sb.append(ch);
+            }
+        }
+        return sb.toString();
     }
 }
