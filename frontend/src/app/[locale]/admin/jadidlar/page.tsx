@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useLocale } from 'next-intl'
 import { isAuthenticated, removeToken, HistoricalFigure } from '@/lib/api'
 import { figureService } from '@/lib/services'
+import { translateBatch } from '@/lib/translate'
 import FileUpload from '@/components/FileUpload'
 
 const LANGS = [
@@ -81,7 +82,47 @@ export default function AdminJadidlarPage() {
     const [activeLang, setActiveLang] = useState<'uz' | 'ru' | 'en'>('uz')
     const [activeTab, setActiveTab] = useState<'info' | 'timeline' | 'gallery' | 'works'>('info')
     const [saving, setSaving] = useState(false)
+    const [translating, setTranslating] = useState(false)
+    const [translateSuccess, setTranslateSuccess] = useState('')
     const [error, setError] = useState('')
+
+    const handleAutoTranslate = async () => {
+        if (!form.nameUz.trim() && !form.bioUz.trim()) {
+            setError("Avtomatik tarjima qilish uchun kamida O'zbekcha ism yoki tarjimai hol kiritilishi kerak")
+            return
+        }
+        setTranslating(true)
+        setError('')
+        setTranslateSuccess('')
+
+        try {
+            const fieldsToTranslate: Record<string, string> = {
+                name: form.nameUz,
+                title: form.titleUz,
+                bio: form.bioUz,
+                quote: form.quote,
+            }
+
+            const res = await translateBatch(fieldsToTranslate, ['ru', 'en'])
+
+            setForm(prev => ({
+                ...prev,
+                nameRu: res.ru.name || prev.nameRu,
+                nameEn: res.en.name || prev.nameEn,
+                titleRu: res.ru.title || prev.titleRu,
+                titleEn: res.en.title || prev.titleEn,
+                bioRu: res.ru.bio || prev.bioRu,
+                bioEn: res.en.bio || prev.bioEn,
+            }))
+
+            setTranslateSuccess("Barcha maydonlar Rus va Ingliz tillariga muvaffaqiyatli tarjima qilindi! Iltimos, tillar bo'yicha ko'zdan kechirib chiqing.")
+            setTimeout(() => setTranslateSuccess(''), 7000)
+        } catch (err: any) {
+            setError("Tarjima qilishda xatolik yuz berdi: " + (err?.message || 'Qayta urinib ko\'ring'))
+        } finally {
+            setTranslating(false)
+        }
+    }
 
     // Works
     const [works, setWorks] = useState<LocalWork[]>([])
@@ -372,25 +413,68 @@ export default function AdminJadidlarPage() {
                             {/* TAB 1: Asosiy ma'lumotlar */}
                             {activeTab === 'info' && (
                                 <div>
-                                    {/* Language selector */}
-                                    <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', background: 'var(--bg-secondary)', padding: '6px', borderRadius: '8px', width: 'fit-content' }}>
-                                        {LANGS.map(l => (
-                                            <button
-                                                key={l.key}
-                                                type="button"
-                                                onClick={() => setActiveLang(l.key as any)}
-                                                style={{
-                                                    padding: '6px 14px', borderRadius: '6px', border: 'none', cursor: 'pointer',
-                                                    background: activeLang === l.key ? 'var(--gold)' : 'transparent',
-                                                    color: activeLang === l.key ? '#061d15' : 'var(--text-muted)',
-                                                    fontWeight: '600', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px'
-                                                }}
-                                            >
-                                                <span>{l.flag}</span>
-                                                <span>{l.label}</span>
-                                            </button>
-                                        ))}
+                                    {/* Language selector & Auto-Translate Action */}
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '20px' }}>
+                                        <div style={{ display: 'flex', gap: '8px', background: 'var(--bg-secondary)', padding: '6px', borderRadius: '8px', width: 'fit-content' }}>
+                                            {LANGS.map(l => (
+                                                <button
+                                                    key={l.key}
+                                                    type="button"
+                                                    onClick={() => setActiveLang(l.key as any)}
+                                                    style={{
+                                                        padding: '6px 14px', borderRadius: '6px', border: 'none', cursor: 'pointer',
+                                                        background: activeLang === l.key ? 'var(--gold)' : 'transparent',
+                                                        color: activeLang === l.key ? '#061d15' : 'var(--text-muted)',
+                                                        fontWeight: '600', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px'
+                                                    }}
+                                                >
+                                                    <span>{l.flag}</span>
+                                                    <span>{l.label}</span>
+                                                </button>
+                                            ))}
+                                        </div>
+
+                                        <button
+                                            type="button"
+                                            onClick={handleAutoTranslate}
+                                            disabled={translating}
+                                            style={{
+                                                padding: '8px 16px',
+                                                background: 'linear-gradient(135deg, rgba(201,168,76,0.2) 0%, rgba(201,168,76,0.1) 100%)',
+                                                border: '1px solid rgba(201,168,76,0.4)',
+                                                color: 'var(--gold)',
+                                                borderRadius: '8px',
+                                                fontFamily: 'var(--font-display)',
+                                                fontSize: '13px',
+                                                fontWeight: '600',
+                                                cursor: translating ? 'not-allowed' : 'pointer',
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '8px',
+                                                boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                                                transition: 'all 0.2s',
+                                            }}
+                                        >
+                                            {translating ? (
+                                                <>
+                                                    <span style={{ width: '14px', height: '14px', border: '2px solid rgba(201,168,76,0.3)', borderTop: '2px solid var(--gold)', borderRadius: '50%', display: 'inline-block', animation: 'spin 0.8s linear infinite' }} />
+                                                    Tarjima qilinmoqda...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <span>✨</span>
+                                                    <span>Rus va Ingliz tiliga avtomatik tarjima qilish</span>
+                                                </>
+                                            )}
+                                        </button>
                                     </div>
+
+                                    {translateSuccess && (
+                                        <div style={{ background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.35)', borderRadius: '8px', padding: '12px 16px', marginBottom: '20px', color: '#22c55e', fontSize: '13.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                            <span>✓</span>
+                                            <span>{translateSuccess}</span>
+                                        </div>
+                                    )}
 
                                     {/* Multi-language inputs */}
                                     {activeLang === 'uz' && (

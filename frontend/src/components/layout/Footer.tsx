@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useLocale } from 'next-intl'
 import { settingService } from '@/lib/services'
 import { SiteSetting } from '@/lib/api'
 
 export default function Footer() {
+    const pathname = usePathname()
     const locale = useLocale()
     const [settings, setSettings] = useState<SiteSetting | null>(null)
 
@@ -15,6 +17,10 @@ export default function Footer() {
             .then(data => setSettings(data))
             .catch(() => {})
     }, [locale])
+
+    if (pathname && pathname.includes('/admin')) {
+        return null
+    }
 
     const links = locale === 'ru' ? [
         { href: `/${locale}/jadidlar`,   label: 'Джадиды' },

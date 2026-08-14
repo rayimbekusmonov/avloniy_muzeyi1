@@ -96,6 +96,10 @@ export default function Navbar() {
         // { href: `/${locale}/contact`, label: t('contact') },
     ]
 
+    if (pathname && pathname.includes('/admin')) {
+        return null
+    }
+
     return (
         <nav style={{
             position: 'fixed',

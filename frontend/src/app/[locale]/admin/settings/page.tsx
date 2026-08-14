@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useLocale } from 'next-intl'
 import { isAuthenticated, removeToken, SiteSetting } from '@/lib/api'
 import { settingService } from '@/lib/services'
+import { translateBatch } from '@/lib/translate'
 
 const LANGS = [
     { key: 'uz', label: "O'zbek", flag: '🇺🇿' },
@@ -20,10 +21,54 @@ export default function AdminSettingsPage() {
     const [settings, setSettings] = useState<SiteSetting>({})
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
+    const [translating, setTranslating] = useState(false)
+    const [translateSuccess, setTranslateSuccess] = useState('')
     const [activeLang, setActiveLang] = useState<'uz' | 'ru' | 'en'>('uz')
     const [activeTab, setActiveTab] = useState<'contact' | 'social' | 'stats' | 'hero'>('contact')
     const [message, setMessage] = useState('')
     const [error, setError] = useState('')
+
+    const handleAutoTranslate = async () => {
+        setTranslating(true)
+        setError('')
+        setTranslateSuccess('')
+
+        try {
+            const fieldsToTranslate: Record<string, string> = {
+                museumName: settings.museumNameUz || '',
+                address: settings.addressUz || '',
+                workingHours: settings.workingHoursUz || '',
+                heroTitle: settings.heroTitleUz || '',
+                heroSubtitle: settings.heroSubtitleUz || '',
+                quoteText: settings.quoteTextUz || '',
+            }
+
+            const res = await translateBatch(fieldsToTranslate, ['ru', 'en'])
+
+            setSettings(prev => ({
+                ...prev,
+                museumNameRu: res.ru.museumName || prev.museumNameRu,
+                museumNameEn: res.en.museumName || prev.museumNameEn,
+                addressRu: res.ru.address || prev.addressRu,
+                addressEn: res.en.address || prev.addressEn,
+                workingHoursRu: res.ru.workingHours || prev.workingHoursRu,
+                workingHoursEn: res.en.workingHours || prev.workingHoursEn,
+                heroTitleRu: res.ru.heroTitle || prev.heroTitleRu,
+                heroTitleEn: res.en.heroTitle || prev.heroTitleEn,
+                heroSubtitleRu: res.ru.heroSubtitle || prev.heroSubtitleRu,
+                heroSubtitleEn: res.en.heroSubtitle || prev.heroSubtitleEn,
+                quoteTextRu: res.ru.quoteText || prev.quoteTextRu,
+                quoteTextEn: res.en.quoteText || prev.quoteTextEn,
+            }))
+
+            setTranslateSuccess("Barcha matnlar Rus va Ingliz tillariga muvaffaqiyatli tarjima qilindi! Iltimos, tekshirib chiqing.")
+            setTimeout(() => setTranslateSuccess(''), 7000)
+        } catch (err: any) {
+            setError("Tarjima qilishda xatolik yuz berdi: " + (err?.message || 'Qayta urinib ko\'ring'))
+        } finally {
+            setTranslating(false)
+        }
+    }
 
     useEffect(() => {
         if (!isAuthenticated()) {
@@ -78,6 +123,13 @@ export default function AdminSettingsPage() {
                     </div>
                 )}
 
+                {translateSuccess && (
+                    <div style={{ background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.35)', borderRadius: '8px', padding: '12px 16px', marginBottom: '24px', color: '#22c55e', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span>✓</span>
+                        <span>{translateSuccess}</span>
+                    </div>
+                )}
+
                 {error && (
                     <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '8px', padding: '12px 16px', marginBottom: '24px', color: '#ef4444', fontSize: '14px' }}>
                         ⚠ {error}
@@ -88,19 +140,55 @@ export default function AdminSettingsPage() {
                     <div style={{ padding: '40px', textAlign: 'center', color: 'var(--gold)', fontFamily: 'var(--font-mono)' }}>Yuklanmoqda...</div>
                 ) : (
                     <form onSubmit={handleSubmit} style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '16px', padding: '32px', boxShadow: 'var(--shadow-md)' }}>
-                        {/* Section tabs */}
-                        <div style={{ display: 'flex', gap: '8px', marginBottom: '28px', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '12px', flexWrap: 'wrap' }}>
-                            <button type="button" onClick={() => setActiveTab('contact')} style={{ padding: '10px 20px', borderRadius: '8px', border: 'none', cursor: 'pointer', background: activeTab === 'contact' ? 'var(--gold)' : 'var(--bg-secondary)', color: activeTab === 'contact' ? '#061d15' : 'var(--text-main)', fontWeight: '600', fontSize: '13px' }}>
-                                📞 Kontakt & Ish vaqti
-                            </button>
-                            <button type="button" onClick={() => setActiveTab('social')} style={{ padding: '10px 20px', borderRadius: '8px', border: 'none', cursor: 'pointer', background: activeTab === 'social' ? 'var(--gold)' : 'var(--bg-secondary)', color: activeTab === 'social' ? '#061d15' : 'var(--text-main)', fontWeight: '600', fontSize: '13px' }}>
-                                🌐 Ijtimoiy Tarmoqlar
-                            </button>
-                            <button type="button" onClick={() => setActiveTab('stats')} style={{ padding: '10px 20px', borderRadius: '8px', border: 'none', cursor: 'pointer', background: activeTab === 'stats' ? 'var(--gold)' : 'var(--bg-secondary)', color: activeTab === 'stats' ? '#061d15' : 'var(--text-main)', fontWeight: '600', fontSize: '13px' }}>
-                                📊 Statistika Sonlari
-                            </button>
-                            <button type="button" onClick={() => setActiveTab('hero')} style={{ padding: '10px 20px', borderRadius: '8px', border: 'none', cursor: 'pointer', background: activeTab === 'hero' ? 'var(--gold)' : 'var(--bg-secondary)', color: activeTab === 'hero' ? '#061d15' : 'var(--text-main)', fontWeight: '600', fontSize: '13px' }}>
-                                🏛 Bosh Sahifa Matnlari
+                        {/* Section tabs & Auto-Translate Action */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
+                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                <button type="button" onClick={() => setActiveTab('contact')} style={{ padding: '10px 18px', borderRadius: '8px', border: 'none', cursor: 'pointer', background: activeTab === 'contact' ? 'var(--gold)' : 'var(--bg-secondary)', color: activeTab === 'contact' ? '#061d15' : 'var(--text-main)', fontWeight: '600', fontSize: '13px' }}>
+                                    📞 Kontakt & Ish vaqti
+                                </button>
+                                <button type="button" onClick={() => setActiveTab('social')} style={{ padding: '10px 18px', borderRadius: '8px', border: 'none', cursor: 'pointer', background: activeTab === 'social' ? 'var(--gold)' : 'var(--bg-secondary)', color: activeTab === 'social' ? '#061d15' : 'var(--text-main)', fontWeight: '600', fontSize: '13px' }}>
+                                    🌐 Ijtimoiy tarmoqlar
+                                </button>
+                                <button type="button" onClick={() => setActiveTab('stats')} style={{ padding: '10px 18px', borderRadius: '8px', border: 'none', cursor: 'pointer', background: activeTab === 'stats' ? 'var(--gold)' : 'var(--bg-secondary)', color: activeTab === 'stats' ? '#061d15' : 'var(--text-main)', fontWeight: '600', fontSize: '13px' }}>
+                                    📊 Statistika
+                                </button>
+                                <button type="button" onClick={() => setActiveTab('hero')} style={{ padding: '10px 18px', borderRadius: '8px', border: 'none', cursor: 'pointer', background: activeTab === 'hero' ? 'var(--gold)' : 'var(--bg-secondary)', color: activeTab === 'hero' ? '#061d15' : 'var(--text-main)', fontWeight: '600', fontSize: '13px' }}>
+                                    🏛 Bosh sahifa matnlari
+                                </button>
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={handleAutoTranslate}
+                                disabled={translating}
+                                style={{
+                                    padding: '9px 18px',
+                                    background: 'linear-gradient(135deg, rgba(201,168,76,0.2) 0%, rgba(201,168,76,0.1) 100%)',
+                                    border: '1px solid rgba(201,168,76,0.4)',
+                                    color: 'var(--gold)',
+                                    borderRadius: '8px',
+                                    fontFamily: 'var(--font-display)',
+                                    fontSize: '13px',
+                                    fontWeight: '600',
+                                    cursor: translating ? 'not-allowed' : 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                                    transition: 'all 0.2s',
+                                }}
+                            >
+                                {translating ? (
+                                    <>
+                                        <span style={{ width: '14px', height: '14px', border: '2px solid rgba(201,168,76,0.3)', borderTop: '2px solid var(--gold)', borderRadius: '50%', display: 'inline-block', animation: 'spin 0.8s linear infinite' }} />
+                                        Tarjima qilinmoqda...
+                                    </>
+                                ) : (
+                                    <>
+                                        <span>✨</span>
+                                        <span>Barcha matnlarni Rus va Ingliz tiliga tarjima qilish</span>
+                                    </>
+                                )}
                             </button>
                         </div>
 

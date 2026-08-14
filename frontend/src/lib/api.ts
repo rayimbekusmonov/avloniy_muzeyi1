@@ -51,7 +51,7 @@ export const isAuthenticated = (): boolean => {
 };
 
 // Base fetch wrapper
-async function request<T>(
+export async function request<T>(
     endpoint: string,
     options: RequestInit = {}
 ): Promise<T> {

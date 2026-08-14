@@ -6,6 +6,7 @@ import { useLocale } from 'next-intl'
 import { isAuthenticated, removeToken } from '@/lib/api'
 import { newsService } from '@/lib/services'
 import { NewsItem } from '@/lib/api'
+import { translateBatch } from '@/lib/translate'
 import FileUpload from '@/components/FileUpload'
 import RichTextEditor from '@/components/RichTextEditor'
 
@@ -41,7 +42,44 @@ export default function AdminNewsPage() {
     const [form, setForm] = useState(emptyForm)
     const [activeLang, setActiveLang] = useState<'uz' | 'ru' | 'en'>('uz')
     const [saving, setSaving] = useState(false)
+    const [translating, setTranslating] = useState(false)
+    const [translateSuccess, setTranslateSuccess] = useState('')
     const [error, setError] = useState('')
+
+    const handleAutoTranslate = async () => {
+        if (!form.titleUz.trim() && !form.contentUz.trim()) {
+            setError("Avtomatik tarjima qilish uchun kamida O'zbekcha sarlavha yoki matn kiritilishi kerak")
+            return
+        }
+        setTranslating(true)
+        setError('')
+        setTranslateSuccess('')
+
+        try {
+            const res = await translateBatch({
+                title: form.titleUz,
+                excerpt: form.excerptUz,
+                content: form.contentUz,
+            }, ['ru', 'en'])
+
+            setForm(prev => ({
+                ...prev,
+                titleRu: res.ru.title || prev.titleRu,
+                titleEn: res.en.title || prev.titleEn,
+                excerptRu: res.ru.excerpt || prev.excerptRu,
+                excerptEn: res.en.excerpt || prev.excerptEn,
+                contentRu: res.ru.content || prev.contentRu,
+                contentEn: res.en.content || prev.contentEn,
+            }))
+
+            setTranslateSuccess("Yangilik matnlari Rus hamda Ingliz tillariga muvaffaqiyatli tarjima qilindi! Iltimos, tillar bo'yicha ko'zdan kechirib chiqing.")
+            setTimeout(() => setTranslateSuccess(''), 7000)
+        } catch (err: any) {
+            setError("Tarjima qilishda xatolik yuz berdi: " + (err?.message || 'Qayta urinib ko\'ring'))
+        } finally {
+            setTranslating(false)
+        }
+    }
 
     const fetchNews = useCallback(async () => {
         setLoading(true)
@@ -187,7 +225,50 @@ export default function AdminNewsPage() {
                             </div>
 
                             <div style={{ marginBottom: '24px' }}>
-                                <label style={{ ...labelStyle, marginBottom: '12px' }}>Til bo'yicha kontent</label>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '12px' }}>
+                                    <label style={{ ...labelStyle, marginBottom: 0 }}>Til bo'yicha kontent</label>
+                                    <button
+                                        type="button"
+                                        onClick={handleAutoTranslate}
+                                        disabled={translating}
+                                        style={{
+                                            padding: '7px 16px',
+                                            background: 'linear-gradient(135deg, rgba(201,168,76,0.2) 0%, rgba(201,168,76,0.1) 100%)',
+                                            border: '1px solid rgba(201,168,76,0.4)',
+                                            color: 'var(--gold)',
+                                            borderRadius: '8px',
+                                            fontFamily: 'var(--font-display)',
+                                            fontSize: '13px',
+                                            fontWeight: '600',
+                                            cursor: translating ? 'not-allowed' : 'pointer',
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '8px',
+                                            boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                                            transition: 'all 0.2s',
+                                        }}
+                                    >
+                                        {translating ? (
+                                            <>
+                                                <span style={{ width: '14px', height: '14px', border: '2px solid rgba(201,168,76,0.3)', borderTop: '2px solid var(--gold)', borderRadius: '50%', display: 'inline-block', animation: 'spin 0.8s linear infinite' }} />
+                                                Tarjima qilinmoqda...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <span>✨</span>
+                                                <span>Rus va Ingliz tiliga avtomatik tarjima qilish</span>
+                                            </>
+                                        )}
+                                    </button>
+                                </div>
+
+                                {translateSuccess && (
+                                    <div style={{ background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.35)', borderRadius: '8px', padding: '12px 16px', marginBottom: '16px', color: '#22c55e', fontSize: '13.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <span>✓</span>
+                                        <span>{translateSuccess}</span>
+                                    </div>
+                                )}
+
                                 <div className="nav-tabs-scroll" style={{ display: 'flex', gap: '0', marginBottom: '0', borderBottom: '2px solid var(--border-subtle)' }}>
                                     {LANGS.map(lang => {
                                         const status = getLangStatus(lang.key)
