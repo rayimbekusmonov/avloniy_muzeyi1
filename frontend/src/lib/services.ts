@@ -1,5 +1,25 @@
-import { api, Page, NewsItem, NewsFormData, GalleryItem, ResourceItem, AuthResponse, HistoricalFigure } from './api';
+import { api, Page, NewsItem, NewsFormData, GalleryItem, ResourceItem, AuthResponse, HistoricalFigure, SiteSetting, FaqItem } from './api';
 import { getLocalizedJadids, MOCK_JADIDS } from './mockJadids';
+
+export const normalizeFigure = (item: HistoricalFigure): HistoricalFigure => {
+    let timeline = item.timeline || [];
+    if ((!timeline || timeline.length === 0) && item.timelineJson) {
+        try {
+            timeline = JSON.parse(item.timelineJson);
+        } catch {}
+    }
+    let galleryPhotos = item.galleryPhotos || [];
+    if ((!galleryPhotos || galleryPhotos.length === 0) && item.galleryPhotosJson) {
+        try {
+            galleryPhotos = JSON.parse(item.galleryPhotosJson);
+        } catch {}
+    }
+    return {
+        ...item,
+        timeline,
+        galleryPhotos
+    };
+};
 
 // Auth
 export const authService = {
@@ -14,7 +34,6 @@ export const authService = {
 
 // News
 export const newsService = {
-    // Frontend: locale parametr bilan (uz/ru/en)
     getAll: (page = 0, size = 10, category?: string, locale = 'uz') => {
         const params = new URLSearchParams({ page: String(page), size: String(size), locale });
         if (category) params.append('category', category);
@@ -24,7 +43,6 @@ export const newsService = {
     getBySlug: (slug: string, locale = 'uz') =>
         api.get<NewsItem>(`/api/news/${slug}?locale=${locale}`),
 
-    // Admin: barcha til maydonlari bilan — TO'G'RI ENDPOINT!
     getAllForAdmin: (page = 0, size = 50) =>
         api.get<Page<NewsItem>>(`/api/news/all?page=${page}&size=${size}`),
 
@@ -73,24 +91,30 @@ export const resourceService = {
         api.delete<void>(`/api/resources/${id}`),
 };
 
+// Contact
 export const contactService = {
     send: (data: { name: string; phone: string; telegram: string; subject: string; message: string }) =>
         api.post<{ message: string }>('/api/contact', data),
 };
 
+// Historical Figures (Jadidlar)
 export const figureService = {
-    // Frontend: locale bo'yicha
     getAll: async (locale = 'uz'): Promise<HistoricalFigure[]> => {
         try {
             const apiData = await api.get<HistoricalFigure[]>(`/api/figures?locale=${locale}`);
             if (apiData && apiData.length > 0) {
-                // Merge extra mock metadata if apiData lacks region/timeline
                 return apiData.map(item => {
-                    const mockMatch = MOCK_JADIDS.find(m => m.id === item.id || m.nameUz.toLowerCase().includes(item.nameUz.toLowerCase()));
-                    return {
-                        ...mockMatch,
-                        ...item
-                    };
+                    const normalized = normalizeFigure(item);
+                    const mockMatch = MOCK_JADIDS.find(m => m.id === item.id || (item.nameUz && m.nameUz.toLowerCase().includes(item.nameUz.toLowerCase())));
+                    if (mockMatch) {
+                        return {
+                            ...mockMatch,
+                            ...normalized,
+                            timeline: normalized.timeline && normalized.timeline.length > 0 ? normalized.timeline : mockMatch.timeline,
+                            galleryPhotos: normalized.galleryPhotos && normalized.galleryPhotos.length > 0 ? normalized.galleryPhotos : mockMatch.galleryPhotos,
+                        };
+                    }
+                    return normalized;
                 });
             }
             return getLocalizedJadids(locale);
@@ -102,18 +126,18 @@ export const figureService = {
     getById: async (id: number, locale = 'uz'): Promise<HistoricalFigure> => {
         try {
             const apiItem = await api.get<HistoricalFigure>(`/api/figures/${id}?locale=${locale}`);
-            const mockMatch = MOCK_JADIDS.find(m => m.id === id || m.id === Number(id));
             if (apiItem) {
-                return {
-                    ...mockMatch,
-                    ...apiItem
-                };
-            }
-            if (mockMatch) {
-                const name = locale === 'ru' ? mockMatch.nameRu || mockMatch.nameUz : locale === 'en' ? mockMatch.nameEn || mockMatch.nameUz : mockMatch.nameUz;
-                const title = locale === 'ru' ? mockMatch.titleRu || mockMatch.titleUz : locale === 'en' ? mockMatch.titleEn || mockMatch.titleUz : mockMatch.titleUz;
-                const bio = locale === 'ru' ? mockMatch.bioRu || mockMatch.bioUz : locale === 'en' ? mockMatch.bioEn || mockMatch.bioUz : mockMatch.bioUz;
-                return { ...mockMatch, name, title, bio };
+                const normalized = normalizeFigure(apiItem);
+                const mockMatch = MOCK_JADIDS.find(m => m.id === id || m.id === Number(id));
+                if (mockMatch) {
+                    return {
+                        ...mockMatch,
+                        ...normalized,
+                        timeline: normalized.timeline && normalized.timeline.length > 0 ? normalized.timeline : mockMatch.timeline,
+                        galleryPhotos: normalized.galleryPhotos && normalized.galleryPhotos.length > 0 ? normalized.galleryPhotos : mockMatch.galleryPhotos,
+                    };
+                }
+                return normalized;
             }
             throw new Error("Figure not found");
         } catch {
@@ -125,9 +149,10 @@ export const figureService = {
         }
     },
 
-    // Admin: barcha til maydonlari
-    getAllForAdmin: () =>
-        api.get<HistoricalFigure[]>('/api/figures/all'),
+    getAllForAdmin: async (): Promise<HistoricalFigure[]> => {
+        const data = await api.get<HistoricalFigure[]>('/api/figures/all');
+        return data.map(normalizeFigure);
+    },
 
     create: (data: Omit<HistoricalFigure, 'id' | 'name' | 'title' | 'bio' | 'createdAt'>) =>
         api.post<HistoricalFigure>('/api/figures', data),
@@ -145,3 +170,32 @@ export const figureService = {
         api.delete<void>(`/api/figures/works/${workId}`),
 };
 
+// Site Settings
+export const settingService = {
+    get: (locale = 'uz'): Promise<SiteSetting> =>
+        api.get<SiteSetting>(`/api/settings?locale=${locale}`),
+
+    update: (data: SiteSetting): Promise<SiteSetting> =>
+        api.put<SiteSetting>('/api/settings', data),
+};
+
+// FAQ
+export const faqService = {
+    getAll: (locale = 'uz'): Promise<FaqItem[]> =>
+        api.get<FaqItem[]>(`/api/faqs?locale=${locale}`),
+
+    getAllForAdmin: (): Promise<FaqItem[]> =>
+        api.get<FaqItem[]>('/api/faqs/all'),
+
+    getById: (id: number): Promise<FaqItem> =>
+        api.get<FaqItem>(`/api/faqs/${id}`),
+
+    create: (data: Partial<FaqItem>): Promise<FaqItem> =>
+        api.post<FaqItem>('/api/faqs', data),
+
+    update: (id: number, data: Partial<FaqItem>): Promise<FaqItem> =>
+        api.put<FaqItem>(`/api/faqs/${id}`, data),
+
+    delete: (id: number): Promise<void> =>
+        api.delete<void>(`/api/faqs/${id}`),
+};

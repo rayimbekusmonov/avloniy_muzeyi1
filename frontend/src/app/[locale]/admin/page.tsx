@@ -67,7 +67,11 @@ function AdminLoginContent() {
                 setMode('setup')
             }
         }).catch(() => {})
-    }, [])
+
+        if (searchParams.get('sessionExpired') === 'true') {
+            setError('Sessiya muddati tugadi. Iltimos, qaytadan tizimga kiring.')
+        }
+    }, [searchParams])
 
     // Blok holati
     useEffect(() => {

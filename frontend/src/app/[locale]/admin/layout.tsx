@@ -1,12 +1,11 @@
 // frontend/src/app/[locale]/admin/layout.tsx
 // Admin sahifalari uchun alohida layout — Navbar va Footer yo'q
+import AdminAuthGuard from '@/components/admin/AdminAuthGuard';
 
 export default function AdminLayout({
                                         children,
                                     }: {
     children: React.ReactNode
 }) {
-    // Admin sahifalari asosiy sayt layoutidan butunlay ajratilgan.
-    // [locale]/layout.tsx dagi Navbar va Footer bu yerda ko'rinmaydi.
-    return <>{children}</>
+    return <AdminAuthGuard>{children}</AdminAuthGuard>
 }

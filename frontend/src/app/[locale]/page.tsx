@@ -4,8 +4,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useEffect, useState, useMemo } from 'react'
 import { useLocale } from 'next-intl'
-import { figureService } from '@/lib/services'
-import { HistoricalFigure } from '@/lib/api'
+import { figureService, settingService } from '@/lib/services'
+import { HistoricalFigure, SiteSetting } from '@/lib/api'
 
 // Modern Vector Icons (2026 Stroke Design System)
 const ModernIcons = {
@@ -80,12 +80,14 @@ function HeroSlideshow() {
 export default function HomePage() {
     const locale = useLocale()
     const [jadids, setJadids] = useState<HistoricalFigure[]>([])
+    const [settings, setSettings] = useState<SiteSetting | null>(null)
     const [search, setSearch] = useState('')
     const [selectedRegion, setSelectedRegion] = useState('Toshkent')
     const [activeQuoteIdx, setActiveQuoteIdx] = useState(0)
 
     useEffect(() => {
         figureService.getAll(locale).then(data => setJadids(data)).catch(() => {})
+        settingService.get(locale).then(data => setSettings(data)).catch(() => {})
     }, [locale])
 
     const filteredJadids = useMemo(() => {
@@ -280,10 +282,10 @@ export default function HomePage() {
                                 paddingTop: '24px', borderTop: '1px solid rgba(255,255,255,0.15)'
                             }}>
                                 {[
-                                    { num: '7+', label: 'Jadid Yetakchilari' },
-                                    { num: '100+', label: 'Elektron Asarlar' },
-                                    { num: '50+', label: 'Nodir Hujjatlar' },
-                                    { num: '4', label: 'Ma\'rifat Markazi' },
+                                    { num: settings?.statsFigures || `${jadids.length > 0 ? jadids.length : 7}+`, label: locale === 'ru' ? 'Просветителей' : locale === 'en' ? 'Jadid Figures' : 'Jadid Yetakchilari' },
+                                    { num: settings?.statsResources || '1 000+', label: locale === 'ru' ? 'Электронных книг' : locale === 'en' ? 'E-Books & Works' : 'Elektron Asarlar' },
+                                    { num: settings?.statsPhotos || '500+', label: locale === 'ru' ? 'Фотоархивов' : locale === 'en' ? 'Photo Archives' : 'Nodir Hujjatlar' },
+                                    { num: settings?.statsExhibits || '150+', label: locale === 'ru' ? 'Экспонатов' : locale === 'en' ? 'Exhibits' : 'Eksponatlar' },
                                 ].map((st, i) => (
                                     <div key={i}>
                                         <div style={{ fontFamily: 'var(--font-display)', fontSize: '26px', fontWeight: '800', color: '#C9A84C' }}>{st.num}</div>

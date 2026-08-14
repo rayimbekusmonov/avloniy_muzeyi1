@@ -1,11 +1,11 @@
 'use client'
+
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useLocale } from 'next-intl'
-import { isAuthenticated, removeToken } from '@/lib/api'
+import { isAuthenticated, removeToken, HistoricalFigure } from '@/lib/api'
 import { figureService } from '@/lib/services'
-import { HistoricalFigure } from '@/lib/api'
 import FileUpload from '@/components/FileUpload'
 
 const LANGS = [
@@ -14,16 +14,35 @@ const LANGS = [
     { key: 'en', label: 'English', flag: '🇬🇧' },
 ]
 
-// Asar uchun local tip (backendga yuborishdan oldin)
+const REGIONS = [
+    'Toshkent', 'Samarqand', 'Buxoro', "Farg'ona", 'Xorazm',
+    'Andijon', 'Namangan', 'Qashqadaryo', 'Surxondaryo', "Qoraqalpog'iston"
+]
+
+const CATEGORIES = [
+    "Ta'lim & Matbuot", "Matbuot & Teatr", "Adabiyot & She'riyat",
+    "Adabiyot & Fan", "Siyosat & Davlat", "San'at & Madaniyat"
+]
+
 interface LocalWork {
-    tempId: string        // faqat local
+    tempId: string
     title: string
     year: string
     pdfUrl: string
     sortOrder: number
-    // Saqlangan asarlar uchun (tahrirlashda)
     id?: number
     saved?: boolean
+}
+
+interface TimelineItem {
+    year: string
+    title: string
+    desc: string
+}
+
+interface ArchivePhoto {
+    title: string
+    url: string
 }
 
 const emptyForm = {
@@ -33,7 +52,7 @@ const emptyForm = {
     years: '',
     imageUrl: '',
     region: 'Toshkent',
-    category: 'Ta\'lim & Matbuot',
+    category: "Ta'lim & Matbuot",
     quote: '',
     featured: false,
     sortOrder: 0,
@@ -52,20 +71,31 @@ const emptyWorkForm = (): LocalWork => ({
 export default function AdminJadidlarPage() {
     const router = useRouter()
     const locale = useLocale()
+
     const [figures, setFigures] = useState<HistoricalFigure[]>([])
     const [loading, setLoading] = useState(true)
+    const [searchQuery, setSearchQuery] = useState('')
     const [showForm, setShowForm] = useState(false)
     const [editItem, setEditItem] = useState<HistoricalFigure | null>(null)
     const [form, setForm] = useState(emptyForm)
     const [activeLang, setActiveLang] = useState<'uz' | 'ru' | 'en'>('uz')
+    const [activeTab, setActiveTab] = useState<'info' | 'timeline' | 'gallery' | 'works'>('info')
     const [saving, setSaving] = useState(false)
     const [error, setError] = useState('')
 
-    // Asarlar ro'yxati (yangi va mavjud)
+    // Works
     const [works, setWorks] = useState<LocalWork[]>([])
     const [addingWork, setAddingWork] = useState(false)
     const [newWork, setNewWork] = useState<LocalWork>(emptyWorkForm())
     const [workError, setWorkError] = useState('')
+
+    // Timeline
+    const [timelineItems, setTimelineItems] = useState<TimelineItem[]>([])
+    const [newTimeline, setNewTimeline] = useState<TimelineItem>({ year: '', title: '', desc: '' })
+
+    // Gallery Photos
+    const [galleryPhotos, setGalleryPhotos] = useState<ArchivePhoto[]>([])
+    const [newPhoto, setNewPhoto] = useState<ArchivePhoto>({ title: '', url: '' })
 
     const fetchFigures = useCallback(async () => {
         setLoading(true)
@@ -73,14 +103,17 @@ export default function AdminJadidlarPage() {
             const data = await figureService.getAllForAdmin()
             setFigures(data)
         } catch {
-            setError('Jadidlar yuklanmadi')
+            setError('Jadidlar ma\'lumotlarini yuklab bo\'lmadi')
         } finally {
             setLoading(false)
         }
     }, [])
 
     useEffect(() => {
-        if (!isAuthenticated()) { router.push(`/${locale}/admin`); return }
+        if (!isAuthenticated()) {
+            router.push(`/${locale}/admin`)
+            return
+        }
         fetchFigures()
     }, [fetchFigures, router, locale])
 
@@ -93,14 +126,33 @@ export default function AdminJadidlarPage() {
             years: item.years || '',
             imageUrl: item.imageUrl || '',
             region: item.region || 'Toshkent',
-            category: item.category || 'Ta\'lim & Matbuot',
+            category: item.category || "Ta'lim & Matbuot",
             quote: item.quote || '',
             featured: item.featured || false,
             sortOrder: item.sortOrder || 0,
             works: item.works || '',
             pdfUrl: item.pdfUrl || '',
         })
-        // Mavjud asarlarni local ro'yxatga yuklash
+
+        // Parse timeline
+        let parsedTimeline: TimelineItem[] = []
+        if (item.timeline && item.timeline.length > 0) {
+            parsedTimeline = item.timeline
+        } else if (item.timelineJson) {
+            try { parsedTimeline = JSON.parse(item.timelineJson) } catch {}
+        }
+        setTimelineItems(parsedTimeline)
+
+        // Parse gallery
+        let parsedGallery: ArchivePhoto[] = []
+        if (item.galleryPhotos && item.galleryPhotos.length > 0) {
+            parsedGallery = item.galleryPhotos
+        } else if (item.galleryPhotosJson) {
+            try { parsedGallery = JSON.parse(item.galleryPhotosJson) } catch {}
+        }
+        setGalleryPhotos(parsedGallery)
+
+        // Existing works
         const existingWorks: LocalWork[] = (item.figureWorks || []).map(w => ({
             tempId: `saved-${w.id}`,
             title: w.title,
@@ -111,7 +163,9 @@ export default function AdminJadidlarPage() {
             saved: true,
         }))
         setWorks(existingWorks)
+
         setActiveLang('uz')
+        setActiveTab('info')
         setShowForm(true)
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100)
     }
@@ -120,21 +174,25 @@ export default function AdminJadidlarPage() {
         setEditItem(null)
         setForm(emptyForm)
         setWorks([])
+        setTimelineItems([])
+        setGalleryPhotos([])
         setActiveLang('uz')
+        setActiveTab('info')
         setShowForm(true)
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100)
     }
 
     const handleDelete = async (id: number) => {
-        if (!confirm("Jadidni o'chirishni tasdiqlaysizmi?")) return
+        if (!confirm("Jadidni butunlay o'chirishni tasdiqlaysizmi?")) return
         try {
             await figureService.delete(id)
             setFigures(prev => prev.filter(f => f.id !== id))
-        } catch { setError("O'chirishda xato yuz berdi") }
+        } catch {
+            setError("O'chirishda xato yuz berdi")
+        }
     }
 
-    // === ASARLAR BILAN ISHLASH ===
-
+    // Work handling
     const handleAddWorkToList = () => {
         setWorkError('')
         if (!newWork.title.trim()) { setWorkError("Asar nomi kiritilishi shart"); return }
@@ -145,42 +203,76 @@ export default function AdminJadidlarPage() {
     }
 
     const handleRemoveWork = async (work: LocalWork) => {
-        // Agar saqlangan asar bo'lsa — backenddan o'chirish
         if (work.saved && work.id) {
             if (!confirm("Asarni o'chirishni tasdiqlaysizmi?")) return
             try {
                 await figureService.deleteWork(work.id)
             } catch {
-                setError("Asarni o'chirishda xato")
+                setError("Asarni o'chirishda xatolik")
                 return
             }
         }
         setWorks(prev => prev.filter(w => w.tempId !== work.tempId))
     }
 
-    // === SAQLASH ===
+    // Timeline handling
+    const handleAddTimeline = () => {
+        if (!newTimeline.year.trim() || !newTimeline.title.trim()) {
+            alert("Yil va voqea sarlavhasi kiritilishi shart")
+            return
+        }
+        setTimelineItems(prev => [...prev, newTimeline])
+        setNewTimeline({ year: '', title: '', desc: '' })
+    }
 
+    const handleRemoveTimeline = (index: number) => {
+        setTimelineItems(prev => prev.filter((_, idx) => idx !== index))
+    }
+
+    // Gallery Photos handling
+    const handleAddGalleryPhoto = () => {
+        if (!newPhoto.url.trim()) {
+            alert("Rasm yuklanishi shart")
+            return
+        }
+        setGalleryPhotos(prev => [...prev, { title: newPhoto.title.trim() || 'Tarixiy fotosurat', url: newPhoto.url }])
+        setNewPhoto({ title: '', url: '' })
+    }
+
+    const handleRemoveGalleryPhoto = (index: number) => {
+        setGalleryPhotos(prev => prev.filter((_, idx) => idx !== index))
+    }
+
+    // Save
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         if (!form.nameUz.trim()) { setError("O'zbekcha ism kiritilishi shart"); return }
         if (!form.bioUz.trim()) { setError("O'zbekcha biografiya kiritilishi shart"); return }
         if (!form.years.trim()) { setError("Yillar kiritilishi shart"); return }
-        setSaving(true); setError('')
+
+        setSaving(true)
+        setError('')
+
+        const payload = {
+            ...form,
+            timelineJson: JSON.stringify(timelineItems),
+            galleryPhotosJson: JSON.stringify(galleryPhotos),
+        }
 
         try {
             let figureId: number
 
             if (editItem) {
-                const updated = await figureService.update(editItem.id, form as any)
+                const updated = await figureService.update(editItem.id, payload as any)
                 setFigures(prev => prev.map(f => f.id === editItem.id ? updated : f))
                 figureId = editItem.id
             } else {
-                const created = await figureService.create(form as any)
+                const created = await figureService.create(payload as any)
                 setFigures(prev => [...prev, created])
                 figureId = created.id
             }
 
-            // Yangi asarlarni saqlash (saved=false bo'lganlar)
+            // Save new works
             const newWorks = works.filter(w => !w.saved)
             for (const w of newWorks) {
                 await figureService.addWork(figureId, {
@@ -192,9 +284,9 @@ export default function AdminJadidlarPage() {
             }
 
             handleCancel()
-            await fetchFigures() // Ro'yxatni yangilash
+            await fetchFigures()
         } catch (err: any) {
-            setError(err.message || 'Xato yuz berdi')
+            setError(err?.message || 'Saqlashda xato yuz berdi')
         } finally {
             setSaving(false)
         }
@@ -205,262 +297,386 @@ export default function AdminJadidlarPage() {
         setEditItem(null)
         setForm(emptyForm)
         setWorks([])
+        setTimelineItems([])
+        setGalleryPhotos([])
         setError('')
         setAddingWork(false)
         setNewWork(emptyWorkForm())
         setWorkError('')
     }
 
-    const setLangField = (field: string, value: string) => {
-        const key = `${field}${activeLang.charAt(0).toUpperCase() + activeLang.slice(1)}`
-        setForm(p => ({ ...p, [key]: value }))
-    }
-    const getLangField = (field: string) => {
-        const key = `${field}${activeLang.charAt(0).toUpperCase() + activeLang.slice(1)}`
-        return (form as any)[key] || ''
-    }
-    const getLangStatus = (lang: string) => {
-        const name = (form as any)[`name${lang.charAt(0).toUpperCase() + lang.slice(1)}`]
-        const bio = (form as any)[`bio${lang.charAt(0).toUpperCase() + lang.slice(1)}`]
-        if (name && bio) return 'done'
-        if (name || bio) return 'partial'
-        return 'empty'
-    }
+    const filteredFigures = figures.filter(f =>
+        f.nameUz.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (f.titleUz && f.titleUz.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (f.region && f.region.toLowerCase().includes(searchQuery.toLowerCase()))
+    )
 
     return (
-        <div style={{ minHeight: '100vh', background: 'var(--bg-main)' }}>
+        <div style={{ minHeight: '100vh', background: 'var(--bg-main)', color: 'var(--text-main)' }}>
             <header style={{ background: 'var(--bg-header)', padding: '0 24px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--border-subtle)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <Link href={`/${locale}/admin/dashboard`} style={{ color: 'rgba(255,255,255,0.5)', fontFamily: 'var(--font-mono)', fontSize: '12px', textDecoration: 'none' }}>← Dashboard</Link>
+                    <Link href={`/${locale}/admin/dashboard`} style={{ color: 'rgba(255,255,255,0.7)', fontFamily: 'var(--font-mono)', fontSize: '13px', textDecoration: 'none' }}>← Dashboard</Link>
                     <div style={{ color: 'rgba(255,255,255,0.2)' }}>|</div>
-                    <span style={{ fontFamily: 'var(--font-display)', fontSize: '15px', color: '#fff' }}>Jadidlar</span>
+                    <span style={{ fontFamily: 'var(--font-display)', fontSize: '16px', color: '#fff', fontWeight: '600' }}>Jadidlar Boshqaruvi</span>
                 </div>
-                <button onClick={() => { removeToken(); router.push(`/${locale}/admin`) }} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.7)', padding: '8px 16px', borderRadius: '6px', fontFamily: 'var(--font-mono)', fontSize: '12px', cursor: 'pointer' }}>Chiqish</button>
+                <button onClick={() => { removeToken(); router.push(`/${locale}/admin`) }} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.8)', padding: '8px 16px', borderRadius: '6px', fontFamily: 'var(--font-mono)', fontSize: '12px', cursor: 'pointer' }}>
+                    Chiqish
+                </button>
             </header>
 
             <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 24px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
-                    <h1 style={{ fontSize: '26px', color: 'var(--text-heading)' }}>Jadidlar boshqaruvi</h1>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
+                    <div>
+                        <h1 style={{ fontSize: '26px', color: 'var(--text-heading)', marginBottom: '4px' }}>Jadidlar Portali Boshqaruvi</h1>
+                        <p style={{ fontSize: '14px', color: 'var(--text-muted)' }}>Tarixiy shaxslar, ularning asarlari, shajarasi va fotogalereyalarini boshqaring</p>
+                    </div>
                     {!showForm && (
-                        <button onClick={handleNewFigure} className="btn-primary" style={{ border: 'none', cursor: 'pointer' }}>+ Yangi qo'shish</button>
+                        <button onClick={handleNewFigure} className="btn-primary" style={{ border: 'none', cursor: 'pointer', padding: '12px 24px', borderRadius: '8px', fontWeight: '600' }}>
+                            + Yangi Jadid qo'shish
+                        </button>
                     )}
                 </div>
 
                 {error && (
-                    <div style={{ background: 'rgba(220,38,38,0.08)', border: '1px solid rgba(220,38,38,0.2)', borderRadius: '8px', padding: '12px 16px', marginBottom: '24px', color: '#dc2626', fontSize: '14px' }}>{error}</div>
+                    <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '8px', padding: '12px 16px', marginBottom: '24px', color: '#ef4444', fontSize: '14px' }}>
+                        ⚠ {error}
+                    </div>
                 )}
 
-                {showForm && (
-                    <div style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '32px', marginBottom: '32px', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-md)' }}>
-                        <h2 style={{ fontSize: '20px', color: 'var(--text-heading)', marginBottom: '28px' }}>
-                            {editItem ? 'Jadidni tahrirlash' : "Yangi jadid qo'shish"}
-                        </h2>
+                {showForm ? (
+                    <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '16px', padding: '32px', boxShadow: 'var(--shadow-md)', marginBottom: '40px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '16px' }}>
+                            <h2 style={{ fontSize: '20px', color: 'var(--text-heading)' }}>
+                                {editItem ? `Tahrirlash: ${editItem.nameUz}` : 'Yangi Jadid Qo\'shish'}
+                            </h2>
+                            <button onClick={handleCancel} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', fontSize: '20px', cursor: 'pointer' }}>✕</button>
+                        </div>
+
+                        {/* Top Sub-tabs */}
+                        <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '12px', flexWrap: 'wrap' }}>
+                            <button type="button" onClick={() => setActiveTab('info')} style={{ padding: '8px 18px', borderRadius: '6px', border: 'none', cursor: 'pointer', background: activeTab === 'info' ? 'var(--gold)' : 'var(--bg-secondary)', color: activeTab === 'info' ? '#061d15' : 'var(--text-main)', fontWeight: '600', fontSize: '13px' }}>
+                                👤 Asosiy ma'lumotlar
+                            </button>
+                            <button type="button" onClick={() => setActiveTab('timeline')} style={{ padding: '8px 18px', borderRadius: '6px', border: 'none', cursor: 'pointer', background: activeTab === 'timeline' ? 'var(--gold)' : 'var(--bg-secondary)', color: activeTab === 'timeline' ? '#061d15' : 'var(--text-main)', fontWeight: '600', fontSize: '13px' }}>
+                                ⏳ Vaqt shajarasi ({timelineItems.length})
+                            </button>
+                            <button type="button" onClick={() => setActiveTab('gallery')} style={{ padding: '8px 18px', borderRadius: '6px', border: 'none', cursor: 'pointer', background: activeTab === 'gallery' ? 'var(--gold)' : 'var(--bg-secondary)', color: activeTab === 'gallery' ? '#061d15' : 'var(--text-main)', fontWeight: '600', fontSize: '13px' }}>
+                                🖼 Foto va Hujjatlar ({galleryPhotos.length})
+                            </button>
+                            <button type="button" onClick={() => setActiveTab('works')} style={{ padding: '8px 18px', borderRadius: '6px', border: 'none', cursor: 'pointer', background: activeTab === 'works' ? 'var(--gold)' : 'var(--bg-secondary)', color: activeTab === 'works' ? '#061d15' : 'var(--text-main)', fontWeight: '600', fontSize: '13px' }}>
+                                📚 Asarlar & PDF ({works.length})
+                            </button>
+                        </div>
+
                         <form onSubmit={handleSubmit}>
-                            {/* Asosiy ma'lumotlar */}
-                            <div className="grid-2-col" style={{ display: 'grid', gap: '16px', marginBottom: '24px' }}>
+                            {/* TAB 1: Asosiy ma'lumotlar */}
+                            {activeTab === 'info' && (
                                 <div>
-                                    <label style={labelStyle}>Rasm</label>
-                                    <FileUpload folder="jadidlar" accept="image/*" label="Rasm yuklash" onUpload={(url) => setForm(p => ({ ...p, imageUrl: url }))} />
-                                    {form.imageUrl && (
-                                        <img src={form.imageUrl} alt="" style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px', marginTop: '8px' }} />
-                                    )}
-                                </div>
-                                <div>
-                                    <label style={labelStyle}>Yillar * (masalan: 1878–1934)</label>
-                                    <input value={form.years} onChange={e => setForm(p => ({ ...p, years: e.target.value }))} required style={inputStyle} placeholder="1878–1934" />
-                                    <label style={{ ...labelStyle, marginTop: '16px' }}>Tartib raqami</label>
-                                    <input type="number" value={form.sortOrder} onChange={e => setForm(p => ({ ...p, sortOrder: Number(e.target.value) }))} style={inputStyle} min={0} />
-                                </div>
-                            </div>
-
-                            {/* Markaziy shaxs belgisi */}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '24px' }}>
-                                <input type="checkbox" id="featured" checked={form.featured} onChange={e => setForm(p => ({ ...p, featured: e.target.checked }))} style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: 'var(--gold)' }} />
-                                <label htmlFor="featured" style={{ fontSize: '15px', color: 'var(--text-heading)', cursor: 'pointer' }}>Markaziy shaxs (bosh sahifada alohida ko'rsatiladi)</label>
-                            </div>
-
-                            {/* Til tablari */}
-                            <div style={{ marginBottom: '24px' }}>
-                                <div style={{ display: 'flex', gap: '0', borderBottom: '2px solid var(--border-subtle)' }}>
-                                    {LANGS.map(lang => {
-                                        const status = getLangStatus(lang.key)
-                                        return (
-                                            <button key={lang.key} type="button" onClick={() => setActiveLang(lang.key as any)} style={{
-                                                padding: '10px 24px', border: 'none',
-                                                borderBottom: activeLang === lang.key ? '2px solid var(--gold)' : '2px solid transparent',
-                                                background: 'none', cursor: 'pointer',
-                                                fontFamily: 'var(--font-mono)', fontSize: '13px',
-                                                color: activeLang === lang.key ? 'var(--text-heading)' : 'var(--text-muted)',
-                                                display: 'flex', alignItems: 'center', gap: '8px',
-                                            }}>
-                                                <span>{lang.flag}</span><span>{lang.label}</span>
-                                                <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: status === 'done' ? '#16a34a' : status === 'partial' ? '#f59e0b' : 'var(--border-color)' }} />
+                                    {/* Language selector */}
+                                    <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', background: 'var(--bg-secondary)', padding: '6px', borderRadius: '8px', width: 'fit-content' }}>
+                                        {LANGS.map(l => (
+                                            <button
+                                                key={l.key}
+                                                type="button"
+                                                onClick={() => setActiveLang(l.key as any)}
+                                                style={{
+                                                    padding: '6px 14px', borderRadius: '6px', border: 'none', cursor: 'pointer',
+                                                    background: activeLang === l.key ? 'var(--gold)' : 'transparent',
+                                                    color: activeLang === l.key ? '#061d15' : 'var(--text-muted)',
+                                                    fontWeight: '600', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px'
+                                                }}
+                                            >
+                                                <span>{l.flag}</span>
+                                                <span>{l.label}</span>
                                             </button>
-                                        )
-                                    })}
-                                </div>
-                                <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)', padding: '20px', borderRadius: '0 0 8px 8px' }}>
-                                    <div style={{ marginBottom: '16px' }}>
-                                        <label style={labelStyle}>Ism {activeLang === 'uz' ? '*' : '(ixtiyoriy)'}</label>
-                                        <input value={getLangField('name')} onChange={e => setLangField('name', e.target.value)} style={inputStyle} placeholder={activeLang === 'uz' ? 'Abdulla Avloniy' : activeLang === 'ru' ? 'Абдулла Авлоний' : 'Abdulla Avloniy'} />
+                                        ))}
                                     </div>
-                                    <div style={{ marginBottom: '16px' }}>
-                                        <label style={labelStyle}>Unvon / Kasb</label>
-                                        <input value={getLangField('title')} onChange={e => setLangField('title', e.target.value)} style={inputStyle} placeholder={activeLang === 'uz' ? "Shoir, dramaturg, ma'rifatparvar" : activeLang === 'ru' ? 'Поэт, драматург, просветитель' : 'Poet, playwright, educator'} />
-                                    </div>
-                                    <div>
-                                        <label style={labelStyle}>Biografiya {activeLang === 'uz' ? '*' : '(ixtiyoriy)'}</label>
-                                        <textarea value={getLangField('bio')} onChange={e => setLangField('bio', e.target.value)} rows={6} style={{ ...inputStyle, resize: 'vertical' }} placeholder={activeLang === 'uz' ? "Hayoti va faoliyati haqida..." : ''} />
-                                    </div>
-                                </div>
-                            </div>
 
-                            {/* === ELEKTRON ASARLAR BO'LIMI === */}
-                            <div style={{ marginBottom: '24px', padding: '20px', background: 'rgba(201,168,76,0.04)', border: '1px solid rgba(201,168,76,0.2)', borderRadius: '10px' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                                    <div>
-                                        <label style={{ ...labelStyle, color: 'var(--navy-dark)', fontSize: '13px' }}>
-                                            📚 Elektron asarlar
-                                        </label>
-                                        <p style={{ fontSize: '12px', color: 'var(--gray-600)', marginTop: '2px' }}>
-                                            Asar nomi va PDF faylini qo'shing — frontend'da yuklab olish tugmasi ko'rinadi
-                                        </p>
-                                    </div>
-                                    {!addingWork && (
-                                        <button type="button" onClick={() => { setAddingWork(true); setWorkError('') }} style={{ padding: '8px 16px', background: 'var(--gold)', color: 'var(--navy-dark)', border: 'none', borderRadius: '6px', fontSize: '13px', fontFamily: 'var(--font-mono)', cursor: 'pointer', fontWeight: '600' }}>
-                                            + Asar qo'shish
-                                        </button>
+                                    {/* Multi-language inputs */}
+                                    {activeLang === 'uz' && (
+                                        <>
+                                            <div style={{ marginBottom: '16px' }}>
+                                                <label style={labelStyle}>Ism va Familiya (O'zbekcha) *</label>
+                                                <input type="text" value={form.nameUz} onChange={e => setForm({ ...form, nameUz: e.target.value })} required style={inputStyle} placeholder="Abdulla Avloniy" />
+                                            </div>
+                                            <div style={{ marginBottom: '16px' }}>
+                                                <label style={labelStyle}>Unvon / Faoliyati (O'zbekcha)</label>
+                                                <input type="text" value={form.titleUz} onChange={e => setForm({ ...form, titleUz: e.target.value })} style={inputStyle} placeholder="Shoir, dramaturg, pedagog, matbuot asoschisi" />
+                                            </div>
+                                            <div style={{ marginBottom: '16px' }}>
+                                                <label style={labelStyle}>Tarjimai hol (O'zbekcha) *</label>
+                                                <textarea rows={5} value={form.bioUz} onChange={e => setForm({ ...form, bioUz: e.target.value })} required style={{ ...inputStyle, resize: 'vertical' }} placeholder="Jadid haqida to'liq ma'lumot..." />
+                                            </div>
+                                        </>
                                     )}
-                                </div>
 
-                                {/* Yangi asar qo'shish formasi */}
-                                {addingWork && (
-                                    <div style={{ background: 'var(--bg-card)', borderRadius: '8px', padding: '16px', marginBottom: '16px', border: '1px solid var(--border-color)' }}>
-                                        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '12px', marginBottom: '12px' }}>
-                                            <div>
-                                                <label style={labelStyle}>Asar nomi *</label>
-                                                <input
-                                                    value={newWork.title}
-                                                    onChange={e => setNewWork(p => ({ ...p, title: e.target.value }))}
-                                                    style={inputStyle}
-                                                    placeholder="Masalan: Turkiy Guliston yoxud axloq"
-                                                    autoFocus
-                                                />
+                                    {activeLang === 'ru' && (
+                                        <>
+                                            <div style={{ marginBottom: '16px' }}>
+                                                <label style={labelStyle}>Имя и Фамилия (Русский)</label>
+                                                <input type="text" value={form.nameRu} onChange={e => setForm({ ...form, nameRu: e.target.value })} style={inputStyle} placeholder="Абдулла Авлоний" />
                                             </div>
-                                            <div>
-                                                <label style={labelStyle}>Nashr yili</label>
-                                                <input
-                                                    type="number"
-                                                    value={newWork.year}
-                                                    onChange={e => setNewWork(p => ({ ...p, year: e.target.value }))}
-                                                    style={inputStyle}
-                                                    placeholder="1913"
-                                                    min={1800}
-                                                    max={2100}
-                                                />
+                                            <div style={{ marginBottom: '16px' }}>
+                                                <label style={labelStyle}>Деятельность / Звание (Русский)</label>
+                                                <input type="text" value={form.titleRu} onChange={e => setForm({ ...form, titleRu: e.target.value })} style={inputStyle} placeholder="Поэт, драматург, педагог, издатель" />
                                             </div>
+                                            <div style={{ marginBottom: '16px' }}>
+                                                <label style={labelStyle}>Биография (Русский)</label>
+                                                <textarea rows={5} value={form.bioRu} onChange={e => setForm({ ...form, bioRu: e.target.value })} style={{ ...inputStyle, resize: 'vertical' }} placeholder="Биография на русском..." />
+                                            </div>
+                                        </>
+                                    )}
+
+                                    {activeLang === 'en' && (
+                                        <>
+                                            <div style={{ marginBottom: '16px' }}>
+                                                <label style={labelStyle}>Full Name (English)</label>
+                                                <input type="text" value={form.nameEn} onChange={e => setForm({ ...form, nameEn: e.target.value })} style={inputStyle} placeholder="Abdulla Avloniy" />
+                                            </div>
+                                            <div style={{ marginBottom: '16px' }}>
+                                                <label style={labelStyle}>Title / Profession (English)</label>
+                                                <input type="text" value={form.titleEn} onChange={e => setForm({ ...form, titleEn: e.target.value })} style={inputStyle} placeholder="Poet, playwright, educator, publisher" />
+                                            </div>
+                                            <div style={{ marginBottom: '16px' }}>
+                                                <label style={labelStyle}>Biography (English)</label>
+                                                <textarea rows={5} value={form.bioEn} onChange={e => setForm({ ...form, bioEn: e.target.value })} style={{ ...inputStyle, resize: 'vertical' }} placeholder="Biography in English..." />
+                                            </div>
+                                        </>
+                                    )}
+
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                                        <div>
+                                            <label style={labelStyle}>Yashagan yillari *</label>
+                                            <input type="text" value={form.years} onChange={e => setForm({ ...form, years: e.target.value })} required style={inputStyle} placeholder="1878–1934" />
                                         </div>
-                                        <div style={{ marginBottom: '12px' }}>
-                                            <label style={labelStyle}>PDF fayl *</label>
-                                            <FileUpload
-                                                folder="jadidlar/works"
-                                                accept=".pdf"
-                                                label="PDF yuklash"
-                                                onUpload={(url) => setNewWork(p => ({ ...p, pdfUrl: url }))}
-                                            />
-                                            {newWork.pdfUrl && (
-                                                <p style={{ fontSize: '12px', color: '#16a34a', marginTop: '4px' }}>
-                                                    ✓ PDF yuklandi
-                                                </p>
-                                            )}
+                                        <div>
+                                            <label style={labelStyle}>Harakat markazi (Hudud)</label>
+                                            <select value={form.region} onChange={e => setForm({ ...form, region: e.target.value })} style={inputStyle}>
+                                                {REGIONS.map(r => <option key={r} value={r}>{r}</option>)}
+                                            </select>
                                         </div>
-                                        {workError && (
-                                            <p style={{ fontSize: '13px', color: '#dc2626', marginBottom: '10px' }}>{workError}</p>
+                                    </div>
+
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                                        <div>
+                                            <label style={labelStyle}>Soha / Kategoriya</label>
+                                            <select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })} style={inputStyle}>
+                                                {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label style={labelStyle}>Tartib raqami (Sort Order)</label>
+                                            <input type="number" value={form.sortOrder} onChange={e => setForm({ ...form, sortOrder: Number(e.target.value) })} style={inputStyle} />
+                                        </div>
+                                    </div>
+
+                                    <div style={{ marginBottom: '16px' }}>
+                                        <label style={labelStyle}>Hikmatli so'zi / Mashhur iqtibosi</label>
+                                        <textarea rows={2} value={form.quote} onChange={e => setForm({ ...form, quote: e.target.value })} style={{ ...inputStyle, resize: 'vertical' }} placeholder="Tarbiya biz uchun yo hayot — yo mamot..." />
+                                    </div>
+
+                                    {/* Portrait Image Upload */}
+                                    <div style={{ marginBottom: '20px' }}>
+                                        <label style={labelStyle}>Jadid portret rasmi</label>
+                                        {form.imageUrl && (
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
+                                                <img src={form.imageUrl} alt="Preview" style={{ width: '80px', height: '100px', objectFit: 'cover', borderRadius: '8px', border: '1px solid var(--border-color)' }} />
+                                                <button type="button" onClick={() => setForm({ ...form, imageUrl: '' })} style={{ color: '#ef4444', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '13px' }}>Rasmni o'chirish ✕</button>
+                                            </div>
                                         )}
-                                        <div style={{ display: 'flex', gap: '10px' }}>
-                                            <button type="button" onClick={handleAddWorkToList} style={{ padding: '8px 20px', background: 'var(--gold)', color: '#061d15', border: 'none', borderRadius: '6px', fontSize: '13px', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontWeight: '600' }}>
-                                                ✓ Qo'shish
-                                            </button>
-                                            <button type="button" onClick={() => { setAddingWork(false); setNewWork(emptyWorkForm()); setWorkError('') }} style={{ padding: '8px 16px', background: 'rgba(220,38,38,0.08)', border: '1px solid rgba(220,38,38,0.2)', color: '#dc2626', borderRadius: '6px', fontSize: '13px', cursor: 'pointer' }}>
-                                                Bekor
-                                            </button>
-                                        </div>
+                                        <FileUpload folder="jadidlar" accept="image/*" onUpload={url => setForm({ ...form, imageUrl: url })} label="Portret yuklash" />
                                     </div>
-                                )}
 
-                                {/* Asarlar ro'yxati */}
-                                {works.length > 0 ? (
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                        {works.map((work, idx) => (
-                                            <div key={work.tempId} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
-                                                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gray-400)', minWidth: '20px' }}>{idx + 1}</span>
-                                                <span style={{ fontSize: '18px' }}>📄</span>
-                                                <div style={{ flex: 1 }}>
-                                                    <div style={{ fontSize: '14px', color: 'var(--text-heading)', fontWeight: '600' }}>{work.title}</div>
-                                                    <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px', display: 'flex', gap: '12px' }}>
-                                                        {work.year && <span>📅 {work.year}-yil</span>}
-                                                        {work.pdfUrl && <span style={{ color: '#16a34a' }}>✓ PDF mavjud</span>}
-                                                        {work.saved && <span style={{ color: 'var(--gold)' }}>Saqlangan</span>}
-                                                    </div>
+                                    <div style={{ marginBottom: '24px' }}>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+                                            <input type="checkbox" checked={form.featured} onChange={e => setForm({ ...form, featured: e.target.checked })} />
+                                            <span style={{ fontSize: '14px', fontWeight: '500' }}>Markaziy yetakchi (Featured) sifatida belgilash</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* TAB 2: Vaqt shajarasi (Timeline) */}
+                            {activeTab === 'timeline' && (
+                                <div>
+                                    <h3 style={{ fontSize: '16px', color: 'var(--text-heading)', marginBottom: '12px' }}>Tarixiy Vaqt Shajarasi (Timeline)</h3>
+                                    <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '20px' }}>Jadid hayotidagi muhim sanalar va voqealar zanjiri</p>
+
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
+                                        {timelineItems.map((item, idx) => (
+                                            <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--bg-secondary)', padding: '12px 16px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                                                <div>
+                                                    <span style={{ color: 'var(--gold)', fontWeight: '700', fontFamily: 'var(--font-mono)', marginRight: '12px' }}>{item.year}</span>
+                                                    <span style={{ fontWeight: '600', marginRight: '12px' }}>{item.title}</span>
+                                                    <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{item.desc}</span>
                                                 </div>
-                                                {work.pdfUrl && (
-                                                    <a href={work.pdfUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: '12px', color: 'var(--gold)', textDecoration: 'none', padding: '4px 10px', background: 'rgba(201,168,76,0.1)', borderRadius: '4px' }}>
-                                                        Ko'rish ↗
-                                                    </a>
-                                                )}
-                                                <button type="button" onClick={() => handleRemoveWork(work)} style={{ padding: '6px 10px', background: 'rgba(220,38,38,0.08)', border: '1px solid rgba(220,38,38,0.2)', borderRadius: '6px', fontSize: '12px', color: '#dc2626', cursor: 'pointer' }}>
-                                                    ✕
-                                                </button>
+                                                <button type="button" onClick={() => handleRemoveTimeline(idx)} style={{ color: '#ef4444', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '13px' }}>O'chirish</button>
                                             </div>
                                         ))}
                                     </div>
-                                ) : (
-                                    <p style={{ fontSize: '13px', color: 'var(--gray-400)', textAlign: 'center', padding: '20px', fontStyle: 'italic' }}>
-                                        Hali asarlar qo'shilmagan. "Asar qo'shish" tugmasini bosing.
-                                    </p>
-                                )}
-                            </div>
 
-                            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
-                                <button type="button" onClick={handleCancel} className="btn-outline">Bekor qilish</button>
-                                <button type="submit" disabled={saving} className="btn-primary" style={{ border: 'none', cursor: saving ? 'not-allowed' : 'pointer', opacity: saving ? 0.7 : 1 }}>
-                                    {saving ? 'Saqlanmoqda...' : editItem ? 'Saqlash' : "Qo'shish"}
+                                    <div style={{ background: 'var(--bg-secondary)', padding: '20px', borderRadius: '10px', border: '1px dashed var(--border-color)' }}>
+                                        <h4 style={{ fontSize: '14px', marginBottom: '12px' }}>+ Yangi sana/voqea qo'shish</h4>
+                                        <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: '12px', marginBottom: '12px' }}>
+                                            <input type="text" value={newTimeline.year} onChange={e => setNewTimeline({ ...newTimeline, year: e.target.value })} placeholder="Yil (1904)" style={inputStyle} />
+                                            <input type="text" value={newTimeline.title} onChange={e => setNewTimeline({ ...newTimeline, title: e.target.value })} placeholder="Voqea sarlavhasi (Yangi usul maktabi)" style={inputStyle} />
+                                        </div>
+                                        <textarea rows={2} value={newTimeline.desc} onChange={e => setNewTimeline({ ...newTimeline, desc: e.target.value })} placeholder="Qisqacha tavsif..." style={{ ...inputStyle, resize: 'vertical', marginBottom: '12px' }} />
+                                        <button type="button" onClick={handleAddTimeline} style={{ padding: '8px 16px', background: 'var(--gold)', color: '#061d15', border: 'none', borderRadius: '6px', fontWeight: '600', cursor: 'pointer' }}>
+                                            + Voqeani qo'shish
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* TAB 3: Foto va Hujjatlar arxivi */}
+                            {activeTab === 'gallery' && (
+                                <div>
+                                    <h3 style={{ fontSize: '16px', color: 'var(--text-heading)', marginBottom: '12px' }}>Foto va Tarixiy Hujjatlar Arxivi</h3>
+                                    <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '20px' }}>Ushbu jadidga tegishli qo'shimcha fotosuratlar va hujjatlar</p>
+
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '16px', marginBottom: '24px' }}>
+                                        {galleryPhotos.map((photo, idx) => (
+                                            <div key={idx} style={{ background: 'var(--bg-secondary)', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
+                                                <img src={photo.url} alt={photo.title} style={{ width: '100%', height: '120px', objectFit: 'cover' }} />
+                                                <div style={{ padding: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                    <span style={{ fontSize: '12px', color: 'var(--text-main)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{photo.title}</span>
+                                                    <button type="button" onClick={() => handleRemoveGalleryPhoto(idx)} style={{ color: '#ef4444', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '12px' }}>✕</button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div style={{ background: 'var(--bg-secondary)', padding: '20px', borderRadius: '10px', border: '1px dashed var(--border-color)' }}>
+                                        <h4 style={{ fontSize: '14px', marginBottom: '12px' }}>+ Yangi fotosurat yuklash</h4>
+                                        <div style={{ marginBottom: '12px' }}>
+                                            <input type="text" value={newPhoto.title} onChange={e => setNewPhoto({ ...newPhoto, title: e.target.value })} placeholder="Surat yoki hujjat tavsifi (masalan: 1913-yilgi shaxsiy surati)" style={inputStyle} />
+                                        </div>
+                                        <div style={{ marginBottom: '12px' }}>
+                                            <FileUpload folder="jadidlar_gallery" accept="image/*" onUpload={url => setNewPhoto({ ...newPhoto, url })} label="Fotosuratni tanlash va yuklash" />
+                                        </div>
+                                        {newPhoto.url && (
+                                            <button type="button" onClick={handleAddGalleryPhoto} style={{ padding: '8px 16px', background: 'var(--gold)', color: '#061d15', border: 'none', borderRadius: '6px', fontWeight: '600', cursor: 'pointer' }}>
+                                                + Galereyaga kiritish
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* TAB 4: Asarlar & PDF */}
+                            {activeTab === 'works' && (
+                                <div>
+                                    <h3 style={{ fontSize: '16px', color: 'var(--text-heading)', marginBottom: '12px' }}>Ilmiy va Adabiy Asarlari (PDF kitoblar)</h3>
+                                    <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '20px' }}>Foydalanuvchilar o'qishi va yuklab olishi uchun PDF kitoblar</p>
+
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '24px' }}>
+                                        {works.map((work) => (
+                                            <div key={work.tempId} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--bg-secondary)', padding: '12px 16px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                                                <div>
+                                                    <span style={{ fontWeight: '600', marginRight: '10px' }}>📖 {work.title}</span>
+                                                    {work.year && <span style={{ color: 'var(--gold)', fontSize: '13px', marginRight: '10px' }}>({work.year}-yil)</span>}
+                                                    <a href={work.pdfUrl} target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: 'var(--gold)', textDecoration: 'underline' }}>PDF ochish</a>
+                                                </div>
+                                                <button type="button" onClick={() => handleRemoveWork(work)} style={{ color: '#ef4444', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '13px' }}>O'chirish</button>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {addingWork ? (
+                                        <div style={{ background: 'var(--bg-secondary)', padding: '20px', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
+                                            <h4 style={{ fontSize: '14px', marginBottom: '12px' }}>Yangi kitob / asar kiritish</h4>
+                                            {workError && <div style={{ color: '#ef4444', fontSize: '13px', marginBottom: '10px' }}>{workError}</div>}
+                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 140px', gap: '12px', marginBottom: '12px' }}>
+                                                <input type="text" value={newWork.title} onChange={e => setNewWork({ ...newWork, title: e.target.value })} placeholder="Asar nomi (masalan: Turkiy Guliston)" style={inputStyle} />
+                                                <input type="number" value={newWork.year} onChange={e => setNewWork({ ...newWork, year: e.target.value })} placeholder="Yili (1913)" style={inputStyle} />
+                                            </div>
+                                            <div style={{ marginBottom: '12px' }}>
+                                                <FileUpload folder="books" accept=".pdf" onUpload={url => setNewWork({ ...newWork, pdfUrl: url })} label="PDF faylni yuklash" />
+                                                {newWork.pdfUrl && <span style={{ color: '#22c55e', fontSize: '12px' }}>✓ PDF muvaffaqiyatli yuklandi</span>}
+                                            </div>
+                                            <div style={{ display: 'flex', gap: '10px' }}>
+                                                <button type="button" onClick={handleAddWorkToList} style={{ padding: '8px 16px', background: 'var(--gold)', color: '#061d15', border: 'none', borderRadius: '6px', fontWeight: '600', cursor: 'pointer' }}>
+                                                    Saqlash
+                                                </button>
+                                                <button type="button" onClick={() => setAddingWork(false)} style={{ padding: '8px 16px', background: 'transparent', border: '1px solid var(--border-color)', color: 'var(--text-muted)', borderRadius: '6px', cursor: 'pointer' }}>
+                                                    Bekor qilish
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <button type="button" onClick={() => setAddingWork(true)} style={{ padding: '10px 18px', background: 'var(--bg-secondary)', border: '1px dashed var(--gold)', color: 'var(--gold)', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}>
+                                            + Asar / PDF kitob qo'shish
+                                        </button>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* Actions */}
+                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '32px', borderTop: '1px solid var(--border-subtle)', paddingTop: '20px' }}>
+                                <button type="button" onClick={handleCancel} style={{ padding: '12px 24px', background: 'transparent', border: '1px solid var(--border-color)', color: 'var(--text-muted)', borderRadius: '8px', cursor: 'pointer', fontSize: '14px' }}>
+                                    Bekor qilish
+                                </button>
+                                <button type="submit" disabled={saving} style={{ padding: '12px 28px', background: saving ? 'rgba(201,168,76,0.5)' : 'var(--gold)', color: '#061d15', border: 'none', borderRadius: '8px', fontWeight: '700', fontSize: '14px', cursor: saving ? 'not-allowed' : 'pointer' }}>
+                                    {saving ? 'Saqlanmoqda...' : (editItem ? 'O\'zgarishlarni Saqlash' : 'Jadidni Yaratish')}
                                 </button>
                             </div>
                         </form>
                     </div>
-                )}
+                ) : null}
 
-                {/* Jadidlar ro'yxati */}
+                {/* Figures List */}
+                <div style={{ marginBottom: '20px' }}>
+                    <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={e => setSearchQuery(e.target.value)}
+                        placeholder="Jadid nomi, unvoni yoki hududi bo'yicha qidirish..."
+                        style={{ ...inputStyle, maxWidth: '400px', marginBottom: '20px' }}
+                    />
+                </div>
+
                 {loading ? (
-                    <div style={{ textAlign: 'center', padding: '60px' }}>Yuklanmoqda...</div>
-                ) : figures.length === 0 ? (
-                    <div style={{ textAlign: 'center', padding: '60px', color: 'var(--gray-600)' }}>
-                        <p>Hali jadidlar qo'shilmagan</p>
+                    <div style={{ padding: '40px', textAlign: 'center', color: 'var(--gold)', fontFamily: 'var(--font-mono)' }}>Yuklanmoqda...</div>
+                ) : filteredFigures.length === 0 ? (
+                    <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)', background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+                        Hech qanday jadid topilmadi
                     </div>
                 ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                        {figures.map(item => (
-                            <div key={item.id} style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '20px 24px', display: 'flex', alignItems: 'center', gap: '16px', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-sm)' }}>
-                                <div style={{ width: '60px', height: '60px', borderRadius: '8px', overflow: 'hidden', background: 'linear-gradient(135deg, var(--navy-dark), var(--navy))', flexShrink: 0 }}>
-                                    {item.imageUrl && <img src={item.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
-                                </div>
-                                <div style={{ flex: 1 }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                                        <h3 style={{ fontSize: '16px', color: 'var(--text-heading)' }}>{item.nameUz}</h3>
-                                        {item.featured && <span style={{ fontSize: '10px', color: 'var(--gold)', border: '1px solid var(--gold)', padding: '1px 6px', borderRadius: '4px' }}>MARKAZIY</span>}
-                                        <span style={{ fontSize: '12px', color: 'var(--gray-400)' }}>{item.years}</span>
-                                        {item.figureWorks && item.figureWorks.length > 0 && (
-                                            <span style={{ fontSize: '11px', color: '#16a34a', background: 'rgba(22,163,74,0.1)', padding: '2px 8px', borderRadius: '10px' }}>
-                                                📄 {item.figureWorks.length} ta asar
-                                            </span>
-                                        )}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '20px' }}>
+                        {filteredFigures.map(item => (
+                            <div key={item.id} style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: 'var(--shadow-sm)' }}>
+                                <div>
+                                    <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '14px' }}>
+                                        <div style={{ width: '56px', height: '68px', borderRadius: '6px', overflow: 'hidden', background: '#0a1829', flexShrink: 0, border: '1px solid var(--border-color)' }}>
+                                            {item.imageUrl ? (
+                                                <img src={item.imageUrl} alt={item.nameUz} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                            ) : (
+                                                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.3)', fontSize: '20px' }}>👤</div>
+                                            )}
+                                        </div>
+                                        <div>
+                                            <h3 style={{ fontSize: '17px', color: 'var(--text-heading)', fontWeight: '600', marginBottom: '2px' }}>{item.nameUz}</h3>
+                                            <div style={{ fontSize: '13px', color: 'var(--gold)', fontFamily: 'var(--font-mono)' }}>{item.years}</div>
+                                            {item.region && <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>📍 {item.region}</span>}
+                                        </div>
                                     </div>
-                                    {item.titleUz && <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '2px' }}>{item.titleUz}</div>}
+                                    <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.6', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', marginBottom: '14px' }}>
+                                        {item.bioUz}
+                                    </p>
                                 </div>
-                                <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
-                                    <button onClick={() => handleEdit(item)} style={{ padding: '8px 16px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '6px', fontSize: '13px', color: 'var(--text-heading)', cursor: 'pointer' }}>Tahrirlash</button>
-                                    <button onClick={() => handleDelete(item.id)} style={{ padding: '8px 16px', background: 'rgba(220,38,38,0.08)', border: '1px solid rgba(220,38,38,0.2)', borderRadius: '6px', fontSize: '13px', color: '#dc2626', cursor: 'pointer' }}>O'chirish</button>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--border-subtle)', paddingTop: '12px' }}>
+                                    <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+                                        {item.featured && <span style={{ background: 'rgba(201,168,76,0.15)', color: 'var(--gold)', padding: '2px 8px', borderRadius: '4px', marginRight: '6px' }}>★ Yetakchi</span>}
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '8px' }}>
+                                        <button onClick={() => handleEdit(item)} style={{ padding: '6px 12px', background: 'rgba(201,168,76,0.15)', border: '1px solid rgba(201,168,76,0.3)', color: 'var(--gold)', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: '600' }}>
+                                            Tahrirlash
+                                        </button>
+                                        <button onClick={() => handleDelete(item.id)} style={{ padding: '6px 12px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#ef4444', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: '600' }}>
+                                            O'chirish
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         ))}
@@ -472,10 +688,23 @@ export default function AdminJadidlarPage() {
 }
 
 const labelStyle: React.CSSProperties = {
-    display: 'block', fontSize: '12px', fontFamily: 'var(--font-mono)',
-    color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.5px'
+    display: 'block',
+    fontFamily: 'var(--font-mono)',
+    fontSize: '11px',
+    color: 'var(--text-muted)',
+    letterSpacing: '1px',
+    textTransform: 'uppercase',
+    marginBottom: '6px',
 }
+
 const inputStyle: React.CSSProperties = {
-    width: '100%', padding: '10px 14px', border: '1px solid var(--border-color)',
-    borderRadius: '8px', fontSize: '15px', color: 'var(--text-heading)', outline: 'none', background: 'var(--bg-main)'
+    width: '100%',
+    padding: '10px 14px',
+    background: 'var(--bg-input)',
+    border: '1px solid var(--border-color)',
+    borderRadius: '8px',
+    color: 'var(--text-main)',
+    fontSize: '14px',
+    fontFamily: 'var(--font-body)',
+    outline: 'none',
 }

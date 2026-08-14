@@ -19,6 +19,8 @@ public class DataInitializer implements CommandLineRunner {
     private final UserRepository userRepository;
     private final HistoricalFigureRepository figureRepository;
     private final PasswordEncoder passwordEncoder;
+    private final uz.rayimbek.avloniy_muzeyi.service.SiteSettingService siteSettingService;
+    private final uz.rayimbek.avloniy_muzeyi.repository.FaqRepository faqRepository;
 
     @Value("${app.default-admin.username:admin}")
     private String defaultUsername;
@@ -38,6 +40,9 @@ public class DataInitializer implements CommandLineRunner {
             userRepository.save(admin);
             log.info("Boshlang'ich admin yaratildi. Username: '{}'", defaultUsername);
         }
+
+        // Initialize default Site Settings
+        siteSettingService.getOrCreate();
 
         if (figureRepository.count() == 0) {
             log.info("Jadid ma'rifatparvarlari topilmadi. Boshlang'ich jadidlar kiritilmoqda...");
@@ -146,6 +151,45 @@ public class DataInitializer implements CommandLineRunner {
 
             figureRepository.saveAll(java.util.List.of(avloniy, behbudiy, munavvarqori, cholpon, fitrat));
             log.info("Boshlang'ich jadid ma'rifatparvarlari ma'lumotlar bazasiga saqlandi.");
+        }
+
+        if (faqRepository.count() == 0) {
+            log.info("FAQ ma'lumotlari kiritilmoqda...");
+            uz.rayimbek.avloniy_muzeyi.entity.Faq f1 = uz.rayimbek.avloniy_muzeyi.entity.Faq.builder()
+                    .questionUz("Muzey qayerda joylashgan?")
+                    .questionRu("Где находится музей?")
+                    .questionEn("Where is the museum located?")
+                    .answerUz("Muzey Toshkent shahri, Yunusobod tumani, Abdulla Avloniy ko'chasi, 34-uyda joylashgan.")
+                    .answerRu("Музей расположен по адресу: г. Ташкент, Юнусабадский район, ул. Абдуллы Авлония, 34.")
+                    .answerEn("The museum is located at 34, Abdulla Avloniy Street, Yunusabad District, Tashkent.")
+                    .category("Tashrif")
+                    .sortOrder(1)
+                    .build();
+
+            uz.rayimbek.avloniy_muzeyi.entity.Faq f2 = uz.rayimbek.avloniy_muzeyi.entity.Faq.builder()
+                    .questionUz("Muzeyning ish vaqti qanday?")
+                    .questionRu("Каков режим работы музея?")
+                    .questionEn("What are the museum opening hours?")
+                    .answerUz("Muzey Dushanbadan Shanbagacha soat 9:00 dan 18:00 gacha, Yakshanba kuni 10:00 dan 16:00 gacha ochiq.")
+                    .answerRu("Музей открыт с понедельника по субботу с 9:00 до 18:00, в воскресенье с 10:00 до 16:00.")
+                    .answerEn("The museum is open Monday to Saturday from 9:00 AM to 6:00 PM, Sunday 10:00 AM to 4:00 PM.")
+                    .category("Tashrif")
+                    .sortOrder(2)
+                    .build();
+
+            uz.rayimbek.avloniy_muzeyi.entity.Faq f3 = uz.rayimbek.avloniy_muzeyi.entity.Faq.builder()
+                    .questionUz("E-kitoblarni yuklab olish bepulmi?")
+                    .questionRu("Бесплатно ли скачивать электронные книги?")
+                    .questionEn("Is downloading e-books free?")
+                    .answerUz("Ha, saytdagi barcha e-kitoblar va ilmiy maqolalar to'liq bepul yuklab olinadi.")
+                    .answerRu("Да, все электронные книги и статьи на сайте скачиваются совершенно бесплатно.")
+                    .answerEn("Yes, all e-books and research articles on the site are completely free to download.")
+                    .category("Manbalar")
+                    .sortOrder(3)
+                    .build();
+
+            faqRepository.saveAll(java.util.List.of(f1, f2, f3));
+            log.info("Boshlang'ich FAQ ma'lumotlari saqlandi.");
         }
     }
 }

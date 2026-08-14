@@ -42,6 +42,17 @@ export default function FileUpload({ folder, accept = "*", onUpload, label = "Fa
       });
 
       if (!res.ok) {
+        if (res.status === 401 || res.status === 403) {
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('token');
+            const path = window.location.pathname;
+            if (path.includes('/admin') && !path.endsWith('/admin') && !path.endsWith('/admin/')) {
+              const localeMatch = path.match(/^\/([a-z]{2})\//);
+              const locale = localeMatch ? localeMatch[1] : 'uz';
+              window.location.href = `/${locale}/admin?sessionExpired=true`;
+            }
+          }
+        }
         const errData = await res.json().catch(() => ({ error: "Fayl yuklanmadi" }));
         throw new Error(errData.error || "Fayl yuklanmadi");
       }

@@ -1,7 +1,9 @@
 'use client'
-import { useState } from 'react'
+
+import { useState, useEffect } from 'react'
 import { useLocale } from 'next-intl'
-import { contactService } from '@/lib/services'
+import { contactService, settingService } from '@/lib/services'
+import { SiteSetting } from '@/lib/api'
 
 const Icons = {
     MapPin: () => (
@@ -33,10 +35,17 @@ const Icons = {
 
 export default function ContactPage() {
     const locale = useLocale()
+    const [settings, setSettings] = useState<SiteSetting | null>(null)
     const [form, setForm] = useState({ name: '', phone: '', telegram: '', subject: '', message: '' })
     const [sending, setSending] = useState(false)
     const [success, setSuccess] = useState(false)
     const [error, setError] = useState('')
+
+    useEffect(() => {
+        settingService.get(locale)
+            .then(data => setSettings(data))
+            .catch(() => {})
+    }, [locale])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -58,10 +67,12 @@ export default function ContactPage() {
         infoTitle: locale === 'ru' ? 'Информация о ' : locale === 'en' ? 'Museum ' : 'Muzey ',
         infoTitleGold: locale === 'ru' ? 'музее' : locale === 'en' ? 'Info' : "ma'lumotlari",
         address: locale === 'ru' ? 'Адрес' : locale === 'en' ? 'Address' : 'Manzil',
-        addressText: locale === 'ru' ? 'г. Ташкент, Юнусабадский р-н\nул. Абдуллы Авлония, 34' : locale === 'en' ? 'Tashkent city, Yunusabad district\nAbdulla Avloniy street, 34' : "Toshkent shahri, Yunusobod tumani\nAbdulla Avloniy ko'chasi, 34-uy",
+        addressText: settings?.address || (locale === 'ru' ? 'г. Ташкент, Юнусабадский р-н\nул. Абдуллы Авлония, 34' : locale === 'en' ? 'Tashkent city, Yunusabad district\nAbdulla Avloniy street, 34' : "Toshkent shahri, Yunusobod tumani\nAbdulla Avloniy ko'chasi, 34-uy"),
         phone: locale === 'ru' ? 'Телефон' : locale === 'en' ? 'Phone' : 'Telefon',
+        phoneText: settings?.phone || '+998 71 200 00 00',
+        emailText: settings?.email || 'info@avloniy-muzey.uz',
         workHours: locale === 'ru' ? 'Часы работы' : locale === 'en' ? 'Working hours' : 'Ish vaqti',
-        workHoursText: locale === 'ru' ? 'Пн – Сб: 09:00 – 18:00\nВс: 10:00 – 16:00' : locale === 'en' ? 'Mon – Sat: 09:00 – 18:00\nSun: 10:00 – 16:00' : "Dushanba – Shanba: 09:00 – 18:00\nYakshanba: 10:00 – 16:00",
+        workHoursText: settings?.workingHours || (locale === 'ru' ? 'Пн – Сб: 09:00 – 18:00\nВс: 10:00 – 16:00' : locale === 'en' ? 'Mon – Sat: 09:00 – 18:00\nSun: 10:00 – 16:00' : "Dushanba – Shanba: 09:00 – 18:00\nYakshanba: 10:00 – 16:00"),
         formTitle: locale === 'ru' ? 'Отправить ' : locale === 'en' ? 'Send a ' : 'Xabar ',
         formTitleGold: locale === 'ru' ? 'сообщение' : locale === 'en' ? 'message' : 'yuborish',
         successTitle: locale === 'ru' ? 'Ваше сообщение отправлено!' : locale === 'en' ? 'Your message has been sent!' : 'Xabaringiz yuborildi!',
@@ -80,8 +91,8 @@ export default function ContactPage() {
 
     const contactItems = [
         { Icon: Icons.MapPin, title: t.address,   text: t.addressText },
-        { Icon: Icons.Phone,  title: t.phone,     text: '+998 71 123 45 67' },
-        { Icon: Icons.Mail,   title: 'Email',     text: 'info@avloniy-muzey.uz' },
+        { Icon: Icons.Phone,  title: t.phone,     text: t.phoneText },
+        { Icon: Icons.Mail,   title: 'Email',     text: t.emailText },
         { Icon: Icons.Clock,  title: t.workHours, text: t.workHoursText },
     ]
 

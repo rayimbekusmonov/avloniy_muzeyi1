@@ -1,6 +1,9 @@
 'use client'
-import { useState } from 'react'
+
+import { useState, useEffect, useMemo } from 'react'
 import { useLocale } from 'next-intl'
+import { faqService } from '@/lib/services'
+import { FaqItem } from '@/lib/api'
 
 const Icons = {
     MessageCircle: () => (
@@ -30,64 +33,60 @@ function AccordionItem({ q, a }: { q: string; a: string }) {
     )
 }
 
+const FALLBACK_FAQS_UZ = [
+    { category: 'Tashrif', items: [
+        { q: "Muzey qayerda joylashgan?", a: "Muzey Toshkent shahri, Yunusobod tumani, Abdulla Avloniy ko'chasi, 34-uyda joylashgan." },
+        { q: "Muzeyning ish vaqti qanday?", a: "Muzey Dushanbadan Shanbagacha soat 9:00 dan 18:00 gacha, Yakshanba kuni 10:00 dan 16:00 gacha ochiq." },
+        { q: "Kirish pullik yoki bepulmi?", a: "Asosiy zalga kirish bepul. Ba'zi maxsus ko'rgazmalar uchun nominal to'lov olinishi mumkin." },
+        { q: "Bolalar bilan kelsa bo'ladimi?", a: "Albatta! Muzey barcha yoshdagi mehmonga mo'ljallangan. Maktab ekskursiyalari uchun avvaldan ro'yxatdan o'tish tavsiya etiladi." },
+    ]},
+    { category: 'Manbalar', items: [
+        { q: "E-kitoblarni yuklab olish bepulmi?", a: "Ha, saytdagi barcha e-kitoblar va maqolalar bepul yuklab olinadi." },
+        { q: "Audio materiallarni offline tinglab bo'ladimi?", a: "Hozircha faqat online tinglash imkoniyati mavjud. Kelajakda yuklab olish funksiyasi qo'shiladi." },
+    ]},
+    { category: 'Galereya va tadbirlar', items: [
+        { q: "Muzeyda ekskursiya o'tkazish mumkinmi?", a: "Ha. Guruh ekskursiyalari uchun kamida 3 kun oldin bog'lanish orqali buyurtma bering." },
+        { q: "Foto va video suratga olish ruxsatmi?", a: "Shaxsiy foydalanish uchun ruxsat beriladi. Tijorat maqsadlarida muzey ma'muriyatidan ruxsat olish kerak." },
+    ]},
+]
+
 export default function FAQPage() {
     const locale = useLocale()
+    const [faqList, setFaqList] = useState<FaqItem[]>([])
+    const [loading, setLoading] = useState(true)
 
-    const faqsUz = [
-        { category: 'Tashrif', items: [
-                { q: "Muzey qayerda joylashgan?", a: "Muzey Toshkent shahri, Yunusobod tumani, Abdulla Avloniy ko'chasi, 34-uyda joylashgan." },
-                { q: "Muzeyning ish vaqti qanday?", a: "Muzey Dushanbadan Shanbagacha soat 9:00 dan 18:00 gacha, Yakshanba kuni 10:00 dan 16:00 gacha ochiq." },
-                { q: "Kirish pullik yoki bepulmi?", a: "Asosiy zalga kirish bepul. Ba'zi maxsus ko'rgazmalar uchun nominal to'lov olinishi mumkin." },
-                { q: "Bolalar bilan kelsa bo'ladimi?", a: "Albatta! Muzey barcha yoshdagi mehmonga mo'ljallangan. Maktab ekskursiyalari uchun avvaldan ro'yxatdan o'tish tavsiya etiladi." },
-            ]},
-        { category: 'Manbalar', items: [
-                { q: "E-kitoblarni yuklab olish bepulmi?", a: "Ha, saytdagi barcha e-kitoblar va maqolalar bepul yuklab olinadi." },
-                { q: "Audio materiallarni offline tinglab bo'ladimi?", a: "Hozircha faqat online tinglash imkoniyati mavjud. Kelajakda yuklab olish funksiyasi qo'shiladi." },
-            ]},
-        { category: 'Galereya va tadbirlar', items: [
-                { q: "Muzeyda ekskursiya o'tkazish mumkinmi?", a: "Ha. Guruh ekskursiyalari uchun kamida 3 kun oldin bog'lanish orqali buyurtma bering." },
-                { q: "Foto va video suratga olish ruxsatmi?", a: "Shaxsiy foydalanish uchun ruxsat beriladi. Tijorat maqsadlarida muzey ma'muriyatidan ruxsat olish kerak." },
-                { q: "Muzeyda tadbirlar o'tkazish mumkinmi?", a: "Ma'ruza, anjuman yoki madaniy tadbirlar uchun muzey zali band qilinishi mumkin." },
-            ]},
-    ]
+    useEffect(() => {
+        setLoading(true)
+        faqService.getAll(locale)
+            .then(data => {
+                if (data && data.length > 0) {
+                    setFaqList(data)
+                }
+            })
+            .catch(() => {})
+            .finally(() => setLoading(false))
+    }, [locale])
 
-    const faqsRu = [
-        { category: 'Посещение', items: [
-                { q: "Где находится музей?", a: "Музей расположен по адресу: г. Ташкент, Юнусабадский район, ул. Абдуллы Авлония, 34." },
-                { q: "Каков режим работы музея?", a: "Музей открыт с понедельника по субботу с 9:00 до 18:00, в воскресенье с 10:00 до 16:00." },
-                { q: "Вход платный или бесплатный?", a: "Вход в основной зал бесплатный. На некоторые специальные выставки может взиматься символическая плата." },
-                { q: "Можно ли прийти с детьми?", a: "Конечно! Музей рассчитан на посетителей всех возрастов. Для школьных экскурсий рекомендуется предварительная запись." },
-            ]},
-        { category: 'Ресурсы', items: [
-                { q: "Скачивание электронных книг бесплатное?", a: "Да, все электронные книги и статьи на сайте скачиваются бесплатно." },
-                { q: "Можно ли слушать аудиоматериалы офлайн?", a: "Пока доступно только онлайн-прослушивание. Функция загрузки будет добавлена в будущем." },
-            ]},
-        { category: 'Галерея и мероприятия', items: [
-                { q: "Можно ли провести экскурсию в музее?", a: "Да. Для групповых экскурсий необходимо заказать за 3 дня, связавшись с нами." },
-                { q: "Разрешена ли фото- и видеосъёмка?", a: "Фото- и видеосъёмка разрешена для личного использования. Для коммерческих целей требуется разрешение администрации." },
-                { q: "Можно ли проводить мероприятия в музее?", a: "Зал музея можно забронировать для лекций, конференций или культурных мероприятий." },
-            ]},
-    ]
+    const groupedFaqs = useMemo(() => {
+        if (faqList.length === 0) {
+            return FALLBACK_FAQS_UZ
+        }
 
-    const faqsEn = [
-        { category: 'Visit', items: [
-                { q: "Where is the museum located?", a: "The museum is located at 34 Abdulla Avloniy Street, Yunusabad district, Tashkent." },
-                { q: "What are the museum's working hours?", a: "The museum is open Monday to Saturday 9:00–18:00, Sunday 10:00–16:00." },
-                { q: "Is admission free?", a: "Admission to the main hall is free. Some special exhibitions may have a nominal fee." },
-                { q: "Can I bring children?", a: "Of course! The museum is designed for visitors of all ages. Pre-registration is recommended for school excursions." },
-            ]},
-        { category: 'Resources', items: [
-                { q: "Is downloading e-books free?", a: "Yes, all e-books and articles on the site are free to download." },
-                { q: "Can audio materials be listened to offline?", a: "Currently only online listening is available. A download function will be added in the future." },
-            ]},
-        { category: 'Gallery & Events', items: [
-                { q: "Can tours be arranged at the museum?", a: "Yes. For group tours, please book at least 3 days in advance." },
-                { q: "Is photography allowed?", a: "Photo and video recording is permitted for personal use. Commercial use requires permission." },
-                { q: "Can events be held at the museum?", a: "The museum hall can be reserved for lectures, conferences or cultural events." },
-            ]},
-    ]
+        const groups: { [key: string]: { q: string; a: string }[] } = {}
+        faqList.forEach(item => {
+            const cat = item.category || (locale === 'ru' ? 'Общие' : locale === 'en' ? 'General' : 'Umumiy')
+            if (!groups[cat]) groups[cat] = []
+            groups[cat].push({
+                q: item.question || item.questionUz,
+                a: item.answer || item.answerUz,
+            })
+        })
 
-    const faqs = locale === 'ru' ? faqsRu : locale === 'en' ? faqsEn : faqsUz
+        return Object.keys(groups).map(category => ({
+            category,
+            items: groups[category],
+        }))
+    }, [faqList, locale])
 
     const t = {
         label: locale === 'ru' ? 'Вопросы' : locale === 'en' ? 'Questions' : 'Savollar',
@@ -111,17 +110,21 @@ export default function FAQPage() {
 
             <section className="section">
                 <div className="container" style={{ maxWidth: '800px' }}>
-                    {faqs.map((group, gi) => (
-                        <div key={gi} style={{ marginBottom: '48px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
-                                <div style={{ width: '4px', height: '24px', background: 'var(--gold)', borderRadius: '2px' }} />
-                                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', color: 'var(--text-heading)' }}>{group.category}</h2>
+                    {loading ? (
+                        <div style={{ textAlign: 'center', padding: '40px', color: 'var(--gold)', fontFamily: 'var(--font-mono)' }}>Yuklanmoqda...</div>
+                    ) : (
+                        groupedFaqs.map((group, gi) => (
+                            <div key={gi} style={{ marginBottom: '48px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+                                    <div style={{ width: '4px', height: '24px', background: 'var(--gold)', borderRadius: '2px' }} />
+                                    <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', color: 'var(--text-heading)' }}>{group.category}</h2>
+                                </div>
+                                {group.items.map((item, ii) => (
+                                    <AccordionItem key={ii} q={item.q} a={item.a} />
+                                ))}
                             </div>
-                            {group.items.map((item, ii) => (
-                                <AccordionItem key={ii} q={item.q} a={item.a} />
-                            ))}
-                        </div>
-                    ))}
+                        ))
+                    )}
 
                     <div style={{ background: 'linear-gradient(135deg, var(--navy-dark), var(--navy))', borderRadius: '16px', padding: '40px', textAlign: 'center', marginTop: '48px' }}>
                         <div style={{ color: 'rgba(201,168,76,0.7)', display: 'flex', justifyContent: 'center', marginBottom: '16px' }}><Icons.MessageCircle /></div>

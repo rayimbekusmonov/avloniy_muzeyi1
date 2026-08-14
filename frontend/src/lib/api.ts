@@ -1,16 +1,48 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
 // Token management
+export const isTokenExpired = (token: string): boolean => {
+    try {
+        const parts = token.split('.');
+        if (parts.length !== 3) return true;
+
+        let base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+        while (base64.length % 4) {
+            base64 += '=';
+        }
+        const jsonPayload = decodeURIComponent(
+            atob(base64)
+                .split('')
+                .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+                .join('')
+        );
+        const payload = JSON.parse(jsonPayload);
+        if (!payload.exp) return false;
+
+        return Date.now() >= payload.exp * 1000;
+    } catch {
+        return true;
+    }
+};
+
 export const getToken = (): string | null => {
     if (typeof window === 'undefined') return null;
-    return localStorage.getItem('token');
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+    if (isTokenExpired(token)) {
+        localStorage.removeItem('token');
+        return null;
+    }
+    return token;
 };
 
 export const setToken = (token: string): void => {
+    if (typeof window === 'undefined') return;
     localStorage.setItem('token', token);
 };
 
 export const removeToken = (): void => {
+    if (typeof window === 'undefined') return;
     localStorage.removeItem('token');
 };
 
@@ -37,6 +69,17 @@ async function request<T>(
     });
 
     if (!response.ok) {
+        if (response.status === 401 || response.status === 403) {
+            removeToken();
+            if (typeof window !== 'undefined') {
+                const path = window.location.pathname;
+                if (path.includes('/admin') && !path.endsWith('/admin') && !path.endsWith('/admin/')) {
+                    const localeMatch = path.match(/^\/([a-z]{2})\//);
+                    const locale = localeMatch ? localeMatch[1] : 'uz';
+                    window.location.href = `/${locale}/admin?sessionExpired=true`;
+                }
+            }
+        }
         const error = await response.json().catch(() => ({ message: 'Xato yuz berdi' }));
         throw new Error(error.message || `HTTP error: ${response.status}`);
     }
@@ -175,13 +218,70 @@ export interface HistoricalFigure {
     region?: string; // e.g. "Toshkent", "Samarqand", "Buxoro", "Farg'ona"
     category?: string; // e.g. "Ta'lim", "Matbuot", "Adabiyot", "Teatr"
     quote?: string;
+    timelineJson?: string;
+    galleryPhotosJson?: string;
     timeline?: { year: string; title: string; desc: string }[];
     galleryPhotos?: { title: string; url: string }[];
-    figureWorks: {
+    figureWorks?: {
         id: number;
         title: string;
         year: number | null;
         pdfUrl: string;
         sortOrder: number;
     }[];
+}
+
+export interface SiteSetting {
+    id?: number;
+    museumNameUz?: string;
+    museumNameRu?: string;
+    museumNameEn?: string;
+    phone?: string;
+    email?: string;
+    telegram?: string;
+    addressUz?: string;
+    addressRu?: string;
+    addressEn?: string;
+    workingHoursUz?: string;
+    workingHoursRu?: string;
+    workingHoursEn?: string;
+    telegramUrl?: string;
+    instagramUrl?: string;
+    youtubeUrl?: string;
+    facebookUrl?: string;
+    statsExhibits?: string;
+    statsFigures?: string;
+    statsResources?: string;
+    statsPhotos?: string;
+    heroTitleUz?: string;
+    heroTitleRu?: string;
+    heroTitleEn?: string;
+    heroSubtitleUz?: string;
+    heroSubtitleRu?: string;
+    heroSubtitleEn?: string;
+    quoteTextUz?: string;
+    quoteTextRu?: string;
+    quoteTextEn?: string;
+    // Localized fields for UI
+    museumName?: string;
+    address?: string;
+    workingHours?: string;
+    heroTitle?: string;
+    heroSubtitle?: string;
+    quoteText?: string;
+}
+
+export interface FaqItem {
+    id: number;
+    questionUz: string;
+    questionRu: string;
+    questionEn: string;
+    answerUz: string;
+    answerRu: string;
+    answerEn: string;
+    question: string;
+    answer: string;
+    category: string;
+    sortOrder: number;
+    createdAt?: string;
 }
