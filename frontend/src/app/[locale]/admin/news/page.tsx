@@ -14,7 +14,6 @@ const CATEGORIES = [
     { value: 'KORGAZMA', label: "Ko'rgazma" },
     { value: 'TADBIR', label: 'Tadbir' },
     { value: 'YANGILIK', label: 'Yangilik' },
-    { value: 'BAYRAM', label: 'Bayram' },
 ]
 
 const LANGS = [
@@ -30,6 +29,7 @@ const emptyForm = {
     imageUrl: '',
     category: 'YANGILIK',
     published: false,
+    createdAt: new Date().toISOString().slice(0, 16),
 }
 
 export default function AdminNewsPage() {
@@ -58,7 +58,6 @@ export default function AdminNewsPage() {
         try {
             const res = await translateBatch({
                 title: form.titleUz,
-                excerpt: form.excerptUz,
                 content: form.contentUz,
             }, ['ru', 'en'])
 
@@ -66,8 +65,6 @@ export default function AdminNewsPage() {
                 ...prev,
                 titleRu: res.ru.title || prev.titleRu,
                 titleEn: res.en.title || prev.titleEn,
-                excerptRu: res.ru.excerpt || prev.excerptRu,
-                excerptEn: res.en.excerpt || prev.excerptEn,
                 contentRu: res.ru.content || prev.contentRu,
                 contentEn: res.en.content || prev.contentEn,
             }))
@@ -103,19 +100,21 @@ export default function AdminNewsPage() {
 
     const handleEdit = (item: NewsItem) => {
         setEditItem(item)
+        const dateVal = item.createdAt ? new Date(item.createdAt).toISOString().slice(0, 16) : new Date().toISOString().slice(0, 16)
         setForm({
             titleUz: item.titleUz || item.title || '',
             contentUz: item.contentUz || item.content || '',
-            excerptUz: item.excerptUz || item.excerpt || '',
+            excerptUz: '',
             titleRu: item.titleRu || '',
             contentRu: item.contentRu || '',
-            excerptRu: item.excerptRu || '',
+            excerptRu: '',
             titleEn: item.titleEn || '',
             contentEn: item.contentEn || '',
-            excerptEn: item.excerptEn || '',
+            excerptEn: '',
             imageUrl: item.imageUrl || '',
             category: item.category || 'YANGILIK',
             published: item.published || false,
+            createdAt: dateVal,
         })
         setActiveLang('uz')
         setShowForm(true)
@@ -139,11 +138,18 @@ export default function AdminNewsPage() {
         setSaving(true)
         setError('')
         try {
+            const payload = {
+                ...form,
+                excerptUz: form.contentUz.replace(/<[^>]*>?/gm, '').slice(0, 160),
+                excerptRu: form.contentRu ? form.contentRu.replace(/<[^>]*>?/gm, '').slice(0, 160) : '',
+                excerptEn: form.contentEn ? form.contentEn.replace(/<[^>]*>?/gm, '').slice(0, 160) : '',
+                createdAt: form.createdAt ? new Date(form.createdAt).toISOString() : undefined,
+            }
             if (editItem) {
-                const updated = await newsService.update(editItem.id, form)
+                const updated = await newsService.update(editItem.id, payload)
                 setNews(prev => prev.map(n => n.id === editItem.id ? updated : n))
             } else {
-                const created = await newsService.create(form)
+                const created = await newsService.create(payload)
                 setNews(prev => [created, ...prev])
             }
             setShowForm(false)
@@ -206,7 +212,7 @@ export default function AdminNewsPage() {
                             {editItem ? 'Yangilikni tahrirlash' : "Yangi yangilik qo'shish"}
                         </h2>
                         <form onSubmit={handleSubmit}>
-                            <div className="grid-2-col" style={{ display: 'grid', gap: '16px', marginBottom: '20px' }}>
+                            <div className="grid-2-col" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '20px' }}>
                                 <div>
                                     <label style={labelStyle}>Kategoriya *</label>
                                     <select value={form.category} onChange={e => setForm(p => ({ ...p, category: e.target.value }))} required style={{ ...inputStyle, cursor: 'pointer' }}>
@@ -214,11 +220,22 @@ export default function AdminNewsPage() {
                                     </select>
                                 </div>
                                 <div>
+                                    <label style={labelStyle}>📅 Yangilik sanasi va vaqti *</label>
+                                    <input
+                                        type="datetime-local"
+                                        value={form.createdAt}
+                                        onChange={e => setForm(p => ({ ...p, createdAt: e.target.value }))}
+                                        required
+                                        style={inputStyle}
+                                    />
+                                </div>
+                                <div style={{ gridColumn: '1 / -1' }}>
                                     <label style={labelStyle}>Rasm URL / Fayl</label>
                                     <FileUpload folder="news" accept="image/*" label="Rasm yuklash" onUpload={(url) => setForm(p => ({ ...p, imageUrl: url }))} />
                                     {form.imageUrl && (
                                         <div style={{ marginTop: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                                             <img src={form.imageUrl} alt="" style={{ width: '64px', height: '44px', objectFit: 'cover', borderRadius: '6px' }} />
+                                            <button type="button" onClick={() => setForm(p => ({ ...p, imageUrl: '' }))} style={{ color: '#ef4444', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '12px' }}>Rasmni o'chirish ✕</button>
                                         </div>
                                     )}
                                 </div>
@@ -297,11 +314,6 @@ export default function AdminNewsPage() {
                                         <label style={labelStyle}>Sarlavha {activeLang === 'uz' ? '*' : '(ixtiyoriy)'}</label>
                                         <input value={getLangField('title')} onChange={e => setLangField('title', e.target.value)} style={inputStyle}
                                                placeholder={activeLang === 'uz' ? 'Yangilik sarlavhasi...' : activeLang === 'ru' ? 'Заголовок новости...' : 'News title...'} />
-                                    </div>
-                                    <div style={{ marginBottom: '16px' }}>
-                                        <label style={labelStyle}>Qisqa matn (excerpt)</label>
-                                        <input value={getLangField('excerpt')} onChange={e => setLangField('excerpt', e.target.value)} style={inputStyle}
-                                               placeholder={activeLang === 'uz' ? "Qisqa ma'lumot..." : activeLang === 'ru' ? 'Краткое описание...' : 'Brief description...'} />
                                     </div>
                                     <div>
                                         <label style={labelStyle}>Kontent {activeLang === 'uz' ? '*' : '(ixtiyoriy)'}</label>

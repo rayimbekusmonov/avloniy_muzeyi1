@@ -33,6 +33,7 @@ export default function AdminGalleryPage() {
     const [showForm, setShowForm] = useState(false)
     const [editItem, setEditItem] = useState<GalleryItem | null>(null)
     const [form, setForm] = useState(emptyForm)
+    const [sourceType, setSourceType] = useState<'upload' | 'url'>('upload')
     const [saving, setSaving] = useState(false)
     const [error, setError] = useState('')
     const [filterType, setFilterType] = useState('')
@@ -125,10 +126,79 @@ export default function AdminGalleryPage() {
                                     <FileUpload folder="gallery/thumbnails" accept="image/*" label="Thumbnail yuklash" onUpload={(url) => setForm(p => ({ ...p, thumbnailUrl: url }))} />
                                     {form.thumbnailUrl && <img src={form.thumbnailUrl} alt="" style={{ width: '60px', height: '40px', objectFit: 'cover', borderRadius: '4px', marginTop: '4px' }} />}
                                 </div>
-                                <div style={{ gridColumn: '1 / -1' }}>
-                                    <label style={labelStyle}>Fayl *</label>
-                                    <FileUpload folder="gallery" accept={form.mediaType === 'PHOTO' ? 'image/*' : form.mediaType === 'VIDEO' ? 'video/*' : 'audio/*'} label="Fayl yuklash" onUpload={(url) => setForm(p => ({ ...p, fileUrl: url }))} />
-                                    {form.fileUrl && <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px', wordBreak: 'break-all' }}>{form.fileUrl}</p>}
+                                <div style={{ gridColumn: '1 / -1', background: 'var(--bg-secondary)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border-subtle)' }}>
+                                    <label style={{ ...labelStyle, color: 'var(--gold)' }}>Media fayl yoki havola *</label>
+                                    
+                                    <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
+                                        <button
+                                            type="button"
+                                            onClick={() => setSourceType('upload')}
+                                            style={{
+                                                padding: '6px 14px',
+                                                borderRadius: '6px',
+                                                border: '1px solid',
+                                                borderColor: sourceType === 'upload' ? 'var(--gold)' : 'var(--border-color)',
+                                                background: sourceType === 'upload' ? 'rgba(201,168,76,0.15)' : 'var(--bg-card)',
+                                                color: sourceType === 'upload' ? 'var(--gold)' : 'var(--text-muted)',
+                                                fontSize: '12px',
+                                                cursor: 'pointer',
+                                                fontWeight: '600'
+                                            }}
+                                        >
+                                            📁 Kompyuterdan fayl yuklash
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setSourceType('url')}
+                                            style={{
+                                                padding: '6px 14px',
+                                                borderRadius: '6px',
+                                                border: '1px solid',
+                                                borderColor: sourceType === 'url' ? 'var(--gold)' : 'var(--border-color)',
+                                                background: sourceType === 'url' ? 'rgba(201,168,76,0.15)' : 'var(--bg-card)',
+                                                color: sourceType === 'url' ? 'var(--gold)' : 'var(--text-muted)',
+                                                fontSize: '12px',
+                                                cursor: 'pointer',
+                                                fontWeight: '600'
+                                            }}
+                                        >
+                                            🔗 Havola orqali (YouTube / Video URL)
+                                        </button>
+                                    </div>
+
+                                    {sourceType === 'upload' ? (
+                                        <div>
+                                            <FileUpload folder="gallery" accept={form.mediaType === 'PHOTO' ? 'image/*' : form.mediaType === 'VIDEO' ? 'video/*' : 'audio/*'} label="Fayl yuklash" onUpload={(url) => setForm(p => ({ ...p, fileUrl: url }))} />
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            <input
+                                                type="text"
+                                                value={form.fileUrl}
+                                                onChange={e => {
+                                                    const val = e.target.value;
+                                                    let thumb = form.thumbnailUrl;
+                                                    if (!thumb && val.includes('youtube.com/watch?v=')) {
+                                                        const id = val.split('v=')[1]?.split('&')[0];
+                                                        if (id) thumb = `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+                                                    } else if (!thumb && val.includes('youtu.be/')) {
+                                                        const id = val.split('youtu.be/')[1]?.split('?')[0];
+                                                        if (id) thumb = `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+                                                    }
+                                                    setForm(p => ({ ...p, fileUrl: val, thumbnailUrl: thumb }));
+                                                }}
+                                                placeholder={form.mediaType === 'VIDEO' ? 'https://www.youtube.com/watch?v=... yoki video fayl havolasi' : 'https://... fayl to\'g\'ridan-to\'g\'ri havolasi'}
+                                                style={inputStyle}
+                                            />
+                                        </div>
+                                    )}
+
+                                    {form.fileUrl && (
+                                        <div style={{ marginTop: '8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--bg-card)', padding: '8px 12px', borderRadius: '6px', border: '1px solid var(--border-color)' }}>
+                                            <p style={{ fontSize: '12px', color: 'var(--text-main)', margin: 0, wordBreak: 'break-all' }}><strong>Tanlangan manzil:</strong> {form.fileUrl}</p>
+                                            <button type="button" onClick={() => setForm(p => ({ ...p, fileUrl: '' }))} style={{ color: '#ef4444', background: 'none', border: 'none', cursor: 'pointer', fontSize: '12px' }}>O'chirish ✕</button>
+                                        </div>
+                                    )}
                                 </div>
                                 <div style={{ gridColumn: '1 / -1' }}>
                                     <label style={labelStyle}>Tavsif</label>

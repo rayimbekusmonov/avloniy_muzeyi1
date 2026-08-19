@@ -142,16 +142,17 @@ export interface NewsItem {
 export interface NewsFormData {
     titleUz: string;
     contentUz: string;
-    excerptUz: string;
-    titleRu: string;
-    contentRu: string;
-    excerptRu: string;
-    titleEn: string;
-    contentEn: string;
-    excerptEn: string;
-    imageUrl: string;
-    category: string;
-    published: boolean;
+    excerptUz?: string;
+    titleRu?: string;
+    contentRu?: string;
+    excerptRu?: string;
+    titleEn?: string;
+    contentEn?: string;
+    excerptEn?: string;
+    imageUrl?: string;
+    category?: string;
+    published?: boolean;
+    createdAt?: string;
 }
 
 export interface GalleryItem {
@@ -231,6 +232,12 @@ export interface HistoricalFigure {
     }[];
 }
 
+export interface HeroQuoteItem {
+    text: string;
+    author: string;
+    role: string;
+}
+
 export interface SiteSetting {
     id?: number;
     museumNameUz?: string;
@@ -262,6 +269,8 @@ export interface SiteSetting {
     quoteTextUz?: string;
     quoteTextRu?: string;
     quoteTextEn?: string;
+    heroQuotesJson?: string;
+    heroQuotes?: HeroQuoteItem[];
     // Localized fields for UI
     museumName?: string;
     address?: string;

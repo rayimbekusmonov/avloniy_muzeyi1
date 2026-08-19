@@ -67,7 +67,7 @@ export default function AdminDashboardPage() {
             href: `/${locale}/admin/settings`,
             Icon: Icons.Settings,
             title: 'Sayt Sozlamalari & Matnlar',
-            desc: "Kontaktlar, ijtimoiy tarmoqlar, statistika raqamlari va bosh sahifa shiorlari",
+            desc: "Kontaktlar, ijtimoiy tarmoqlar va bosh sahifa shiorlari",
             tag: "Umumiy"
         },
         {

@@ -50,6 +50,8 @@ public class SiteSettingResponse {
     private String quoteTextRu;
     private String quoteTextEn;
 
+    private String heroQuotesJson;
+
     // Localized fields for convenience
     private String museumName;
     private String address;

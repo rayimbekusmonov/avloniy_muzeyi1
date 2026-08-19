@@ -98,6 +98,10 @@ public class SiteSettingService {
         setting.setQuoteTextRu(request.getQuoteTextRu());
         setting.setQuoteTextEn(request.getQuoteTextEn());
 
+        if (request.getHeroQuotesJson() != null) {
+            setting.setHeroQuotesJson(request.getHeroQuotesJson());
+        }
+
         SiteSetting saved = repository.save(setting);
         return toResponse(saved, "uz");
     }
@@ -159,6 +163,7 @@ public class SiteSettingService {
                 .quoteTextUz(s.getQuoteTextUz())
                 .quoteTextRu(s.getQuoteTextRu())
                 .quoteTextEn(s.getQuoteTextEn())
+                .heroQuotesJson(s.getHeroQuotesJson())
                 .museumName(museumName)
                 .address(address)
                 .workingHours(workingHours)

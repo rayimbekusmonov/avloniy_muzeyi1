@@ -14,17 +14,46 @@ const LANGS = [
     { key: 'en', label: 'English', flag: '🇬🇧' },
 ]
 
+const DEFAULT_HERO_QUOTES = [
+    {
+        text: "Tarbiya biz uchun yo hayot — yo mamot, yo najot — yo halokat, yo saodat — yo falokat masalasidir.",
+        author: "Abdulla Avloniy",
+        role: "Shoir, pedagog va matbuot asoschisi (Toshkent)"
+    },
+    {
+        text: "Haq olinadur, berilmaydur! Dunyoda turmoq uchun dunyoviy fan va ilm lozimdir.",
+        author: "Mahmudxo'ja Behbudiy",
+        role: "Jadidchilik harakati sarvari va dramaturg (Samarqand)"
+    },
+    {
+        text: "Bizni jaholat va nodonlik qorong'uligidan faqat ilm, ma'rifat va maktab qutqara oladi.",
+        author: "Munavvarqori Abdurrashidxonov",
+        role: "Toshkent jadidlarining yetakchisi"
+    },
+    {
+        text: "Go'zal Turkiston, senga ne bo'ldi? Yonar bag'ringizda alanga qayda?",
+        author: "Abdulhamid Cho'lpon",
+        role: "Buyuk shoir va adib (Andijon / Farg'ona)"
+    },
+    {
+        text: "Haqiqat egiladi, bukiladi, ammo sinmaydi! Millat ma'rifat bilan yashaydi.",
+        author: "Abdurauf Fitrat",
+        role: "Olim va dramaturg (Buxoro)"
+    }
+]
+
 export default function AdminSettingsPage() {
     const router = useRouter()
     const locale = useLocale()
 
     const [settings, setSettings] = useState<SiteSetting>({})
+    const [heroQuotes, setHeroQuotes] = useState<Array<{ text: string; author: string; role: string }>>(DEFAULT_HERO_QUOTES)
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
     const [translating, setTranslating] = useState(false)
     const [translateSuccess, setTranslateSuccess] = useState('')
     const [activeLang, setActiveLang] = useState<'uz' | 'ru' | 'en'>('uz')
-    const [activeTab, setActiveTab] = useState<'contact' | 'social' | 'stats' | 'hero'>('contact')
+    const [activeTab, setActiveTab] = useState<'contact' | 'social' | 'hero' | 'quotes'>('contact')
     const [message, setMessage] = useState('')
     const [error, setError] = useState('')
 
@@ -76,10 +105,35 @@ export default function AdminSettingsPage() {
             return
         }
         settingService.get('uz')
-            .then(data => setSettings(data))
+            .then(data => {
+                setSettings(data)
+                if (data.heroQuotesJson) {
+                    try {
+                        const parsed = JSON.parse(data.heroQuotesJson)
+                        if (Array.isArray(parsed) && parsed.length > 0) {
+                            setHeroQuotes(parsed)
+                        }
+                    } catch {}
+                }
+            })
             .catch(() => setError("Sozlamalarni yuklab bo'lmadi"))
             .finally(() => setLoading(false))
     }, [router, locale])
+
+    const handleAddQuote = () => {
+        setHeroQuotes(prev => [
+            ...prev,
+            { text: '', author: '', role: '' }
+        ])
+    }
+
+    const handleUpdateQuote = (index: number, field: 'text' | 'author' | 'role', val: string) => {
+        setHeroQuotes(prev => prev.map((q, idx) => idx === index ? { ...q, [field]: val } : q))
+    }
+
+    const handleRemoveQuote = (index: number) => {
+        setHeroQuotes(prev => prev.filter((_, idx) => idx !== index))
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -87,9 +141,13 @@ export default function AdminSettingsPage() {
         setMessage('')
         setError('')
         try {
-            const res = await settingService.update(settings)
+            const payload: SiteSetting = {
+                ...settings,
+                heroQuotesJson: JSON.stringify(heroQuotes)
+            }
+            const res = await settingService.update(payload)
             setSettings(res)
-            setMessage("Sayt sozlamalari muvaffaqiyatli saqlandi!")
+            setMessage("Sayt sozlamalari va hikmatlar karuseli muvaffaqiyatli saqlandi!")
             setTimeout(() => setMessage(''), 4000)
         } catch (err: any) {
             setError(err?.message || "Saqlashda xatolik yuz berdi")
@@ -114,7 +172,7 @@ export default function AdminSettingsPage() {
             <main style={{ maxWidth: '1000px', margin: '0 auto', padding: '40px 24px' }}>
                 <div style={{ marginBottom: '32px' }}>
                     <h1 style={{ fontSize: '26px', color: 'var(--text-heading)', marginBottom: '6px' }}>Sayt Sozlamalari & Matnlari</h1>
-                    <p style={{ fontSize: '14px', color: 'var(--text-muted)' }}>Muzey kontaktlari, ijtimoiy tarmoqlar, statistika ko'rsatkichlari va bosh sahifa matnlarini boshqaring</p>
+                    <p style={{ fontSize: '14px', color: 'var(--text-muted)' }}>Muzey kontaktlari, ijtimoiy tarmoqlar va bosh sahifa matnlarini boshqaring</p>
                 </div>
 
                 {message && (
@@ -149,11 +207,11 @@ export default function AdminSettingsPage() {
                                 <button type="button" onClick={() => setActiveTab('social')} style={{ padding: '10px 18px', borderRadius: '8px', border: 'none', cursor: 'pointer', background: activeTab === 'social' ? 'var(--gold)' : 'var(--bg-secondary)', color: activeTab === 'social' ? '#061d15' : 'var(--text-main)', fontWeight: '600', fontSize: '13px' }}>
                                     🌐 Ijtimoiy tarmoqlar
                                 </button>
-                                <button type="button" onClick={() => setActiveTab('stats')} style={{ padding: '10px 18px', borderRadius: '8px', border: 'none', cursor: 'pointer', background: activeTab === 'stats' ? 'var(--gold)' : 'var(--bg-secondary)', color: activeTab === 'stats' ? '#061d15' : 'var(--text-main)', fontWeight: '600', fontSize: '13px' }}>
-                                    📊 Statistika
-                                </button>
                                 <button type="button" onClick={() => setActiveTab('hero')} style={{ padding: '10px 18px', borderRadius: '8px', border: 'none', cursor: 'pointer', background: activeTab === 'hero' ? 'var(--gold)' : 'var(--bg-secondary)', color: activeTab === 'hero' ? '#061d15' : 'var(--text-main)', fontWeight: '600', fontSize: '13px' }}>
                                     🏛 Bosh sahifa matnlari
+                                </button>
+                                <button type="button" onClick={() => setActiveTab('quotes')} style={{ padding: '10px 18px', borderRadius: '8px', border: 'none', cursor: 'pointer', background: activeTab === 'quotes' ? 'var(--gold)' : 'var(--bg-secondary)', color: activeTab === 'quotes' ? '#061d15' : 'var(--text-main)', fontWeight: '600', fontSize: '13px' }}>
+                                    💬 Hikmatlar karuseli ({heroQuotes.length} ta)
                                 </button>
                             </div>
 
@@ -273,33 +331,7 @@ export default function AdminSettingsPage() {
                             </div>
                         )}
 
-                        {/* TAB 3: Statistics Counters */}
-                        {activeTab === 'stats' && (
-                            <div>
-                                <h3 style={{ fontSize: '15px', color: 'var(--gold)', marginBottom: '16px' }}>Bosh sahifadagi statistika ko'rsatkichlari (Counters)</h3>
-                                <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '24px' }}>Sayt bosh sahifasida chiqadigan raqamlar (masalan: 150+, 50+, 1 000+)</p>
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
-                                    <div>
-                                        <label style={labelStyle}>Eksponatlar soni</label>
-                                        <input type="text" value={settings.statsExhibits || ''} onChange={e => setSettings({ ...settings, statsExhibits: e.target.value })} style={inputStyle} placeholder="150+" />
-                                    </div>
-                                    <div>
-                                        <label style={labelStyle}>Jadid namoyandalari</label>
-                                        <input type="text" value={settings.statsFigures || ''} onChange={e => setSettings({ ...settings, statsFigures: e.target.value })} style={inputStyle} placeholder="50+" />
-                                    </div>
-                                    <div>
-                                        <label style={labelStyle}>E-kitob va manbalar</label>
-                                        <input type="text" value={settings.statsResources || ''} onChange={e => setSettings({ ...settings, statsResources: e.target.value })} style={inputStyle} placeholder="1 000+" />
-                                    </div>
-                                    <div>
-                                        <label style={labelStyle}>Foto & Hujjatlar arxivi</label>
-                                        <input type="text" value={settings.statsPhotos || ''} onChange={e => setSettings({ ...settings, statsPhotos: e.target.value })} style={inputStyle} placeholder="500+" />
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* TAB 4: Hero Texts */}
+                        {/* TAB 3: Hero Texts */}
                         {activeTab === 'hero' && (
                             <div>
                                 <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', background: 'var(--bg-secondary)', padding: '6px', borderRadius: '8px', width: 'fit-content' }}>
@@ -382,6 +414,89 @@ export default function AdminSettingsPage() {
                                         </div>
                                     </>
                                 )}
+                            </div>
+                        )}
+
+                        {/* TAB 4: Quotes Carousel */}
+                        {activeTab === 'quotes' && (
+                            <div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                                    <div>
+                                        <h3 style={{ fontSize: '16px', color: 'var(--gold)', marginBottom: '4px' }}>💬 Bosh sahifadagi Jadidlar hikmatlari karuseli</h3>
+                                        <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Bosh sahifa yuqori qismida aylanib turuvchi iqtibos va hikmatlar ro'yxati</p>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={handleAddQuote}
+                                        style={{
+                                            padding: '8px 16px',
+                                            background: 'rgba(201,168,76,0.15)',
+                                            border: '1px solid var(--gold)',
+                                            color: 'var(--gold)',
+                                            borderRadius: '8px',
+                                            cursor: 'pointer',
+                                            fontSize: '13px',
+                                            fontWeight: '600'
+                                        }}
+                                    >
+                                        + Yangi hikmat qo'shish
+                                    </button>
+                                </div>
+
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                                    {heroQuotes.map((q, idx) => (
+                                        <div key={idx} style={{ background: 'var(--bg-secondary)', padding: '20px', borderRadius: '12px', border: '1px solid var(--border-color)', position: 'relative' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                                                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--gold)', fontWeight: '700' }}>#{idx + 1} - Hikmat</span>
+                                                {heroQuotes.length > 1 && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleRemoveQuote(idx)}
+                                                        style={{ color: '#ef4444', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '12px' }}
+                                                    >
+                                                        O'chirish ✕
+                                                    </button>
+                                                )}
+                                            </div>
+
+                                            <div style={{ marginBottom: '14px' }}>
+                                                <label style={labelStyle}>Hikmat / Iqtibos matni *</label>
+                                                <textarea
+                                                    rows={2}
+                                                    value={q.text}
+                                                    onChange={e => handleUpdateQuote(idx, 'text', e.target.value)}
+                                                    style={{ ...inputStyle, resize: 'vertical' }}
+                                                    placeholder="Tarbiya biz uchun yo hayot — yo mamot..."
+                                                    required
+                                                />
+                                            </div>
+
+                                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px' }}>
+                                                <div>
+                                                    <label style={labelStyle}>Muallif (Jadid ismi) *</label>
+                                                    <input
+                                                        type="text"
+                                                        value={q.author}
+                                                        onChange={e => handleUpdateQuote(idx, 'author', e.target.value)}
+                                                        style={inputStyle}
+                                                        placeholder="Abdulla Avloniy"
+                                                        required
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label style={labelStyle}>Muallif unvoni / Shiori / Shahri</label>
+                                                    <input
+                                                        type="text"
+                                                        value={q.role}
+                                                        onChange={e => handleUpdateQuote(idx, 'role', e.target.value)}
+                                                        style={inputStyle}
+                                                        placeholder="Shoir, pedagog va matbuot asoschisi (Toshkent)"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         )}
 

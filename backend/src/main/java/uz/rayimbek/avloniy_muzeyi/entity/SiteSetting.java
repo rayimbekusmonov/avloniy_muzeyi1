@@ -69,6 +69,10 @@ public class SiteSetting {
     @Column(columnDefinition = "TEXT")
     private String quoteTextEn;
 
+    // Bosh sahifadagi 5 ta karusel hikmatlari JSON formati
+    @Column(columnDefinition = "TEXT")
+    private String heroQuotesJson;
+
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 

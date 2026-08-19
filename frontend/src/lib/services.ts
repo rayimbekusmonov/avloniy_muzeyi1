@@ -14,8 +14,14 @@ export const normalizeFigure = (item: HistoricalFigure): HistoricalFigure => {
             galleryPhotos = JSON.parse(item.galleryPhotosJson);
         } catch {}
     }
+    const name = item.name || item.nameUz || item.nameRu || item.nameEn || '';
+    const title = item.title || item.titleUz || item.titleRu || item.titleEn || '';
+    const bio = item.bio || item.bioUz || item.bioRu || item.bioEn || '';
     return {
         ...item,
+        name,
+        title,
+        bio,
         timeline,
         galleryPhotos
     };

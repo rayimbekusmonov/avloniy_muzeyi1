@@ -3,6 +3,7 @@ package uz.rayimbek.avloniy_muzeyi.dto.request;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import uz.rayimbek.avloniy_muzeyi.entity.News;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -33,4 +34,5 @@ public class NewsRequest {
     private String imageUrl;
     private News.Category category;
     private Boolean published = false;
+    private LocalDateTime createdAt;
 }

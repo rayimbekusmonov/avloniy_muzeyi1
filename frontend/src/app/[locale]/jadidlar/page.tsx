@@ -56,8 +56,14 @@ export default function JadidlarPage() {
             .finally(() => setLoading(false))
     }, [locale])
 
-    const regions = ['Barchasi', 'Toshkent', 'Samarqand', 'Buxoro', 'Farg\'ona']
-    const categories = ['Barchasi', 'Ta\'lim & Matbuot', 'Matbuot & Teatr', 'Adabiyot & She\'riyat', 'Adabiyot & Fan']
+    const regions = [
+        'Barchasi', 'Toshkent', 'Samarqand', 'Buxoro', "Farg'ona", 'Xorazm',
+        'Andijon', 'Namangan', 'Qashqadaryo', 'Surxondaryo', "Qoraqalpog'iston"
+    ]
+    const categories = [
+        'Barchasi', "Ta'lim & Matbuot", "Matbuot & Teatr", "Adabiyot & She'riyat",
+        "Adabiyot & Fan", "Siyosat & Davlat", "San'at & Madaniyat"
+    ]
 
     const getBirthYear = (years: string): number => {
         const match = years && years.match(/(\d{4})/)
@@ -67,10 +73,13 @@ export default function JadidlarPage() {
     const filteredFigures = useMemo(() => {
         return figures
             .filter(figure => {
+                const name = figure.name || figure.nameUz || ''
+                const title = figure.title || figure.titleUz || ''
+                const bio = figure.bio || figure.bioUz || ''
                 const matchesSearch = searchQuery === '' || 
-                    figure.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    (figure.title && figure.title.toLowerCase().includes(searchQuery.toLowerCase())) ||
-                    (figure.bio && figure.bio.toLowerCase().includes(searchQuery.toLowerCase()))
+                    name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    bio.toLowerCase().includes(searchQuery.toLowerCase())
                 
                 const matchesRegion = selectedRegion === 'Barchasi' || (figure.region && figure.region.includes(selectedRegion))
                 const matchesCategory = selectedCategory === 'Barchasi' || (figure.category && figure.category.includes(selectedCategory))

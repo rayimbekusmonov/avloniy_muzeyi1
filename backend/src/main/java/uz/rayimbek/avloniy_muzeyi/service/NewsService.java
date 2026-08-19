@@ -94,6 +94,7 @@ public class NewsService {
                 .imageUrl(request.getImageUrl())
                 .category(request.getCategory())
                 .published(request.getPublished())
+                .createdAt(request.getCreatedAt())
                 .author(author)
                 .build();
 
@@ -116,6 +117,9 @@ public class NewsService {
         news.setImageUrl(request.getImageUrl());
         news.setCategory(request.getCategory());
         news.setPublished(request.getPublished());
+        if (request.getCreatedAt() != null) {
+            news.setCreatedAt(request.getCreatedAt());
+        }
 
         return toAdminResponse(newsRepository.save(news));
     }

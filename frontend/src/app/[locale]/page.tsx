@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { useEffect, useState, useMemo } from 'react'
 import { useLocale } from 'next-intl'
 import { figureService, settingService } from '@/lib/services'
-import { HistoricalFigure, SiteSetting } from '@/lib/api'
+import { HistoricalFigure } from '@/lib/api'
 
 // Modern Vector Icons (2026 Stroke Design System)
 const ModernIcons = {
@@ -30,8 +30,8 @@ const ModernIcons = {
         </svg>
     ),
     ArrowUpRight: () => (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M7 17 17 7"/><path d="M7 7h10v10"/>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M7 17L17 7"/><path d="M7 7h10v10"/>
         </svg>
     ),
     Compass: () => (
@@ -46,13 +46,41 @@ const ModernIcons = {
         </svg>
     ),
     Sparkles: () => (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1 1.3-1.3Z"/>
         </svg>
     )
 }
 
 const SLIDE_IMAGES = ['/slide1.png', '/slide2.png', '/slide3.png', '/slide4.png']
+
+const DEFAULT_QUOTES = [
+    {
+        text: "Tarbiya biz uchun yo hayot — yo mamot, yo najot — yo halokat, yo saodat — yo falokat masalasidir.",
+        author: "Abdulla Avloniy",
+        role: "Shoir, pedagog va matbuot asoschisi (Toshkent)"
+    },
+    {
+        text: "Haq olinadur, berilmaydur! Dunyoda turmoq uchun dunyoviy fan va ilm lozimdir.",
+        author: "Mahmudxo'ja Behbudiy",
+        role: "Jadidchilik harakati sarvari va dramaturg (Samarqand)"
+    },
+    {
+        text: "Bizni jaholat va nodonlik qorong'uligidan faqat ilm, ma'rifat va maktab qutqara oladi.",
+        author: "Munavvarqori Abdurrashidxonov",
+        role: "Toshkent jadidlarining yetakchisi"
+    },
+    {
+        text: "Go'zal Turkiston, senga ne bo'ldi? Yonar bag'ringizda alanga qayda?",
+        author: "Abdulhamid Cho'lpon",
+        role: "Buyuk shoir va adib (Andijon / Farg'ona)"
+    },
+    {
+        text: "Haqiqat egiladi, bukiladi, ammo sinmaydi! Millat ma'rifat bilan yashaydi.",
+        author: "Abdurauf Fitrat",
+        role: "Olim va dramaturg (Buxoro)"
+    }
+]
 
 function HeroSlideshow() {
     const [current, setCurrent] = useState(0)
@@ -68,10 +96,8 @@ function HeroSlideshow() {
         <>
             <div style={{ position: 'absolute', inset: 0, background: '#03120d', zIndex: 0 }} />
             <div key={`curr-${current}`} style={{ position: 'absolute', inset: 0, zIndex: 1, transition: 'opacity 1.2s ease' }}>
-                {/* High visibility image opacity: 0.75 */}
                 <Image src={SLIDE_IMAGES[current]} alt="Jadidlar Portali Background" fill priority sizes="100vw" style={{ objectFit: 'cover', opacity: 0.75 }} />
             </div>
-            {/* Royal Emerald gradient overlay allowing background slides to shine through brightly */}
             <div style={{ position: 'absolute', inset: 0, zIndex: 2, background: 'linear-gradient(to bottom, rgba(3,18,13,0.45) 0%, rgba(3,18,13,0.75) 70%, #03120d 100%)' }} />
         </>
     )
@@ -80,28 +106,25 @@ function HeroSlideshow() {
 export default function HomePage() {
     const locale = useLocale()
     const [jadids, setJadids] = useState<HistoricalFigure[]>([])
-    const [settings, setSettings] = useState<SiteSetting | null>(null)
+    const [customQuotes, setCustomQuotes] = useState<Array<{ text: string; author: string; role: string }> | null>(null)
     const [search, setSearch] = useState('')
     const [selectedRegion, setSelectedRegion] = useState('Toshkent')
     const [activeQuoteIdx, setActiveQuoteIdx] = useState(0)
 
     useEffect(() => {
         figureService.getAll(locale).then(data => setJadids(data)).catch(() => {})
-        settingService.get(locale).then(data => setSettings(data)).catch(() => {})
+        settingService.get(locale).then(st => {
+            if (st?.heroQuotesJson) {
+                try {
+                    const parsed = JSON.parse(st.heroQuotesJson)
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        setCustomQuotes(parsed)
+                    }
+                } catch {}
+            }
+        }).catch(() => {})
     }, [locale])
 
-    const filteredJadids = useMemo(() => {
-        return jadids.filter(j => {
-            const matchesSearch = search === '' ||
-                j.name.toLowerCase().includes(search.toLowerCase()) ||
-                (j.title && j.title.toLowerCase().includes(search.toLowerCase())) ||
-                (j.bio && j.bio.toLowerCase().includes(search.toLowerCase()))
-            const matchesRegion = selectedRegion === 'Barchasi' || (j.region && j.region.includes(selectedRegion))
-            return matchesSearch && matchesRegion
-        })
-    }, [jadids, search, selectedRegion])
-
-    // Regional grouping for the Uzbekistan Map
     const mapRegions = useMemo(() => [
         {
             id: 'Toshkent',
@@ -137,33 +160,17 @@ export default function HomePage() {
         return mapRegions.find(r => r.id === selectedRegion) || mapRegions[0]
     }, [mapRegions, selectedRegion])
 
-    const quotes = useMemo(() => [
-        {
-            text: "Tarbiya biz uchun yo hayot — yo mamot, yo najot — yo halokat, yo saodat — yo falokat masalasidir.",
-            author: "Abdulla Avloniy",
-            role: "Shoir, pedagog va matbuot asoschisi (Toshkent)"
-        },
-        {
-            text: "Haq olinadur, berilmaydur! Dunyoda turmoq uchun dunyoviy fan va ilm lozimdir.",
-            author: "Mahmudxo'ja Behbudiy",
-            role: "Jadidchilik harakati sarvari va dramaturg (Samarqand)"
-        },
-        {
-            text: "Bizni jaholat va nodonlik qorong'uligidan faqat ilm, ma'rifat va maktab qutqara oladi.",
-            author: "Munavvarqori Abdurrashidxonov",
-            role: "Toshkent jadidlarining yetakchisi"
-        },
-        {
-            text: "Go'zal Turkiston, senga ne bo'ldi? Yonar bag'ringizda alanga qayda?",
-            author: "Abdulhamid Cho'lpon",
-            role: "Buyuk shoir va adib (Andijon / Farg'ona)"
-        },
-        {
-            text: "Haqiqat egiladi, bukiladi, ammo sinmaydi! Millat ma'rifat bilan yashaydi.",
-            author: "Abdurauf Fitrat",
-            role: "Olim va dramaturg (Buxoro)"
-        }
-    ], [])
+    const regionJadids = useMemo(() => {
+        const matching = jadids.filter(j =>
+            (j.region && j.region.toLowerCase().includes(selectedRegion.toLowerCase())) ||
+            activeMapRegion.figures.some(f => (j.name || j.nameUz || '').toLowerCase().includes(f.toLowerCase()))
+        )
+        return matching.length > 0 ? matching : jadids.slice(0, 4)
+    }, [jadids, selectedRegion, activeMapRegion])
+
+    const quotes = useMemo(() => {
+        return customQuotes && customQuotes.length > 0 ? customQuotes : DEFAULT_QUOTES
+    }, [customQuotes])
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -247,7 +254,7 @@ export default function HomePage() {
                             </p>
 
                             {/* CTA Action Buttons */}
-                            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginBottom: '40px' }}>
+                            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
                                 <Link
                                     href={`/${locale}/jadidlar`}
                                     style={{
@@ -275,25 +282,6 @@ export default function HomePage() {
                                     <ModernIcons.BookOpen /> {labels.btnLibrary}
                                 </Link>
                             </div>
-
-                            {/* Key Stats Counter */}
-                            <div style={{
-                                display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px',
-                                paddingTop: '24px', borderTop: '1px solid rgba(255,255,255,0.15)'
-                            }}>
-                                {[
-                                    { num: settings?.statsFigures || `${jadids.length > 0 ? jadids.length : 7}+`, label: locale === 'ru' ? 'Просветителей' : locale === 'en' ? 'Jadid Figures' : 'Jadid Yetakchilari' },
-                                    { num: settings?.statsResources || '1 000+', label: locale === 'ru' ? 'Электронных книг' : locale === 'en' ? 'E-Books & Works' : 'Elektron Asarlar' },
-                                    { num: settings?.statsPhotos || '500+', label: locale === 'ru' ? 'Фотоархивов' : locale === 'en' ? 'Photo Archives' : 'Nodir Hujjatlar' },
-                                    { num: settings?.statsExhibits || '150+', label: locale === 'ru' ? 'Экспонатов' : locale === 'en' ? 'Exhibits' : 'Eksponatlar' },
-                                ].map((st, i) => (
-                                    <div key={i}>
-                                        <div style={{ fontFamily: 'var(--font-display)', fontSize: '26px', fontWeight: '800', color: '#C9A84C' }}>{st.num}</div>
-                                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'rgba(255,255,255,0.7)', marginTop: '2px' }}>{st.label}</div>
-                                    </div>
-                                ))}
-                            </div>
-
                         </div>
 
                         {/* Right Quotes Glassmorphism Card */}
@@ -448,12 +436,12 @@ export default function HomePage() {
                             </div>
 
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                                {filteredJadids.length === 0 ? (
+                                {regionJadids.length === 0 ? (
                                     <div style={{ color: 'var(--text-muted)', fontSize: '14px', fontFamily: 'var(--font-mono)' }}>
                                         {activeMapRegion.id} hududidagi jadidlar yuklanmoqda...
                                     </div>
                                 ) : (
-                                    filteredJadids.map(jadid => (
+                                    regionJadids.map(jadid => (
                                         <Link
                                             key={jadid.id}
                                             href={`/${locale}/jadidlar/${jadid.id}`}
@@ -474,7 +462,7 @@ export default function HomePage() {
                                         >
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
                                                 {jadid.imageUrl ? (
-                                                    <img src={jadid.imageUrl} alt={jadid.name} style={{ width: '42px', height: '42px', borderRadius: '50%', objectFit: 'cover', border: '1px solid #C9A84C' }} />
+                                                    <img src={jadid.imageUrl} alt={jadid.name || jadid.nameUz} style={{ width: '42px', height: '42px', borderRadius: '50%', objectFit: 'cover', border: '1px solid #C9A84C' }} />
                                                 ) : (
                                                     <div style={{ width: '42px', height: '42px', borderRadius: '50%', background: 'rgba(201,168,76,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#C9A84C' }}>
                                                         <ModernIcons.Feather />
@@ -482,7 +470,7 @@ export default function HomePage() {
                                                 )}
                                                 <div>
                                                     <div style={{ fontFamily: 'var(--font-display)', fontWeight: '700', fontSize: '16px', color: 'var(--text-heading)' }}>
-                                                        {jadid.name}
+                                                        {jadid.name || jadid.nameUz}
                                                     </div>
                                                     <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#C9A84C' }}>
                                                         {jadid.years}
@@ -494,122 +482,22 @@ export default function HomePage() {
                                     ))
                                 )}
                             </div>
-                        </div>
 
-                    </div>
-                </div>
-            </section>
-
-            {/* JADIDS CATALOG EXPLORER SECTION */}
-            <section style={{ padding: '80px 0' }}>
-                <div className="container">
-                    <div style={{ textAlign: 'center', maxWidth: '750px', margin: '0 auto 40px auto' }}>
-                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: '#C9A84C', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '12px' }}>
-                            Katalog
-                        </div>
-                        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '38px', color: 'var(--text-heading)', fontWeight: '800', marginBottom: '12px' }}>
-                            Barcha Jadid Ma&apos;rifatparvarlari
-                        </h2>
-                    </div>
-
-                    {/* Interactive Search Bar */}
-                    <div style={{
-                        background: 'var(--bg-card)',
-                        border: '1px solid var(--border-color)',
-                        borderRadius: '14px', padding: '24px',
-                        marginBottom: '44px',
-                        display: 'flex', flexDirection: 'column', gap: '20px',
-                        boxShadow: 'var(--shadow-sm)'
-                    }}>
-                        <div style={{ position: 'relative' }}>
-                            <div style={{ position: 'absolute', left: '18px', top: '50%', transform: 'translateY(-50%)', color: '#C9A84C' }}>
-                                <ModernIcons.Search />
-                            </div>
-                            <input
-                                type="text"
-                                value={search}
-                                onChange={e => setSearch(e.target.value)}
-                                placeholder={labels.searchPlaceholder}
-                                style={{
-                                    width: '100%',
-                                    padding: '16px 20px 16px 52px',
-                                    background: 'var(--bg-input)',
-                                    border: '1px solid var(--border-color)',
-                                    borderRadius: '10px',
-                                    color: 'var(--text-main)', fontSize: '15px', outline: 'none'
-                                }}
-                            />
-                        </div>
-                    </div>
-
-                    {/* Cards Grid */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '28px' }}>
-                        {filteredJadids.map(jadid => (
-                            <Link
-                                key={jadid.id}
-                                href={`/${locale}/jadidlar/${jadid.id}`}
-                                style={{
-                                    background: 'var(--bg-card)',
-                                    border: '1px solid var(--border-color)',
-                                    borderRadius: '14px', padding: '28px',
-                                    textDecoration: 'none', color: 'inherit',
-                                    display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-                                    transition: 'all 0.3s ease',
-                                    boxShadow: 'var(--shadow-sm)'
-                                }}
-                                onMouseEnter={e => {
-                                    e.currentTarget.style.borderColor = '#C9A84C'
-                                    e.currentTarget.style.transform = 'translateY(-6px)'
-                                    e.currentTarget.style.boxShadow = 'var(--shadow-md)'
-                                }}
-                                onMouseLeave={e => {
-                                    e.currentTarget.style.borderColor = 'var(--border-color)'
-                                    e.currentTarget.style.transform = 'translateY(0)'
-                                    e.currentTarget.style.boxShadow = 'var(--shadow-sm)'
-                                }}
-                            >
-                                <div>
-                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
-                                        {jadid.imageUrl ? (
-                                            <img src={jadid.imageUrl} alt={jadid.name} style={{ width: '68px', height: '68px', borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(201,168,76,0.4)', boxShadow: '0 4px 14px rgba(0,0,0,0.2)' }} />
-                                        ) : (
-                                            <div style={{ width: '68px', height: '68px', borderRadius: '50%', background: 'rgba(201,168,76,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#C9A84C' }}>
-                                                <ModernIcons.Feather />
-                                            </div>
-                                        )}
-                                        {jadid.region && (
-                                            <span style={{
-                                                fontFamily: 'var(--font-mono)', fontSize: '11px',
-                                                color: '#C9A84C', background: 'rgba(201,168,76,0.12)',
-                                                padding: '5px 12px', borderRadius: '6px', border: '1px solid rgba(201,168,76,0.25)',
-                                                fontWeight: '600'
-                                            }}>
-                                                📍 {jadid.region}
-                                            </span>
-                                        )}
-                                    </div>
-
-                                    <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', color: 'var(--text-heading)', fontWeight: '700', marginBottom: '6px' }}>
-                                        {jadid.name}
-                                    </h3>
-                                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: '#C9A84C', marginBottom: '14px', fontWeight: '600' }}>
-                                        ⏳ {jadid.years}
-                                    </div>
-                                    <p style={{ fontSize: '14.5px', color: 'var(--text-muted)', lineHeight: 1.75, marginBottom: '24px', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                                        {jadid.bio}
-                                    </p>
-                                </div>
-
-                                <div style={{
-                                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                                    paddingTop: '16px', borderTop: '1px solid var(--border-subtle)',
-                                    fontFamily: 'var(--font-mono)', fontSize: '13px', color: '#C9A84C', fontWeight: '700'
-                                }}>
-                                    <span>{labels.viewProfile}</span>
+                            <div style={{ marginTop: '24px', paddingTop: '20px', borderTop: '1px solid var(--border-subtle)', textAlign: 'center' }}>
+                                <Link
+                                    href={`/${locale}/jadidlar`}
+                                    style={{
+                                        display: 'inline-flex', alignItems: 'center', gap: '8px',
+                                        color: '#C9A84C', fontFamily: 'var(--font-mono)', fontSize: '13px',
+                                        fontWeight: '700', textDecoration: 'none'
+                                    }}
+                                >
+                                    <span>{labels.btnAllJadids}</span>
                                     <ModernIcons.ArrowUpRight />
-                                </div>
-                            </Link>
-                        ))}
+                                </Link>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </section>

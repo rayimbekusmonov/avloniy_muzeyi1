@@ -174,7 +174,25 @@ export default function GalleryPage() {
                 <div onClick={() => setSelected(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.9)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
                     <div onClick={e => e.stopPropagation()} style={{ background: 'var(--navy-dark)', borderRadius: '16px', overflow: 'hidden', maxWidth: '900px', width: '100%', maxHeight: '90vh' }}>
                         {selected.mediaType === 'PHOTO' && <img src={selected.fileUrl} alt={selected.title} style={{ width: '100%', maxHeight: '60vh', objectFit: 'contain', background: '#000' }} />}
-                        {selected.mediaType === 'VIDEO' && <video src={selected.fileUrl} controls style={{ width: '100%', maxHeight: '60vh' }} />}
+                        {selected.mediaType === 'VIDEO' && (
+                            selected.fileUrl.includes('youtube.com') || selected.fileUrl.includes('youtu.be') ? (
+                                <iframe
+                                    src={
+                                        selected.fileUrl.includes('watch?v=')
+                                            ? selected.fileUrl.replace('watch?v=', 'embed/').split('&')[0]
+                                            : selected.fileUrl.includes('youtu.be/')
+                                            ? `https://www.youtube.com/embed/${selected.fileUrl.split('youtu.be/')[1]?.split('?')[0]}`
+                                            : selected.fileUrl
+                                    }
+                                    title={selected.title}
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                    style={{ width: '100%', height: '50vh', border: 'none' }}
+                                />
+                            ) : (
+                                <video src={selected.fileUrl} controls style={{ width: '100%', maxHeight: '60vh' }} />
+                            )
+                        )}
                         {selected.mediaType === 'AUDIO' && (
                             <div style={{ padding: '40px', textAlign: 'center' }}>
                                 <div style={{ color: 'rgba(201,168,76,0.6)', display: 'flex', justifyContent: 'center', marginBottom: '24px' }}><Icons.MusicLg /></div>

@@ -280,8 +280,20 @@ export default function AdminJadidlarPage() {
         setNewPhoto({ title: '', url: '' })
     }
 
+    const handleUploadMultipleGalleryPhotos = (urls: string[]) => {
+        const newItems = urls.map((url, i) => ({
+            title: `Arxiv fotosurati ${galleryPhotos.length + i + 1}`,
+            url
+        }))
+        setGalleryPhotos(prev => [...prev, ...newItems])
+    }
+
     const handleRemoveGalleryPhoto = (index: number) => {
         setGalleryPhotos(prev => prev.filter((_, idx) => idx !== index))
+    }
+
+    const handleUpdatePhotoTitle = (index: number, title: string) => {
+        setGalleryPhotos(prev => prev.map((p, idx) => idx === index ? { ...p, title } : p))
     }
 
     // Save
@@ -560,15 +572,55 @@ export default function AdminJadidlarPage() {
                                     </div>
 
                                     {/* Portrait Image Upload */}
-                                    <div style={{ marginBottom: '20px' }}>
-                                        <label style={labelStyle}>Jadid portret rasmi</label>
+                                    <div style={{ marginBottom: '20px', background: 'var(--bg-secondary)', padding: '16px', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
+                                        <label style={{ ...labelStyle, fontSize: '13px', color: 'var(--gold)' }}>🖼 Jadid asosiy portret rasmi</label>
                                         {form.imageUrl && (
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
                                                 <img src={form.imageUrl} alt="Preview" style={{ width: '80px', height: '100px', objectFit: 'cover', borderRadius: '8px', border: '1px solid var(--border-color)' }} />
-                                                <button type="button" onClick={() => setForm({ ...form, imageUrl: '' })} style={{ color: '#ef4444', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '13px' }}>Rasmni o'chirish ✕</button>
+                                                <button type="button" onClick={() => setForm({ ...form, imageUrl: '' })} style={{ color: '#ef4444', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '13px' }}>Portretni o'chirish ✕</button>
                                             </div>
                                         )}
-                                        <FileUpload folder="jadidlar" accept="image/*" onUpload={url => setForm({ ...form, imageUrl: url })} label="Portret yuklash" />
+                                        <FileUpload folder="jadidlar" accept="image/*" onUpload={url => setForm({ ...form, imageUrl: url })} label="Asosiy portretni tanlash va yuklash" />
+                                    </div>
+
+                                    {/* Additional Photos / Multi-upload directly in main tab */}
+                                    <div style={{ marginBottom: '24px', background: 'var(--bg-secondary)', padding: '16px', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                                            <div>
+                                                <label style={{ ...labelStyle, fontSize: '13px', color: 'var(--gold)', marginBottom: '2px' }}>📸 Qo'shimcha rasmlar va arxiv hujjatlari ({galleryPhotos.length} ta)</label>
+                                                <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Bir vaqtning o'zida bir nechta fotosurat tanlashingiz mumkin</p>
+                                            </div>
+                                        </div>
+
+                                        {galleryPhotos.length > 0 && (
+                                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '12px', marginBottom: '16px' }}>
+                                                {galleryPhotos.map((photo, idx) => (
+                                                    <div key={idx} style={{ background: 'var(--bg-card)', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
+                                                        <div style={{ position: 'relative', height: '100px' }}>
+                                                            <img src={photo.url} alt={photo.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                            <button type="button" onClick={() => handleRemoveGalleryPhoto(idx)} style={{ position: 'absolute', top: '4px', right: '4px', background: 'rgba(220,38,38,0.85)', color: '#fff', border: 'none', borderRadius: '50%', width: '22px', height: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: '12px' }}>✕</button>
+                                                        </div>
+                                                        <div style={{ padding: '6px 8px' }}>
+                                                            <input
+                                                                type="text"
+                                                                value={photo.title}
+                                                                onChange={e => handleUpdatePhotoTitle(idx, e.target.value)}
+                                                                style={{ width: '100%', fontSize: '11px', padding: '4px 6px', background: 'var(--bg-input)', border: '1px solid var(--border-color)', borderRadius: '4px', color: 'var(--text-main)' }}
+                                                                placeholder="Rasm tavsifi"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+
+                                        <FileUpload
+                                            folder="jadidlar_gallery"
+                                            accept="image/*"
+                                            multiple={true}
+                                            onUploadMultiple={handleUploadMultipleGalleryPhotos}
+                                            label="Bir vaqtda bir nechta rasm yuklash"
+                                        />
                                     </div>
 
                                     <div style={{ marginBottom: '24px' }}>
@@ -616,34 +668,40 @@ export default function AdminJadidlarPage() {
                             {/* TAB 3: Foto va Hujjatlar arxivi */}
                             {activeTab === 'gallery' && (
                                 <div>
-                                    <h3 style={{ fontSize: '16px', color: 'var(--text-heading)', marginBottom: '12px' }}>Foto va Tarixiy Hujjatlar Arxivi</h3>
-                                    <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '20px' }}>Ushbu jadidga tegishli qo'shimcha fotosuratlar va hujjatlar</p>
+                                    <h3 style={{ fontSize: '16px', color: 'var(--text-heading)', marginBottom: '12px' }}>Foto va Tarixiy Hujjatlar Arxivi ({galleryPhotos.length} ta)</h3>
+                                    <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '20px' }}>Ushbu jadidga tegishli qo'shimcha fotosuratlar va hujjatlar (bir nechta faylni birdaniga tanlash mumkin)</p>
 
                                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '16px', marginBottom: '24px' }}>
                                         {galleryPhotos.map((photo, idx) => (
                                             <div key={idx} style={{ background: 'var(--bg-secondary)', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
-                                                <img src={photo.url} alt={photo.title} style={{ width: '100%', height: '120px', objectFit: 'cover' }} />
-                                                <div style={{ padding: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                    <span style={{ fontSize: '12px', color: 'var(--text-main)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{photo.title}</span>
-                                                    <button type="button" onClick={() => handleRemoveGalleryPhoto(idx)} style={{ color: '#ef4444', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '12px' }}>✕</button>
+                                                <div style={{ position: 'relative', height: '120px' }}>
+                                                    <img src={photo.url} alt={photo.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                    <button type="button" onClick={() => handleRemoveGalleryPhoto(idx)} style={{ position: 'absolute', top: '4px', right: '4px', background: 'rgba(220,38,38,0.85)', color: '#fff', border: 'none', borderRadius: '50%', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: '12px' }}>✕</button>
+                                                </div>
+                                                <div style={{ padding: '8px' }}>
+                                                    <input
+                                                        type="text"
+                                                        value={photo.title}
+                                                        onChange={e => handleUpdatePhotoTitle(idx, e.target.value)}
+                                                        style={{ width: '100%', fontSize: '12px', padding: '4px 6px', background: 'var(--bg-input)', border: '1px solid var(--border-color)', borderRadius: '4px', color: 'var(--text-main)' }}
+                                                        placeholder="Rasm tavsifi"
+                                                    />
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
 
                                     <div style={{ background: 'var(--bg-secondary)', padding: '20px', borderRadius: '10px', border: '1px dashed var(--border-color)' }}>
-                                        <h4 style={{ fontSize: '14px', marginBottom: '12px' }}>+ Yangi fotosurat yuklash</h4>
+                                        <h4 style={{ fontSize: '14px', marginBottom: '12px' }}>+ Yangi fotosuratlar yuklash (Bir yoki bir nechta)</h4>
                                         <div style={{ marginBottom: '12px' }}>
-                                            <input type="text" value={newPhoto.title} onChange={e => setNewPhoto({ ...newPhoto, title: e.target.value })} placeholder="Surat yoki hujjat tavsifi (masalan: 1913-yilgi shaxsiy surati)" style={inputStyle} />
+                                            <FileUpload
+                                                folder="jadidlar_gallery"
+                                                accept="image/*"
+                                                multiple={true}
+                                                onUploadMultiple={handleUploadMultipleGalleryPhotos}
+                                                label="Fotosuratlarni tanlash va yuklash"
+                                            />
                                         </div>
-                                        <div style={{ marginBottom: '12px' }}>
-                                            <FileUpload folder="jadidlar_gallery" accept="image/*" onUpload={url => setNewPhoto({ ...newPhoto, url })} label="Fotosuratni tanlash va yuklash" />
-                                        </div>
-                                        {newPhoto.url && (
-                                            <button type="button" onClick={handleAddGalleryPhoto} style={{ padding: '8px 16px', background: 'var(--gold)', color: '#061d15', border: 'none', borderRadius: '6px', fontWeight: '600', cursor: 'pointer' }}>
-                                                + Galereyaga kiritish
-                                            </button>
-                                        )}
                                     </div>
                                 </div>
                             )}

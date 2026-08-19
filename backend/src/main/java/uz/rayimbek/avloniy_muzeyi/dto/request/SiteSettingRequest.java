@@ -44,4 +44,6 @@ public class SiteSettingRequest {
     private String quoteTextUz;
     private String quoteTextRu;
     private String quoteTextEn;
+
+    private String heroQuotesJson;
 }

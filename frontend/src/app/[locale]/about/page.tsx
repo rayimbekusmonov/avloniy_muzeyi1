@@ -90,83 +90,6 @@ export default function AboutPage() {
         { Icon: Icons.MapPin, label: 'Islohotlar', value: "Diniy va davlat institutlarini modernizatsiya qilish" },
     ]
 
-    const figures = locale === 'ru' ? [
-        {
-            name: 'Abdulla Авлоний',
-            years: '1878–1934',
-            role: 'Просветитель, поэт, педагог',
-            desc: 'Основал новометодные школы в Ташкенте, создал знаменитые педагогические труды «Туркий Гулистон» и «Адиб», редактировал джадидские газеты.',
-        },
-        {
-            name: 'Махмудхўжа Беҳбудий',
-            years: '1875–1919',
-            role: 'Мыслитель, драматург, журналист',
-            desc: 'Один из главных идеологов джадидизма. Автор первой узбекской драмы «Падаркуш». Основал газету «Самарканд» и журнал «Ойна».',
-        },
-        {
-            name: 'Мунаввар Қори',
-            years: '1878–1931',
-            role: 'Педагог, политик, реформатор',
-            desc: 'Открыл первые новометодные школы в Ташкенте, активно участвовал в политической жизни, основал ряд джадидских изданий.',
-        },
-        {
-            name: 'Абдулла Қодирий',
-            years: '1894–1938',
-            role: 'Писатель, журналист',
-            desc: 'Автор первых узбекских романов «Ўтган кунлар» и «Меҳробдан чаён». Своими произведениями отразил дух эпохи и идеалы джадидизма.',
-        },
-    ] : locale === 'en' ? [
-        {
-            name: 'Abdulla Avloniy',
-            years: '1878–1934',
-            role: 'Enlightener, poet, educator',
-            desc: 'Founded new-method schools in Tashkent, created the famous pedagogical works "Turkiy Guliston" and "Adib", edited Jadid newspapers.',
-        },
-        {
-            name: 'Mahmudxo\'ja Behbudi',
-            years: '1875–1919',
-            role: 'Thinker, playwright, journalist',
-            desc: 'One of the main ideologists of Jadidism. Author of the first Uzbek drama "Padarkush". Founded the newspaper "Samarqand" and journal "Oyna".',
-        },
-        {
-            name: 'Munavvar Qori',
-            years: '1878–1931',
-            role: 'Educator, politician, reformer',
-            desc: 'Opened the first new-method schools in Tashkent, actively participated in political life, founded several Jadid publications.',
-        },
-        {
-            name: 'Abdulla Qodiriy',
-            years: '1894–1938',
-            role: 'Writer, journalist',
-            desc: 'Author of the first Uzbek novels "O\'tgan kunlar" and "Mehrobdan chayon". His works reflected the spirit of the era and ideals of Jadidism.',
-        },
-    ] : [
-        {
-            name: 'Abdulla Avloniy',
-            years: '1878–1934',
-            role: "Ma'rifatchi, shoir, pedagog",
-            desc: "Toshkentda yangi usul maktablarini tashkil etdi, mashhur pedagogik asarlar \"Turkiy Guliston\" va \"Adib\"ni yaratdi, jadid gazetalarini tahrir qildi.",
-        },
-        {
-            name: "Mahmudxo'ja Behbudiy",
-            years: '1875–1919',
-            role: "Mutafakkir, dramaturg, jurnalist",
-            desc: "Jadidizmning asosiy mafkurachilaridan biri. Birinchi o'zbek dramasi \"Padarkush\"ning muallifi. \"Samarqand\" gazetasi va \"Oyna\" jurnalini asos soldi.",
-        },
-        {
-            name: 'Munavvar Qori',
-            years: '1878–1931',
-            role: "Pedagog, siyosatchi, islohotchi",
-            desc: "Toshkentda birinchi yangi usul maktablarini ochdi, siyosiy hayotda faol ishtirok etdi, bir qator jadid nashrlari tashkil etdi.",
-        },
-        {
-            name: 'Abdulla Qodiriy',
-            years: '1894–1938',
-            role: "Yozuvchi, jurnalist",
-            desc: "Birinchi o'zbek romanlari \"O'tgan kunlar\" va \"Mehrobdan chayon\"ning muallifi. Asarlari davr ruhini va jadidizm ideallarini aks ettirdi.",
-        },
-    ]
-
     const t = {
         label:         locale === 'ru' ? 'История движения' : locale === 'en' ? 'Movement History' : 'Harakat Tarixi',
         h1a:           locale === 'ru' ? 'Джадиды — '       : locale === 'en' ? 'Jadids — '        : 'Jadidlar — ',
@@ -191,17 +114,9 @@ export default function AboutPage() {
             ? 'Jadids advocated for the reform of the education system, development of national languages, freedom of the press and political transformation. They played a key role in shaping modern Central Asian identity.'
             : "Jadidlar ta'lim tizimini isloh qilish, milliy tillarni rivojlantirish, matbuot erkinligi va siyosiy o'zgarishlarni himoya qildi. Ular zamonaviy Markaziy Osiyo identitetini shakllantirishda muhim rol o'ynadi.",
 
-        goalsLabel:    locale === 'ru' ? 'Цели движения'    : locale === 'en' ? 'Movement Goals'  : 'Harakat maqsadlari',
-        goalsH2a:      locale === 'ru' ? 'Ключевые '        : locale === 'en' ? 'Key '             : 'Asosiy ',
-        goalsH2b:      locale === 'ru' ? 'Идеи'             : locale === 'en' ? 'Ideas'            : "G'oyalar",
-
         timelineLabel: locale === 'ru' ? 'Хронология'      : locale === 'en' ? 'Timeline'        : 'Xronologiya',
         timelineH2a:   locale === 'ru' ? 'История '         : locale === 'en' ? 'History of '      : 'Harakat ',
         timelineH2b:   locale === 'ru' ? 'Движения'         : locale === 'en' ? 'the Movement'     : 'Tarixi',
-
-        figuresLabel:  locale === 'ru' ? 'Видные деятели'   : locale === 'en' ? 'Key Figures'     : 'Yetakchi arboblar',
-        figuresH2a:    locale === 'ru' ? 'Джадидские '      : locale === 'en' ? 'Jadid '          : 'Jadid ',
-        figuresH2b:    locale === 'ru' ? 'Просветители'     : locale === 'en' ? 'Enlighteners'    : "Ma'rifatchilar",
     }
 
     return (
@@ -219,43 +134,35 @@ export default function AboutPage() {
                 <div className="container">
                     <div className="grid-2-col">
                         <div>
-                            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '16px' }}>{t.whatLabel}</div>
-                            <h2 style={{ fontSize: 'clamp(26px, 4vw, 36px)', marginBottom: '16px', color: 'var(--text-heading)' }}>{t.whatH2a}<span style={{ color: 'var(--gold)' }}>{t.whatH2b}</span></h2>
-                            <div className="gold-divider" />
-                            <p style={{ fontSize: '16px', color: 'var(--text-muted)', lineHeight: '1.9', marginTop: '16px', marginBottom: '16px' }}>{t.whatDesc1}</p>
-                            <p style={{ fontSize: '16px', color: 'var(--text-muted)', lineHeight: '1.9', marginBottom: '24px' }}>{t.whatDesc2}</p>
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '16px' }}>
-                                {goals.map((item, i) => (
-                                    <div key={i} style={{ padding: '16px', background: 'var(--bg-card)', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--gold)', marginBottom: '6px' }}>
-                                            <item.Icon />
-                                            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '1px', textTransform: 'uppercase' }}>{item.label}</span>
-                                        </div>
-                                        <div style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.6' }}>{item.value}</div>
-                                    </div>
-                                ))}
-                            </div>
+                            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '12px' }}>{t.whatLabel}</div>
+                            <h2 style={{ fontSize: 'clamp(28px, 4vw, 40px)', color: 'var(--text-heading)', marginBottom: '24px' }}>
+                                {t.whatH2a}<span style={{ color: 'var(--gold)' }}>{t.whatH2b}</span>
+                            </h2>
+                            <p style={{ fontSize: '16px', color: 'var(--text-muted)', lineHeight: '1.8', marginBottom: '16px' }}>
+                                {t.whatDesc1}
+                            </p>
+                            <p style={{ fontSize: '16px', color: 'var(--text-muted)', lineHeight: '1.8' }}>
+                                {t.whatDesc2}
+                            </p>
                         </div>
-                        <div style={{ borderRadius: '16px', overflow: 'hidden', minHeight: '380px', position: 'relative', boxShadow: 'var(--shadow-lg)' }}>
-                            <Image
-                                src="/slide2.png"
-                                alt="Jadidlar tarixi"
-                                fill
-                                style={{ objectFit: 'cover' }}
-                                sizes="(max-width: 768px) 100vw, 50vw"
-                            />
-                            <div style={{
-                                position: 'absolute', inset: 0,
-                                background: 'linear-gradient(to top, rgba(6,29,21,0.7) 0%, transparent 60%)',
-                            }} />
-                            <div style={{
-                                position: 'absolute', bottom: '20px', left: '20px',
-                                fontFamily: 'var(--font-mono)', fontSize: '11px',
-                                color: 'rgba(255,255,255,0.7)', letterSpacing: '2px',
-                                textTransform: 'uppercase',
-                            }}>
-                                {locale === 'ru' ? 'Туркестан · XIX–XX вв.' : locale === 'en' ? 'Turkestan · XIX–XX c.' : 'Turkiston · XIX–XX asr'}
-                            </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
+                            {goals.map((g, i) => (
+                                <div key={i} style={{
+                                    background: 'var(--bg-card)',
+                                    borderRadius: '12px',
+                                    padding: '24px',
+                                    border: '1px solid var(--border-color)',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '12px',
+                                }}>
+                                    <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: 'rgba(201,168,76,0.1)', color: 'var(--gold)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        {g.Icon && <g.Icon />}
+                                    </div>
+                                    <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '18px', color: 'var(--text-heading)' }}>{g.label}</h3>
+                                    <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.6' }}>{g.value}</p>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>
@@ -268,63 +175,35 @@ export default function AboutPage() {
                         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '12px' }}>{t.timelineLabel}</div>
                         <h2 style={{ fontSize: 'clamp(26px, 4vw, 36px)', color: 'var(--text-heading)' }}>{t.timelineH2a}<span style={{ color: 'var(--gold)' }}>{t.timelineH2b}</span></h2>
                     </div>
-                    <div style={{ position: 'relative', maxWidth: '700px', margin: '0 auto' }}>
-                        <div className="timeline-line" style={{ position: 'absolute', left: '79px', top: 0, bottom: 0, width: '2px', background: 'linear-gradient(to bottom, var(--gold), rgba(201,168,76,0.1))' }} />
+                    <div style={{ maxWidth: '800px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '0' }}>
                         {timeline.map((item, i) => (
-                            <div key={i} style={{ display: 'flex', gap: '24px', marginBottom: '36px', alignItems: 'flex-start' }}>
-                                <div className="timeline-year" style={{ minWidth: '64px', fontFamily: 'var(--font-display)', fontSize: '18px', fontWeight: '700', color: 'var(--gold)', textAlign: 'right', paddingTop: '12px' }}>{item.year}</div>
-                                <div className="timeline-dot" style={{ width: '16px', height: '16px', borderRadius: '50%', background: 'var(--gold)', border: '3px solid var(--bg-secondary)', flexShrink: 0, marginTop: '14px', zIndex: 1 }} />
-                                <div className="timeline-card" style={{ flex: 1, background: 'var(--bg-card)', borderRadius: '12px', padding: '20px 24px', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border-color)' }}>
-                                    <h4 style={{ fontFamily: 'var(--font-display)', fontSize: '17px', color: 'var(--text-heading)', marginBottom: '6px' }}>{item.title}</h4>
-                                    <p style={{ fontSize: '14px', color: 'var(--text-muted)' }}>{item.desc}</p>
+                            <div key={i} style={{ display: 'flex', gap: '24px', position: 'relative' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                    <div style={{
+                                        width: '40px', height: '40px', borderRadius: '50%',
+                                        background: 'var(--gold)', color: '#061d15',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: '700',
+                                        flexShrink: 0, zIndex: 1,
+                                    }}>
+                                        {item.year.slice(0, 4)}
+                                    </div>
+                                    {i < timeline.length - 1 && (
+                                        <div style={{ width: '2px', flex: 1, background: 'var(--border-color)', margin: '8px 0' }} />
+                                    )}
                                 </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Key Figures */}
-            <section className="section" style={{ background: 'var(--bg-main)' }}>
-                <div className="container">
-                    <div style={{ textAlign: 'center', marginBottom: '56px' }}>
-                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '12px' }}>{t.figuresLabel}</div>
-                        <h2 style={{ fontSize: 'clamp(26px, 4vw, 36px)', color: 'var(--text-heading)' }}>{t.figuresH2a}<span style={{ color: 'var(--gold)' }}>{t.figuresH2b}</span></h2>
-                    </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
-                        {figures.map((fig, i) => (
-                            <div key={i} style={{
-                                background: 'var(--bg-card)',
-                                borderRadius: '16px',
-                                padding: '28px 24px',
-                                border: '1px solid var(--border-color)',
-                                boxShadow: 'var(--shadow-sm)',
-                                transition: 'transform 0.2s, box-shadow 0.2s',
-                            }}
-                                onMouseEnter={e => {
-                                    (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-4px)'
-                                    ;(e.currentTarget as HTMLDivElement).style.boxShadow = 'var(--shadow-lg)'
-                                }}
-                                onMouseLeave={e => {
-                                    (e.currentTarget as HTMLDivElement).style.transform = 'none'
-                                    ;(e.currentTarget as HTMLDivElement).style.boxShadow = 'var(--shadow-sm)'
-                                }}
-                            >
                                 <div style={{
-                                    width: '56px', height: '56px', borderRadius: '50%',
-                                    background: 'linear-gradient(135deg, rgba(201,168,76,0.3), rgba(201,168,76,0.05))',
-                                    border: '2px solid rgba(201,168,76,0.4)',
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    marginBottom: '16px', color: 'var(--gold)',
-                                    fontSize: '20px', fontFamily: 'var(--font-display)', fontWeight: '700'
+                                    background: 'var(--bg-card)',
+                                    borderRadius: '12px',
+                                    padding: '20px 24px',
+                                    border: '1px solid var(--border-color)',
+                                    marginBottom: '24px',
+                                    flex: 1,
                                 }}>
-                                    {fig.name.charAt(0)}
+                                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)', marginBottom: '4px' }}>{item.year}</div>
+                                    <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '18px', color: 'var(--text-heading)', marginBottom: '8px' }}>{item.title}</h3>
+                                    <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.7' }}>{item.desc}</p>
                                 </div>
-                                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '20px', color: 'var(--text-heading)', marginBottom: '4px' }}>{fig.name}</h3>
-                                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--gold)', letterSpacing: '1px', marginBottom: '8px' }}>{fig.years}</div>
-                                <div style={{ fontSize: '12px', color: 'rgba(201,168,76,0.7)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '14px', fontFamily: 'var(--font-mono)' }}>{fig.role}</div>
-                                <div className="gold-divider" style={{ marginBottom: '14px' }} />
-                                <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.8' }}>{fig.desc}</p>
                             </div>
                         ))}
                     </div>
