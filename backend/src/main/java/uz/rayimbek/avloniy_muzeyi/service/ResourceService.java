@@ -100,10 +100,10 @@ public class ResourceService {
                 .resourceType(resource.getResourceType())
                 .publishedYear(resource.getPublishedYear())
                 .pageCount(resource.getPageCount())
-                .isPremium(resource.getIsPremium())
-                .price(resource.getPrice())
-                .previewPagesCount(resource.getPreviewPagesCount())
-                .allowDownload(resource.getAllowDownload())
+                .isPremium(Boolean.TRUE.equals(resource.getIsPremium()))
+                .price(resource.getPrice() != null ? resource.getPrice() : 0L)
+                .previewPagesCount(resource.getPreviewPagesCount() != null ? resource.getPreviewPagesCount() : 10)
+                .allowDownload(resource.getAllowDownload() == null || resource.getAllowDownload())
                 .createdAt(resource.getCreatedAt())
                 .build();
     }

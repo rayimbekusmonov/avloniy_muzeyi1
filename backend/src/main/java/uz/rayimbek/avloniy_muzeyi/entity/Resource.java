@@ -44,7 +44,7 @@ public class Resource {
     private Integer pageCount;
 
     @Builder.Default
-    @Column(name = "is_premium", nullable = false)
+    @Column(name = "is_premium")
     private Boolean isPremium = false;
 
     @Builder.Default
@@ -56,15 +56,30 @@ public class Resource {
     private Integer previewPagesCount = 10;
 
     @Builder.Default
-    @Column(name = "allow_download", nullable = false)
+    @Column(name = "allow_download")
     private Boolean allowDownload = true;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @PrePersist
+    @PreUpdate
     public void prePersist() {
-        this.createdAt = LocalDateTime.now();
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
+        }
+        if (this.isPremium == null) {
+            this.isPremium = false;
+        }
+        if (this.price == null) {
+            this.price = 0L;
+        }
+        if (this.previewPagesCount == null) {
+            this.previewPagesCount = 10;
+        }
+        if (this.allowDownload == null) {
+            this.allowDownload = true;
+        }
     }
 
     public enum ResourceType {
