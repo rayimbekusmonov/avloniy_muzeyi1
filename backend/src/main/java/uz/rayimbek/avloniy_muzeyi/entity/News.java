@@ -60,6 +60,7 @@ public class News {
     @Enumerated(EnumType.STRING)
     private Category category;
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean published = false;
 

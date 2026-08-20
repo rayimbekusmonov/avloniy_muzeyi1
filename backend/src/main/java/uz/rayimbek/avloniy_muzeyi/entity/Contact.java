@@ -30,6 +30,7 @@ public class Contact {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String message;
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean read = false;
 
