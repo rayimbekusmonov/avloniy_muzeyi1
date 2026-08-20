@@ -561,17 +561,18 @@ export default function BookReaderPage() {
                             <iframe
                                 key={`${book.fileUrl}-${currentPage}`}
                                 src={
-                                    book.fileUrl.startsWith('http') && !book.fileUrl.includes(typeof window !== 'undefined' ? window.location.hostname : '')
-                                        ? `https://docs.google.com/viewer?url=${encodeURIComponent(book.fileUrl)}&embedded=true`
-                                        : `${book.fileUrl}#page=${currentPage}&toolbar=0&navpanes=0&scrollbar=0`
+                                    book.fileUrl.toLowerCase().includes('.pdf')
+                                        ? `${book.fileUrl}#page=${currentPage}&toolbar=0&navpanes=0&scrollbar=0`
+                                        : book.fileUrl
                                 }
                                 style={{
                                     width: '100%',
                                     flex: 1,
-                                    minHeight: '900px',
+                                    minHeight: '920px',
                                     height: '100%',
                                     border: 'none',
-                                    background: themeStyles.paperBg
+                                    background: '#ffffff',
+                                    borderRadius: '8px'
                                 }}
                                 title={book.title}
                             />
