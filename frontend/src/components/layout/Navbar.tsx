@@ -61,6 +61,11 @@ export default function Navbar() {
         return () => window.removeEventListener('scroll', onScroll)
     }, [])
 
+    // Hide Navbar on /admin and /resources/read (reader view)
+    if (pathname && (pathname.includes('/admin') || pathname.includes('/resources/read'))) {
+        return null
+    }
+
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {

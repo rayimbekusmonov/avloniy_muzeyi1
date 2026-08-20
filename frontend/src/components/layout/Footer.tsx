@@ -18,7 +18,7 @@ export default function Footer() {
             .catch(() => {})
     }, [locale])
 
-    if (pathname && pathname.includes('/admin')) {
+    if (pathname && (pathname.includes('/admin') || pathname.includes('/resources/read'))) {
         return null
     }
 
