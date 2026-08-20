@@ -26,4 +26,9 @@ public class ResourceRequest {
 
     private Integer publishedYear;
     private Integer pageCount;
+
+    private Boolean isPremium;
+    private Long price;
+    private Integer previewPagesCount;
+    private Boolean allowDownload;
 }

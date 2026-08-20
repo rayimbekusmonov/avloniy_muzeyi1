@@ -1,4 +1,4 @@
-import { api, Page, NewsItem, NewsFormData, GalleryItem, ResourceItem, AuthResponse, HistoricalFigure, SiteSetting, FaqItem } from './api';
+import { api, Page, NewsItem, NewsFormData, GalleryItem, ResourceItem, AuthResponse, HistoricalFigure, SiteSetting, FaqItem, ReaderProfile, BookAccessInfo, BookPurchaseItem } from './api';
 import { getLocalizedJadids, MOCK_JADIDS } from './mockJadids';
 
 export const normalizeFigure = (item: HistoricalFigure): HistoricalFigure => {
@@ -89,12 +89,29 @@ export const resourceService = {
     },
     getById: (id: number) =>
         api.get<ResourceItem>(`/api/resources/${id}`),
-    create: (data: { title: string; author: string; description: string; fileUrl: string; coverUrl: string; resourceType: string; publishedYear: number; pageCount: number }) =>
+    create: (data: Partial<ResourceItem>) =>
         api.post<ResourceItem>('/api/resources', data),
-    update: (id: number, data: { title: string; author: string; description: string; fileUrl: string; coverUrl: string; resourceType: string; publishedYear: number; pageCount: number }) =>
+    update: (id: number, data: Partial<ResourceItem>) =>
         api.put<ResourceItem>(`/api/resources/${id}`, data),
     delete: (id: number) =>
         api.delete<void>(`/api/resources/${id}`),
+};
+
+// Reader Service (Kitobxon va To'lovlar)
+export const readerService = {
+    auth: (phone: string, fullName?: string, telegramUsername?: string) =>
+        api.post<ReaderProfile>('/api/reader/auth', { phone, fullName, telegramUsername }),
+
+    checkAccess: (resourceId: number, phone?: string) => {
+        const params = phone ? `?phone=${encodeURIComponent(phone)}` : '';
+        return api.get<BookAccessInfo>(`/api/reader/access/${resourceId}${params}`);
+    },
+
+    purchase: (resourceId: number, phone: string, readerName?: string, provider = 'DEMO') =>
+        api.post<{ success: boolean; purchaseId: number; amount: number; title: string }>(`/api/reader/purchase/${resourceId}`, { phone, readerName, provider }),
+
+    getMyBooks: (phone: string) =>
+        api.get<BookPurchaseItem[]>(`/api/reader/my-books?phone=${encodeURIComponent(phone)}`),
 };
 
 // Contact

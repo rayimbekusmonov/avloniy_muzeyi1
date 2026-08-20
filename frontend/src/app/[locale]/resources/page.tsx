@@ -176,22 +176,78 @@ export default function ResourcesPage() {
                         <>
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px' }}>
                                 {items.map(item => (
-                                    <div key={item.id} className="card" style={{ display: 'flex', flexDirection: 'column' }}>
-                                        <div style={{ height: '200px', background: item.coverUrl ? `url(${item.coverUrl}) center/cover` : 'var(--bg-header)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                                    <div key={item.id} className="card" style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
+                                        <div style={{ height: '200px', background: item.coverUrl ? `url(${item.coverUrl}) center/cover` : 'var(--bg-header)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
                                             {!item.coverUrl && <div style={{ color: 'rgba(255,255,255,0.3)' }}>{getPlaceholderIcon(item.resourceType)}</div>}
-                                            <div style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(201,168,76,0.95)', color: '#061d15', padding: '3px 10px', borderRadius: '10px', fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '1px', fontWeight: '700' }}>{item.resourceType}</div>
+                                            
+                                            {/* Type badge */}
+                                            <div style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(6,29,21,0.85)', color: 'var(--gold)', border: '1px solid rgba(201,168,76,0.4)', padding: '3px 10px', borderRadius: '10px', fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '1px', fontWeight: '700' }}>
+                                                {item.resourceType}
+                                            </div>
+
+                                            {/* Premium Badge */}
+                                            {item.isPremium && (
+                                                <div style={{ position: 'absolute', top: '10px', left: '10px', background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#061d15', padding: '4px 10px', borderRadius: '10px', fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '4px', boxShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>
+                                                    <span>⭐</span>
+                                                    <span>{item.price?.toLocaleString()} SO'M</span>
+                                                </div>
+                                            )}
                                         </div>
                                         <div style={{ padding: '20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
                                             <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '17px', color: 'var(--text-heading)', marginBottom: '6px', lineHeight: '1.3' }}>{item.title}</h3>
                                             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)', marginBottom: '8px', letterSpacing: '1px' }}>{item.author}</div>
                                             {item.description && <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.7', marginBottom: '12px', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' as const }}>{item.description}</p>}
-                                            <div style={{ display: 'flex', gap: '12px', fontSize: '12px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', marginBottom: '16px' }}>
+                                            <div style={{ display: 'flex', gap: '12px', fontSize: '12px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', marginBottom: '16px', flexWrap: 'wrap' }}>
                                                 {item.publishedYear && <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Icons.Calendar /> {item.publishedYear}</span>}
                                                 {item.pageCount && <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Icons.Pages /> {item.pageCount} {t.pages}</span>}
+                                                {item.isPremium && (
+                                                    <span style={{ color: 'var(--gold)', fontWeight: '600' }}>
+                                                        · {item.previewPagesCount || 10} bet bepul
+                                                    </span>
+                                                )}
                                             </div>
-                                            <a href={item.fileUrl} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ marginTop: 'auto', textAlign: 'center', fontSize: '14px', padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                                                <Icons.Download /> {t.download}
-                                            </a>
+
+                                            <div style={{ marginTop: 'auto', display: 'flex', gap: '8px', flexDirection: 'column' }}>
+                                                <a
+                                                    href={`/${locale}/resources/read/${item.id}`}
+                                                    className="btn-primary"
+                                                    style={{
+                                                        textAlign: 'center',
+                                                        fontSize: '14px',
+                                                        padding: '10px',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        gap: '8px',
+                                                        textDecoration: 'none',
+                                                        fontWeight: '600'
+                                                    }}
+                                                >
+                                                    <Icons.Book /> {item.isPremium ? `📖 Mutolaa (${item.previewPagesCount || 10} bet demo)` : `📖 Onlayn O'qish`}
+                                                </a>
+
+                                                {item.allowDownload !== false && !item.isPremium && (
+                                                    <a
+                                                        href={item.fileUrl}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        style={{
+                                                            textAlign: 'center',
+                                                            fontSize: '12px',
+                                                            padding: '6px',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            gap: '6px',
+                                                            color: 'var(--text-muted)',
+                                                            textDecoration: 'none',
+                                                            fontFamily: 'var(--font-mono)'
+                                                        }}
+                                                    >
+                                                        <Icons.Download /> {t.download}
+                                                    </a>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 ))}

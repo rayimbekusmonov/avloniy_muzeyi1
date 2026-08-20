@@ -26,7 +26,20 @@ const RESOURCE_TYPES = [
     { value: 'DOCUMENT', Icon: Icons.Scroll,     label: 'Hujjat' },
 ]
 
-const emptyForm = { title: '', author: '', description: '', fileUrl: '', coverUrl: '', resourceType: 'EBOOK', publishedYear: new Date().getFullYear(), pageCount: 0 }
+const emptyForm = {
+    title: '',
+    author: '',
+    description: '',
+    fileUrl: '',
+    coverUrl: '',
+    resourceType: 'EBOOK' as ResourceItem['resourceType'],
+    publishedYear: new Date().getFullYear(),
+    pageCount: 0,
+    isPremium: false,
+    price: 0,
+    previewPagesCount: 10,
+    allowDownload: true
+}
 
 export default function AdminResourcesPage() {
     const router = useRouter()
@@ -55,7 +68,20 @@ export default function AdminResourcesPage() {
 
     const handleEdit = (item: ResourceItem) => {
         setEditItem(item)
-        setForm({ title: item.title, author: item.author, description: item.description || '', fileUrl: item.fileUrl, coverUrl: item.coverUrl || '', resourceType: item.resourceType, publishedYear: item.publishedYear || new Date().getFullYear(), pageCount: item.pageCount || 0 })
+        setForm({
+            title: item.title,
+            author: item.author,
+            description: item.description || '',
+            fileUrl: item.fileUrl,
+            coverUrl: item.coverUrl || '',
+            resourceType: item.resourceType,
+            publishedYear: item.publishedYear || new Date().getFullYear(),
+            pageCount: item.pageCount || 0,
+            isPremium: !!item.isPremium,
+            price: item.price || 0,
+            previewPagesCount: item.previewPagesCount ?? 10,
+            allowDownload: item.allowDownload ?? (!item.isPremium)
+        })
         setShowForm(true)
     }
 
@@ -101,7 +127,10 @@ export default function AdminResourcesPage() {
 
             <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 24px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
-                    <h1 style={{ fontSize: '26px', color: 'var(--text-heading)' }}>Manbalar boshqaruvi</h1>
+                    <div>
+                        <h1 style={{ fontSize: '26px', color: 'var(--text-heading)', marginBottom: '4px' }}>Manbalar & Kitoblar boshqaruvi</h1>
+                        <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Bepul va pullik (Premium) elektron kitoblar, ilmiy ishlar va arxiv hujjatlarini boshqaring</p>
+                    </div>
                     {!showForm && <button onClick={() => { setShowForm(true); setEditItem(null); setForm(emptyForm) }} className="btn-primary" style={{ border: 'none', cursor: 'pointer' }}>+ Yangi manba</button>}
                 </div>
 
@@ -127,13 +156,13 @@ export default function AdminResourcesPage() {
                                 <div><label style={labelStyle}>Muallif *</label><input value={form.author} onChange={e => setForm(p => ({ ...p, author: e.target.value }))} required style={inputStyle} placeholder="Muallif ismi" /></div>
                                 <div>
                                     <label style={labelStyle}>Turi *</label>
-                                    <select value={form.resourceType} onChange={e => setForm(p => ({ ...p, resourceType: e.target.value }))} style={inputStyle}>
+                                    <select value={form.resourceType} onChange={e => setForm(p => ({ ...p, resourceType: e.target.value as ResourceItem['resourceType'] }))} style={inputStyle}>
                                         {RESOURCE_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                                     </select>
                                 </div>
                                 <div><label style={labelStyle}>Nashr yili</label><input type="number" value={form.publishedYear} onChange={e => setForm(p => ({ ...p, publishedYear: Number(e.target.value) }))} style={inputStyle} min={1800} max={new Date().getFullYear()} /></div>
                                 <div>
-                                    <label style={labelStyle}>Fayl *</label>
+                                    <label style={labelStyle}>Fayl (PDF/EPUB) *</label>
                                     <FileUpload folder="resources" accept=".pdf,.epub,video/*,audio/*" label="Fayl yuklash" onUpload={(url) => setForm(p => ({ ...p, fileUrl: url }))} />
                                     {form.fileUrl && <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px', wordBreak: 'break-all' }}>{form.fileUrl}</p>}
                                 </div>
@@ -143,6 +172,64 @@ export default function AdminResourcesPage() {
                                     {form.coverUrl && <img src={form.coverUrl} alt="" style={{ width: '56px', height: '72px', objectFit: 'cover', borderRadius: '4px', marginTop: '4px' }} />}
                                 </div>
                                 <div><label style={labelStyle}>Sahifalar soni</label><input type="number" value={form.pageCount} onChange={e => setForm(p => ({ ...p, pageCount: Number(e.target.value) }))} style={inputStyle} min={0} /></div>
+
+                                {/* PREMIUM SETTINGS BOX */}
+                                <div style={{ gridColumn: '1 / -1', background: 'var(--bg-secondary)', padding: '20px', borderRadius: '10px', border: '1px solid var(--border-subtle)' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: form.isPremium ? '16px' : '0' }}>
+                                        <input
+                                            type="checkbox"
+                                            id="isPremiumCheck"
+                                            checked={form.isPremium}
+                                            onChange={e => setForm(p => ({ ...p, isPremium: e.target.checked, allowDownload: e.target.checked ? false : p.allowDownload }))}
+                                            style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: 'var(--gold)' }}
+                                        />
+                                        <label htmlFor="isPremiumCheck" style={{ fontSize: '14px', fontWeight: '600', color: 'var(--gold)', cursor: 'pointer' }}>
+                                            ⭐ Pullik manba (Premium — Demo mutolaa va To'lov talab qilish)
+                                        </label>
+                                    </div>
+
+                                    {form.isPremium && (
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', paddingTop: '12px', borderTop: '1px solid var(--border-subtle)' }}>
+                                            <div>
+                                                <label style={labelStyle}>Kitob narxi (so'mda) *</label>
+                                                <input
+                                                    type="number"
+                                                    value={form.price}
+                                                    onChange={e => setForm(p => ({ ...p, price: Number(e.target.value) }))}
+                                                    style={inputStyle}
+                                                    placeholder="Masalan: 35000"
+                                                    min={0}
+                                                    step={1000}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label style={labelStyle}>Bepul demo sahifalar soni *</label>
+                                                <input
+                                                    type="number"
+                                                    value={form.previewPagesCount}
+                                                    onChange={e => setForm(p => ({ ...p, previewPagesCount: Number(e.target.value) }))}
+                                                    style={inputStyle}
+                                                    placeholder="Masalan: 10"
+                                                    min={1}
+                                                />
+                                                <span style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px', display: 'block' }}>Foydalanuvchi to'lovsiz dastlabki N betni o'qiy oladi</span>
+                                            </div>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', paddingTop: '20px' }}>
+                                                <input
+                                                    type="checkbox"
+                                                    id="allowDownloadCheck"
+                                                    checked={form.allowDownload}
+                                                    onChange={e => setForm(p => ({ ...p, allowDownload: e.target.checked }))}
+                                                    style={{ width: '16px', height: '16px', cursor: 'pointer', accentColor: 'var(--gold)' }}
+                                                />
+                                                <label htmlFor="allowDownloadCheck" style={{ fontSize: '13px', color: 'var(--text-main)', cursor: 'pointer' }}>
+                                                    Faylni to'liq yuklab olishga ruxsat berish (DRM himoyasini o'chiradi)
+                                                </label>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
                                 <div style={{ gridColumn: '1 / -1' }}><label style={labelStyle}>Tavsif</label><textarea value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} rows={3} style={{ ...inputStyle, resize: 'vertical' }} placeholder="Manba haqida qisqa ma'lumot" /></div>
                             </div>
                             <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
@@ -168,10 +255,16 @@ export default function AdminResourcesPage() {
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px', flexWrap: 'wrap' }}>
                                         <h3 style={{ fontSize: '16px', color: 'var(--text-heading)', fontFamily: 'var(--font-display)' }}>{item.title}</h3>
                                         <span style={{ padding: '2px 10px', borderRadius: '20px', fontSize: '11px', fontFamily: 'var(--font-mono)', background: 'var(--gold-pale)', color: 'var(--gold)', whiteSpace: 'nowrap' }}>{item.resourceType}</span>
+                                        {item.isPremium && (
+                                            <span style={{ padding: '2px 10px', borderRadius: '20px', fontSize: '11px', fontFamily: 'var(--font-mono)', background: 'rgba(201,168,76,0.18)', color: 'var(--gold)', border: '1px solid var(--gold)', fontWeight: '600' }}>
+                                                ⭐ {item.price?.toLocaleString()} so'm ({item.previewPagesCount || 10} bet demo)
+                                            </span>
+                                        )}
                                     </div>
                                     <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{item.author}{item.publishedYear ? ` · ${item.publishedYear}` : ''}{item.pageCount ? ` · ${item.pageCount} sahifa` : ''}</div>
                                 </div>
                                 <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
+                                    <Link href={`/${locale}/resources/read/${item.id}`} target="_blank" style={{ padding: '8px 16px', background: 'rgba(201,168,76,0.12)', border: '1px solid var(--gold)', borderRadius: '6px', fontSize: '13px', color: 'var(--gold)', textDecoration: 'none', fontWeight: '500' }}>📖 O'quvchida ko'rish</Link>
                                     <button onClick={() => handleEdit(item)} style={{ padding: '8px 16px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '6px', fontSize: '13px', color: 'var(--text-heading)', cursor: 'pointer' }}>Tahrirlash</button>
                                     <button onClick={() => handleDelete(item.id)} style={{ padding: '8px 16px', background: 'rgba(220,38,38,0.08)', border: '1px solid rgba(220,38,38,0.2)', borderRadius: '6px', fontSize: '13px', color: '#dc2626', cursor: 'pointer' }}>O'chirish</button>
                                 </div>

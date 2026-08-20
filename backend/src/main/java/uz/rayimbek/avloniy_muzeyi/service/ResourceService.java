@@ -54,6 +54,10 @@ public class ResourceService {
                 .resourceType(request.getResourceType())
                 .publishedYear(request.getPublishedYear())
                 .pageCount(request.getPageCount())
+                .isPremium(request.getIsPremium() != null ? request.getIsPremium() : false)
+                .price(request.getPrice() != null ? request.getPrice() : 0L)
+                .previewPagesCount(request.getPreviewPagesCount() != null ? request.getPreviewPagesCount() : 10)
+                .allowDownload(request.getAllowDownload() != null ? request.getAllowDownload() : true)
                 .build();
         return toResponse(resourceRepository.save(resource));
     }
@@ -70,6 +74,10 @@ public class ResourceService {
         resource.setResourceType(request.getResourceType());
         resource.setPublishedYear(request.getPublishedYear());
         resource.setPageCount(request.getPageCount());
+        if (request.getIsPremium() != null) resource.setIsPremium(request.getIsPremium());
+        if (request.getPrice() != null) resource.setPrice(request.getPrice());
+        if (request.getPreviewPagesCount() != null) resource.setPreviewPagesCount(request.getPreviewPagesCount());
+        if (request.getAllowDownload() != null) resource.setAllowDownload(request.getAllowDownload());
 
         return toResponse(resourceRepository.save(resource));
     }
@@ -92,6 +100,10 @@ public class ResourceService {
                 .resourceType(resource.getResourceType())
                 .publishedYear(resource.getPublishedYear())
                 .pageCount(resource.getPageCount())
+                .isPremium(resource.getIsPremium())
+                .price(resource.getPrice())
+                .previewPagesCount(resource.getPreviewPagesCount())
+                .allowDownload(resource.getAllowDownload())
                 .createdAt(resource.getCreatedAt())
                 .build();
     }

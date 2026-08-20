@@ -43,6 +43,22 @@ public class Resource {
     @Column(name = "page_count")
     private Integer pageCount;
 
+    @Builder.Default
+    @Column(name = "is_premium", nullable = false)
+    private Boolean isPremium = false;
+
+    @Builder.Default
+    @Column(name = "price")
+    private Long price = 0L;
+
+    @Builder.Default
+    @Column(name = "preview_pages_count")
+    private Integer previewPagesCount = 10;
+
+    @Builder.Default
+    @Column(name = "allow_download", nullable = false)
+    private Boolean allowDownload = true;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 

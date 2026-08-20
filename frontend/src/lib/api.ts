@@ -50,6 +50,29 @@ export const isAuthenticated = (): boolean => {
     return !!getToken();
 };
 
+// Reader (Kitobxon) session management
+export const getReaderSession = (): ReaderProfile | null => {
+    if (typeof window === 'undefined') return null;
+    const data = localStorage.getItem('reader_session');
+    if (!data) return null;
+    try {
+        return JSON.parse(data) as ReaderProfile;
+    } catch {
+        localStorage.removeItem('reader_session');
+        return null;
+    }
+};
+
+export const setReaderSession = (profile: ReaderProfile): void => {
+    if (typeof window === 'undefined') return;
+    localStorage.setItem('reader_session', JSON.stringify(profile));
+};
+
+export const removeReaderSession = (): void => {
+    if (typeof window === 'undefined') return;
+    localStorage.removeItem('reader_session');
+};
+
 // Base fetch wrapper
 export async function request<T>(
     endpoint: string,
@@ -178,7 +201,45 @@ export interface ResourceItem {
     resourceType: 'EBOOK' | 'ARTICLE' | 'RESEARCH' | 'DOCUMENT';
     publishedYear: number;
     pageCount: number;
+    isPremium?: boolean;
+    price?: number;
+    previewPagesCount?: number;
+    allowDownload?: boolean;
     createdAt: string;
+}
+
+export interface ReaderProfile {
+    id: number;
+    phone: string;
+    fullName: string;
+    telegramUsername?: string;
+    readerToken: string;
+}
+
+export interface BookAccessInfo {
+    resourceId: number;
+    title: string;
+    author: string;
+    coverUrl?: string;
+    fileUrl: string;
+    isPremium?: boolean;
+    price?: number;
+    previewPagesCount?: number;
+    allowDownload?: boolean;
+    hasFullAccess: boolean;
+    reason: 'FREE' | 'PURCHASED' | 'PAYWALL';
+}
+
+export interface BookPurchaseItem {
+    purchaseId: number;
+    purchasedAt: string;
+    amount: number;
+    resourceId: number;
+    title: string;
+    author: string;
+    coverUrl: string;
+    fileUrl: string;
+    resourceType: string;
 }
 
 export interface AuthResponse {
