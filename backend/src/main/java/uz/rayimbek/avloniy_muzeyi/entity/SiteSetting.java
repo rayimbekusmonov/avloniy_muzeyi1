@@ -73,6 +73,24 @@ public class SiteSetting {
     @Column(columnDefinition = "TEXT")
     private String heroQuotesJson;
 
+    // Footer ma'lumotlari va havolalari
+    @Column(columnDefinition = "TEXT")
+    private String footerTaglineUz;
+    @Column(columnDefinition = "TEXT")
+    private String footerTaglineRu;
+    @Column(columnDefinition = "TEXT")
+    private String footerTaglineEn;
+
+    @Column(columnDefinition = "TEXT")
+    private String footerCopyrightUz;
+    @Column(columnDefinition = "TEXT")
+    private String footerCopyrightRu;
+    @Column(columnDefinition = "TEXT")
+    private String footerCopyrightEn;
+
+    @Column(columnDefinition = "TEXT")
+    private String footerLinksJson;
+
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 

@@ -15,6 +15,7 @@ public class NewsResponse {
     private Long id;
     private String slug;
     private String imageUrl;
+    private String galleryPhotosJson;
     private News.Category category;
     private Boolean published;
     private String authorUsername;

@@ -46,6 +46,12 @@ public class SiteSettingService {
                     .quoteTextUz("Tarbiya biz uchun yo hayot — yo mamot, yo najot — yo halokat, yo saodat — yo falokat masalasidir.")
                     .quoteTextRu("Воспитание для нас — вопрос жизни или смерти, спасения или погибели, счастья или несчастья.")
                     .quoteTextEn("Upbringing for us is a matter of life or death, salvation or destruction, happiness or catastrophe.")
+                    .footerTaglineUz("O'zbekiston jadidlarining hayoti, ilmiy-adabiy merosi, asarlari va tarixiy hujjatlarini jamlagan yagona ma'rifat portali.")
+                    .footerTaglineRu("Единый портал узбекского джадидизма: жизнь, наследие, труды и исторические документы узбекских просветителей.")
+                    .footerTaglineEn("The unified portal of Uzbek Jadidism: life, heritage, works, and historical records of Uzbek enlighteners.")
+                    .footerCopyrightUz("© 2026 O'zbekiston Jadidlari Ma'rifat Portali. Barcha huquqlar himoyalangan.")
+                    .footerCopyrightRu("© 2026 Просветительский портал «Джадиды Узбекистана». Все права защищены.")
+                    .footerCopyrightEn("© 2026 Uzbek Jadids Enlightenment Portal. All rights reserved.")
                     .build();
             return repository.save(setting);
         });
@@ -102,12 +108,24 @@ public class SiteSettingService {
             setting.setHeroQuotesJson(request.getHeroQuotesJson());
         }
 
+        setting.setFooterTaglineUz(request.getFooterTaglineUz());
+        setting.setFooterTaglineRu(request.getFooterTaglineRu());
+        setting.setFooterTaglineEn(request.getFooterTaglineEn());
+
+        setting.setFooterCopyrightUz(request.getFooterCopyrightUz());
+        setting.setFooterCopyrightRu(request.getFooterCopyrightRu());
+        setting.setFooterCopyrightEn(request.getFooterCopyrightEn());
+
+        if (request.getFooterLinksJson() != null) {
+            setting.setFooterLinksJson(request.getFooterLinksJson());
+        }
+
         SiteSetting saved = repository.save(setting);
         return toResponse(saved, "uz");
     }
 
     private SiteSettingResponse toResponse(SiteSetting s, String locale) {
-        String museumName, address, workingHours, heroTitle, heroSubtitle, quoteText;
+        String museumName, address, workingHours, heroTitle, heroSubtitle, quoteText, footerTagline, footerCopyright;
 
         if ("ru".equals(locale) && s.getMuseumNameRu() != null) {
             museumName = s.getMuseumNameRu();
@@ -116,6 +134,8 @@ public class SiteSettingService {
             heroTitle = s.getHeroTitleRu();
             heroSubtitle = s.getHeroSubtitleRu();
             quoteText = s.getQuoteTextRu();
+            footerTagline = s.getFooterTaglineRu();
+            footerCopyright = s.getFooterCopyrightRu();
         } else if ("en".equals(locale) && s.getMuseumNameEn() != null) {
             museumName = s.getMuseumNameEn();
             address = s.getAddressEn();
@@ -123,6 +143,8 @@ public class SiteSettingService {
             heroTitle = s.getHeroTitleEn();
             heroSubtitle = s.getHeroSubtitleEn();
             quoteText = s.getQuoteTextEn();
+            footerTagline = s.getFooterTaglineEn();
+            footerCopyright = s.getFooterCopyrightEn();
         } else {
             museumName = s.getMuseumNameUz();
             address = s.getAddressUz();
@@ -130,6 +152,8 @@ public class SiteSettingService {
             heroTitle = s.getHeroTitleUz();
             heroSubtitle = s.getHeroSubtitleUz();
             quoteText = s.getQuoteTextUz();
+            footerTagline = s.getFooterTaglineUz();
+            footerCopyright = s.getFooterCopyrightUz();
         }
 
         return SiteSettingResponse.builder()
@@ -164,12 +188,21 @@ public class SiteSettingService {
                 .quoteTextRu(s.getQuoteTextRu())
                 .quoteTextEn(s.getQuoteTextEn())
                 .heroQuotesJson(s.getHeroQuotesJson())
+                .footerTaglineUz(s.getFooterTaglineUz())
+                .footerTaglineRu(s.getFooterTaglineRu())
+                .footerTaglineEn(s.getFooterTaglineEn())
+                .footerCopyrightUz(s.getFooterCopyrightUz())
+                .footerCopyrightRu(s.getFooterCopyrightRu())
+                .footerCopyrightEn(s.getFooterCopyrightEn())
+                .footerLinksJson(s.getFooterLinksJson())
                 .museumName(museumName)
                 .address(address)
                 .workingHours(workingHours)
                 .heroTitle(heroTitle)
                 .heroSubtitle(heroSubtitle)
                 .quoteText(quoteText)
+                .footerTagline(footerTagline)
+                .footerCopyright(footerCopyright)
                 .updatedAt(s.getUpdatedAt())
                 .build();
     }

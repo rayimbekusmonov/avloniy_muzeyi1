@@ -115,7 +115,9 @@ export interface NewsItem {
     id: number;
     slug: string;
     imageUrl: string;
-    category: 'KORGAZMA' | 'TADBIR' | 'YANGILIK' | 'BAYRAM';
+    galleryPhotosJson?: string;
+    galleryPhotos?: Array<{ url: string; caption?: string }>;
+    category: 'YANGILIK' | 'TADBIR' | 'FOTOGALEREYA' | 'ELON' | 'KORGAZMA' | 'BAYRAM';
     published: boolean;
     publishedAt: string;
     authorUsername: string;
@@ -150,6 +152,7 @@ export interface NewsFormData {
     contentEn?: string;
     excerptEn?: string;
     imageUrl?: string;
+    galleryPhotosJson?: string;
     category?: string;
     published?: boolean;
     createdAt?: string;
@@ -238,6 +241,14 @@ export interface HeroQuoteItem {
     role: string;
 }
 
+export interface FooterLinkItem {
+    id: string;
+    labelUz: string;
+    labelRu?: string;
+    labelEn?: string;
+    href: string;
+}
+
 export interface SiteSetting {
     id?: number;
     museumNameUz?: string;
@@ -271,6 +282,15 @@ export interface SiteSetting {
     quoteTextEn?: string;
     heroQuotesJson?: string;
     heroQuotes?: HeroQuoteItem[];
+    // Footer fields
+    footerTaglineUz?: string;
+    footerTaglineRu?: string;
+    footerTaglineEn?: string;
+    footerCopyrightUz?: string;
+    footerCopyrightRu?: string;
+    footerCopyrightEn?: string;
+    footerLinksJson?: string;
+    footerLinks?: FooterLinkItem[];
     // Localized fields for UI
     museumName?: string;
     address?: string;
@@ -278,6 +298,8 @@ export interface SiteSetting {
     heroTitle?: string;
     heroSubtitle?: string;
     quoteText?: string;
+    footerTagline?: string;
+    footerCopyright?: string;
 }
 
 export interface FaqItem {

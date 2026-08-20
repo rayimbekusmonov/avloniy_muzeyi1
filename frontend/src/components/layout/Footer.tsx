@@ -22,50 +22,69 @@ export default function Footer() {
         return null
     }
 
-    const links = locale === 'ru' ? [
-        { href: `/${locale}/jadidlar`,   label: 'Джадиды' },
-        { href: `/${locale}/about`,     label: 'История движения' },
-        { href: `/${locale}/resources`, label: 'Библиотека и Труды' },
-        { href: `/${locale}/gallery`,   label: 'Фото и Архивы' },
-        { href: `/${locale}/news`,      label: 'Новости' },
-        { href: `/${locale}/faq`,       label: 'FAQ' },
-        { href: `/${locale}/contact`,   label: 'Контакты' },
+    // Default links if not customized in settings
+    const defaultLinks = locale === 'ru' ? [
+        { href: '/jadidlar',   label: 'Джадиды' },
+        { href: '/about',     label: 'История движения' },
+        { href: '/resources', label: 'Библиотека и Труды' },
+        { href: '/gallery',   label: 'Фото и Архивы' },
+        { href: '/news',      label: 'Новости & События' },
+        { href: '/faq',       label: 'FAQ' },
+        { href: '/contact',   label: 'Контакты' },
     ] : locale === 'en' ? [
-        { href: `/${locale}/jadidlar`,   label: 'Jadids Directory' },
-        { href: `/${locale}/about`,     label: 'Movement History' },
-        { href: `/${locale}/resources`, label: 'Library & Works' },
-        { href: `/${locale}/gallery`,   label: 'Photo Archives' },
-        { href: `/${locale}/news`,      label: 'News & Events' },
-        { href: `/${locale}/faq`,       label: 'FAQ' },
-        { href: `/${locale}/contact`,   label: 'Contact' },
+        { href: '/jadidlar',   label: 'Jadids Directory' },
+        { href: '/about',     label: 'Movement History' },
+        { href: '/resources', label: 'Library & Works' },
+        { href: '/gallery',   label: 'Photo Archives' },
+        { href: '/news',      label: 'News & Events' },
+        { href: '/faq',       label: 'FAQ' },
+        { href: '/contact',   label: 'Contact' },
     ] : [
-        { href: `/${locale}/jadidlar`,   label: 'Jadidlar Katalogi' },
-        { href: `/${locale}/about`,     label: 'Harakat Tarixi' },
-        { href: `/${locale}/resources`, label: 'Kutubxona va Asarlar' },
-        { href: `/${locale}/gallery`,   label: 'Foto va Hujjatlar' },
-        { href: `/${locale}/news`,      label: 'Yangiliklar' },
-        { href: `/${locale}/faq`,       label: 'FAQ' },
-        { href: `/${locale}/contact`,   label: "Bog'lanish" },
+        { href: '/jadidlar',   label: 'Jadidlar Katalogi' },
+        { href: '/about',     label: 'Harakat Tarixi' },
+        { href: '/resources', label: 'Kutubxona va Asarlar' },
+        { href: '/gallery',   label: 'Foto va Hujjatlar' },
+        { href: '/news',      label: 'Yangiliklar & Tadbirlar' },
+        { href: '/faq',       label: 'FAQ' },
+        { href: '/contact',   label: "Bog'lanish" },
     ]
+
+    let customLinks = defaultLinks
+    if (settings?.footerLinksJson) {
+        try {
+            const parsed = JSON.parse(settings.footerLinksJson)
+            if (Array.isArray(parsed) && parsed.length > 0) {
+                customLinks = parsed.map((item: any) => {
+                    const label = locale === 'ru' ? (item.labelRu || item.labelUz || item.label)
+                        : locale === 'en' ? (item.labelEn || item.labelUz || item.label)
+                        : (item.labelUz || item.label)
+                    return {
+                        href: item.href || '/',
+                        label: label || 'Havola'
+                    }
+                })
+            }
+        } catch {}
+    }
 
     const t = {
         museumLabel: locale === 'ru' ? 'Просветительский портал' : locale === 'en' ? 'Enlightenment Portal' : "Ma'rifat Portali",
-        tagline:     locale === 'ru'
+        tagline:     settings?.footerTagline || (locale === 'ru'
             ? 'Единый портал узбекского джадидизма: жизнь, наследие, труды и исторические документы узбекских просветителей.'
             : locale === 'en'
                 ? 'The unified portal of Uzbek Jadidism: life, heritage, works, and historical records of Uzbek enlighteners.'
-                : "O'zbekiston jadidlarining hayoti, ilmiy-adabiy merosi, asarlari va tarixiy hujjatlarini jamlagan yagona ma'rifat portali.",
+                : "O'zbekiston jadidlarining hayoti, ilmiy-adabiy merosi, asarlari va tarixiy hujjatlarini jamlagan yagona ma'rifat portali."),
         sections:  locale === 'ru' ? 'Разделы'              : locale === 'en' ? 'Sections'              : "Bo'limlar",
         address:   locale === 'ru' ? 'Адрес'                : locale === 'en' ? 'Address'               : 'Manzil',
         city:      settings?.address || (locale === 'ru' ? 'г. Ташкент' : locale === 'en' ? 'Tashkent city' : 'Toshkent shahri'),
         hours:     settings?.workingHours || (locale === 'ru' ? 'Пн–Вс: 9:00 – 17:00' : locale === 'en' ? 'Mon–Sun: 9:00 – 17:00' : 'Du–Yak: 9:00 – 17:00'),
         phone:     settings?.phone || '+998 (71) 200-00-00',
         email:     settings?.email || 'info@avloniy-muzey.uz',
-        copyright: locale === 'ru'
+        copyright: settings?.footerCopyright || (locale === 'ru'
             ? '© 2026 Просветительский портал «Джадиды Узбекистана». Все права защищены.'
             : locale === 'en'
                 ? '© 2026 Uzbek Jadids Enlightenment Portal. All rights reserved.'
-                : "© 2026 O'zbekiston Jadidlari Ma'rifat Portali. Barcha huquqlar himoyalangan.",
+                : "© 2026 O'zbekiston Jadidlari Ma'rifat Portali. Barcha huquqlar himoyalangan."),
     }
 
     const socialLinks = [
@@ -74,6 +93,18 @@ export default function Footer() {
         { href: settings?.facebookUrl || 'https://facebook.com/avloniymuzey', color: '#1877F2', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> },
         { href: settings?.youtubeUrl || 'https://youtube.com/@avloniymuzey', color: '#FF0000', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg> },
     ]
+
+    const formatLinkHref = (href: string) => {
+        if (!href) return `/${locale}`
+        if (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('mailto:') || href.startsWith('tel:')) {
+            return href
+        }
+        if (href.startsWith(`/${locale}`)) {
+            return href
+        }
+        const cleanHref = href.startsWith('/') ? href : `/${href}`
+        return `/${locale}${cleanHref}`
+    }
 
     return (
         <footer style={{
@@ -106,12 +137,21 @@ export default function Footer() {
                     {/* Links */}
                     <div>
                         <div style={{ fontFamily: 'var(--font-display)', fontSize: '16px', fontWeight: '600', color: '#C9A84C', marginBottom: '20px' }}>{t.sections}</div>
-                        {links.map(link => (
-                            <Link key={link.href} href={link.href} style={{ display: 'block', fontSize: '14px', color: 'rgba(255,255,255,0.65)', padding: '5px 0', transition: 'color 0.2s', textDecoration: 'none' }}
-                                  onMouseEnter={e => (e.currentTarget.style.color = '#C9A84C')}
-                                  onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.65)')}
-                            >→ {link.label}</Link>
-                        ))}
+                        {customLinks.map((link, idx) => {
+                            const formattedHref = formatLinkHref(link.href)
+                            const isExternal = link.href.startsWith('http://') || link.href.startsWith('https://')
+                            return isExternal ? (
+                                <a key={idx} href={formattedHref} target="_blank" rel="noopener noreferrer" style={{ display: 'block', fontSize: '14px', color: 'rgba(255,255,255,0.65)', padding: '5px 0', transition: 'color 0.2s', textDecoration: 'none' }}
+                                   onMouseEnter={e => (e.currentTarget.style.color = '#C9A84C')}
+                                   onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.65)')}
+                                >→ {link.label}</a>
+                            ) : (
+                                <Link key={idx} href={formattedHref} style={{ display: 'block', fontSize: '14px', color: 'rgba(255,255,255,0.65)', padding: '5px 0', transition: 'color 0.2s', textDecoration: 'none' }}
+                                      onMouseEnter={e => (e.currentTarget.style.color = '#C9A84C')}
+                                      onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.65)')}
+                                >→ {link.label}</Link>
+                            )
+                        })}
                     </div>
 
                     {/* Contact */}
@@ -139,7 +179,7 @@ export default function Footer() {
                 </div>
 
                 <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', padding: '20px 0', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.4)' }}>
+                    <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.4)', textAlign: 'center' }}>
                         {t.copyright}
                     </div>
                 </div>

@@ -46,4 +46,15 @@ public class SiteSettingRequest {
     private String quoteTextEn;
 
     private String heroQuotesJson;
+
+    // Footer
+    private String footerTaglineUz;
+    private String footerTaglineRu;
+    private String footerTaglineEn;
+
+    private String footerCopyrightUz;
+    private String footerCopyrightRu;
+    private String footerCopyrightEn;
+
+    private String footerLinksJson;
 }

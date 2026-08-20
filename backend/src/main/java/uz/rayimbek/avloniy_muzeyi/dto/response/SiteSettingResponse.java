@@ -52,6 +52,17 @@ public class SiteSettingResponse {
 
     private String heroQuotesJson;
 
+    // Footer raw fields
+    private String footerTaglineUz;
+    private String footerTaglineRu;
+    private String footerTaglineEn;
+
+    private String footerCopyrightUz;
+    private String footerCopyrightRu;
+    private String footerCopyrightEn;
+
+    private String footerLinksJson;
+
     // Localized fields for convenience
     private String museumName;
     private String address;
@@ -59,6 +70,8 @@ public class SiteSettingResponse {
     private String heroTitle;
     private String heroSubtitle;
     private String quoteText;
+    private String footerTagline;
+    private String footerCopyright;
 
     private LocalDateTime updatedAt;
 }

@@ -54,6 +54,9 @@ public class News {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @Column(columnDefinition = "TEXT")
+    private String galleryPhotosJson;
+
     @Enumerated(EnumType.STRING)
     private Category category;
 
@@ -84,6 +87,6 @@ public class News {
     }
 
     public enum Category {
-        KORGAZMA, TADBIR, YANGILIK, BAYRAM
+        YANGILIK, TADBIR, FOTOGALEREYA, ELON, KORGAZMA, BAYRAM
     }
 }

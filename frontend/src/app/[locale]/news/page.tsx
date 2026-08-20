@@ -28,10 +28,10 @@ const Icons = {
 
 const CATEGORIES = [
     { value: '', labelUz: 'Barchasi', labelRu: 'Все', labelEn: 'All' },
-    { value: 'YANGILIK', labelUz: 'Yangilik', labelRu: 'Новости', labelEn: 'News' },
-    { value: 'KORGAZMA', labelUz: "Ko'rgazma", labelRu: 'Выставка', labelEn: 'Exhibition' },
-    { value: 'TADBIR', labelUz: 'Tadbir', labelRu: 'Мероприятие', labelEn: 'Event' },
-    { value: 'BAYRAM', labelUz: 'Bayram', labelRu: 'Праздник', labelEn: 'Holiday' },
+    { value: 'YANGILIK', labelUz: 'Yangiliklar', labelRu: 'Новости', labelEn: 'News' },
+    { value: 'TADBIR', labelUz: 'Tadbirlar', labelRu: 'Мероприятия', labelEn: 'Events' },
+    { value: 'FOTOGALEREYA', labelUz: 'Fotogalereya', labelRu: 'Фотогалерея', labelEn: 'Photo Gallery' },
+    { value: 'ELON', labelUz: "E'lonlar", labelRu: 'Объявления', labelEn: 'Announcements' },
 ]
 
 function formatDate(dateString: string, locale: string) {
@@ -57,14 +57,15 @@ export default function NewsPage() {
     const [totalPages, setTotalPages] = useState(0)
 
     const t = {
-        label: locale === 'ru' ? 'Новости' : locale === 'en' ? 'News' : 'Yangiliklar',
-        h1a: locale === 'ru' ? 'Последние ' : locale === 'en' ? 'Latest ' : "So'nggi ",
+        label: locale === 'ru' ? 'Новости и Медиа' : locale === 'en' ? 'News & Media' : 'Yangiliklar & Media',
+        h1a: locale === 'ru' ? 'События и ' : locale === 'en' ? 'Events and ' : "Muzey hayoti va ",
         h1b: locale === 'ru' ? 'Новости' : locale === 'en' ? 'News' : 'Yangiliklar',
-        desc: locale === 'ru' ? 'Следите за последними событиями и новостями музея Абдуллы Авлония.'
-            : locale === 'en' ? 'Follow the latest events and news from the Abdulla Avloniy Museum.'
-                : "Abdulla Avloniy muzeyi so'nggi yangiliklari va tadbirlarini kuzatib boring.",
-        empty: locale === 'ru' ? 'Новостей пока нет' : locale === 'en' ? 'No news yet' : "Hali yangiliklar yo'q",
+        desc: locale === 'ru' ? 'Следите за последними событиями, фоторепортажами, объявлениями и новостями музея.'
+            : locale === 'en' ? 'Follow the latest events, photo galleries, announcements, and news from the museum.'
+                : "Muzeyning so'nggi yangiliklari, tadbirlari, fotogalereyalari va rasmiy e'lonlarini kuzatib boring.",
+        empty: locale === 'ru' ? 'В этом разделе пока нет материалов' : locale === 'en' ? 'No items in this section yet' : "Ushbu bo'limda hali materiallar yo'q",
         readMore: locale === 'ru' ? 'Читать далее' : locale === 'en' ? 'Read more' : 'Batafsil',
+        viewGallery: locale === 'ru' ? 'Смотреть галерею' : locale === 'en' ? 'View gallery' : "Galereyani ko'rish",
         loading: locale === 'ru' ? 'Загрузка...' : locale === 'en' ? 'Loading...' : 'Yuklanmoqda...',
         prev: locale === 'ru' ? '← Назад' : locale === 'en' ? '← Prev' : '← Oldingi',
         next: locale === 'ru' ? 'Далее →' : locale === 'en' ? 'Next →' : 'Keyingi →',
@@ -84,6 +85,40 @@ export default function NewsPage() {
 
     const getCategoryLabel = (cat: typeof CATEGORIES[0]) =>
         locale === 'ru' ? cat.labelRu : locale === 'en' ? cat.labelEn : cat.labelUz
+
+    const getCategoryBadgeStyle = (cat: string) => {
+        switch (cat) {
+            case 'FOTOGALEREYA':
+                return {
+                    label: locale === 'ru' ? 'Фотогалерея' : locale === 'en' ? 'Photo Gallery' : 'Fotogalereya',
+                    icon: '🖼️',
+                    bg: 'rgba(59,130,246,0.92)',
+                    color: '#fff'
+                }
+            case 'ELON':
+                return {
+                    label: locale === 'ru' ? 'Объявление' : locale === 'en' ? 'Announcement' : "E'lon",
+                    icon: '📢',
+                    bg: 'rgba(234,88,12,0.92)',
+                    color: '#fff'
+                }
+            case 'TADBIR':
+                return {
+                    label: locale === 'ru' ? 'Мероприятие' : locale === 'en' ? 'Event' : 'Tadbir',
+                    icon: '📅',
+                    bg: 'rgba(168,85,247,0.92)',
+                    color: '#fff'
+                }
+            case 'YANGILIK':
+            default:
+                return {
+                    label: locale === 'ru' ? 'Новость' : locale === 'en' ? 'News' : 'Yangilik',
+                    icon: '📰',
+                    bg: 'rgba(201,168,76,0.95)',
+                    color: '#061d15'
+                }
+        }
+    }
 
     return (
         <>
@@ -127,43 +162,60 @@ export default function NewsPage() {
                         </div>
                     ) : (
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>
-                            {news.map(item => (
-                                <Link key={item.id} href={`/${locale}/news/${item.slug}`} style={{ textDecoration: 'none' }}>
-                                    <div className="card" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-                                         onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-6px)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)' }}
-                                         onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--shadow-sm)' }}
-                                    >
-                                        <div style={{ position: 'relative', height: '220px', background: 'var(--bg-header)', overflow: 'hidden' }}>
-                                            {item.imageUrl ? (
-                                                <Image src={item.imageUrl} alt={item.title} fill style={{ objectFit: 'cover' }} />
-                                            ) : (
-                                                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.3)' }}>
-                                                    <Icons.Image />
+                            {news.map(item => {
+                                const badge = getCategoryBadgeStyle(item.category)
+                                let photoCount = 0
+                                if (item.galleryPhotosJson) {
+                                    try {
+                                        const p = JSON.parse(item.galleryPhotosJson)
+                                        if (Array.isArray(p)) photoCount = p.length
+                                    } catch {}
+                                }
+
+                                return (
+                                    <Link key={item.id} href={`/${locale}/news/${item.slug}`} style={{ textDecoration: 'none' }}>
+                                        <div className="card" style={{ height: '100%', display: 'flex', flexDirection: 'column', border: item.category === 'ELON' ? '1px solid rgba(234,88,12,0.3)' : undefined }}
+                                             onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-6px)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)' }}
+                                             onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--shadow-sm)' }}
+                                        >
+                                            <div style={{ position: 'relative', height: '220px', background: 'var(--bg-header)', overflow: 'hidden' }}>
+                                                {item.imageUrl ? (
+                                                    <Image src={item.imageUrl} alt={item.title} fill style={{ objectFit: 'cover' }} />
+                                                ) : (
+                                                    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.3)' }}>
+                                                        <Icons.Image />
+                                                    </div>
+                                                )}
+                                                <div style={{ position: 'absolute', top: '14px', left: '14px', background: badge.bg, color: badge.color, fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '1px', textTransform: 'uppercase', padding: '4px 10px', borderRadius: '4px', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '5px', boxShadow: '0 2px 6px rgba(0,0,0,0.3)' }}>
+                                                    <span>{badge.icon}</span>
+                                                    <span>{badge.label}</span>
                                                 </div>
-                                            )}
-                                            <div style={{ position: 'absolute', top: '14px', left: '14px', background: 'rgba(201,168,76,0.95)', color: '#061d15', fontFamily: 'var(--font-mono)', fontSize: '9px', letterSpacing: '2px', textTransform: 'uppercase', padding: '4px 10px', borderRadius: '2px', fontWeight: '700' }}>
-                                                {item.category}
+                                                {photoCount > 0 && (
+                                                    <div style={{ position: 'absolute', bottom: '12px', right: '12px', background: 'rgba(0,0,0,0.75)', color: '#fff', padding: '3px 8px', borderRadius: '4px', fontSize: '11px', fontFamily: 'var(--font-mono)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                                        <span>📷</span> {photoCount}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                                                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '10px' }}>
+                                                    {formatDate(item.createdAt, locale)}
+                                                </div>
+                                                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '19px', color: 'var(--text-heading)', marginBottom: '10px', lineHeight: '1.35', flex: 1 }}>
+                                                    {item.title}
+                                                </h3>
+                                                {item.excerpt && (
+                                                    <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.75', marginBottom: '16px' }}>
+                                                        {item.excerpt.length > 120 ? item.excerpt.substring(0, 120) + '...' : item.excerpt}
+                                                    </p>
+                                                )}
+                                                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: item.category === 'FOTOGALEREYA' ? '#3b82f6' : '#C9A84C', letterSpacing: '1px', fontWeight: '700' }}>
+                                                    {item.category === 'FOTOGALEREYA' ? t.viewGallery : t.readMore} →
+                                                </div>
                                             </div>
                                         </div>
-                                        <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                                            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '10px' }}>
-                                                {formatDate(item.createdAt, locale)}
-                                            </div>
-                                            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '19px', color: 'var(--text-heading)', marginBottom: '10px', lineHeight: '1.35', flex: 1 }}>
-                                                {item.title}
-                                            </h3>
-                                            {item.excerpt && (
-                                                <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.75', marginBottom: '16px' }}>
-                                                    {item.excerpt.length > 120 ? item.excerpt.substring(0, 120) + '...' : item.excerpt}
-                                                </p>
-                                            )}
-                                            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#C9A84C', letterSpacing: '1px', fontWeight: '700' }}>
-                                                {t.readMore} →
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Link>
-                            ))}
+                                    </Link>
+                                )
+                            })}
                         </div>
                     )}
 

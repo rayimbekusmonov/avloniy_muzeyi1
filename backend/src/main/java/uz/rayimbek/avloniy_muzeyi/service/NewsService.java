@@ -92,6 +92,7 @@ public class NewsService {
                 .excerptEn(request.getExcerptEn())
                 .slug(slug)
                 .imageUrl(request.getImageUrl())
+                .galleryPhotosJson(request.getGalleryPhotosJson())
                 .category(request.getCategory())
                 .published(request.getPublished())
                 .createdAt(request.getCreatedAt())
@@ -115,6 +116,7 @@ public class NewsService {
         news.setContentEn(request.getContentEn());
         news.setExcerptEn(request.getExcerptEn());
         news.setImageUrl(request.getImageUrl());
+        news.setGalleryPhotosJson(request.getGalleryPhotosJson());
         news.setCategory(request.getCategory());
         news.setPublished(request.getPublished());
         if (request.getCreatedAt() != null) {
@@ -162,6 +164,7 @@ public class NewsService {
                 .content(content)
                 .excerpt(excerpt)
                 .imageUrl(news.getImageUrl())
+                .galleryPhotosJson(news.getGalleryPhotosJson())
                 .category(news.getCategory())
                 .published(news.getPublished())
                 .authorUsername(news.getAuthor() != null ? news.getAuthor().getUsername() : null)
@@ -187,6 +190,7 @@ public class NewsService {
                 .content(news.getContentUz())
                 .excerpt(news.getExcerptUz())
                 .imageUrl(news.getImageUrl())
+                .galleryPhotosJson(news.getGalleryPhotosJson())
                 .category(news.getCategory())
                 .published(news.getPublished())
                 .authorUsername(news.getAuthor() != null ? news.getAuthor().getUsername() : null)

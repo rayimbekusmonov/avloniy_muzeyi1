@@ -32,6 +32,7 @@ public class NewsRequest {
     private String excerptEn;
 
     private String imageUrl;
+    private String galleryPhotosJson;
     private News.Category category;
     private Boolean published = false;
     private LocalDateTime createdAt;
