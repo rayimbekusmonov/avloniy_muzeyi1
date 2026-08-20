@@ -557,14 +557,26 @@ export default function BookReaderPage() {
                         </div>
 
                         {/* Document Viewer Frame */}
-                        {book.fileUrl.endsWith('.pdf') ? (
+                        {book.fileUrl ? (
                             <iframe
-                                src={`${book.fileUrl}#page=${currentPage}&toolbar=0&navpanes=0&scrollbar=0`}
-                                style={{ width: '100%', flex: 1, minHeight: '880px', border: 'none', background: themeStyles.paperBg }}
+                                key={`${book.fileUrl}-${currentPage}`}
+                                src={
+                                    book.fileUrl.startsWith('http') && !book.fileUrl.includes(typeof window !== 'undefined' ? window.location.hostname : '')
+                                        ? `https://docs.google.com/viewer?url=${encodeURIComponent(book.fileUrl)}&embedded=true`
+                                        : `${book.fileUrl}#page=${currentPage}&toolbar=0&navpanes=0&scrollbar=0`
+                                }
+                                style={{
+                                    width: '100%',
+                                    flex: 1,
+                                    minHeight: '900px',
+                                    height: '100%',
+                                    border: 'none',
+                                    background: themeStyles.paperBg
+                                }}
                                 title={book.title}
                             />
                         ) : (
-                            <div style={{ padding: '60px 48px', lineHeight: '1.8', fontSize: '17px', background: themeStyles.paperBg, color: themeStyles.paperText }}>
+                            <div style={{ padding: '60px 48px', lineHeight: '1.8', fontSize: '17px', background: themeStyles.paperBg, color: themeStyles.paperText, textAlign: 'center' }}>
                                 <h1 style={{ fontSize: '28px', fontFamily: 'var(--font-display)', color: 'var(--gold)', marginBottom: '16px', borderBottom: `1px solid ${themeStyles.border}`, paddingBottom: '12px' }}>
                                     {book.title}
                                 </h1>
@@ -572,7 +584,7 @@ export default function BookReaderPage() {
                                     Muallif: {book.author}
                                 </p>
                                 <div style={{ background: 'rgba(255,255,255,0.03)', padding: '24px', borderRadius: '12px', border: `1px solid ${themeStyles.border}` }}>
-                                    <p>Ushbu elektron kitob / manba brauzer ichidagi himoyalangan o'quvchida ochildi. Hozirgi sahifa: <strong>{currentPage}</strong>.</p>
+                                    <p>Ushbu manbaga fayl biriktirilmagan.</p>
                                 </div>
                             </div>
                         )}
