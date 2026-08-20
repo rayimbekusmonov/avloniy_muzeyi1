@@ -291,6 +291,10 @@ export interface SiteSetting {
     footerCopyrightEn?: string;
     footerLinksJson?: string;
     footerLinks?: FooterLinkItem[];
+    // Telegram Bot Notifications
+    telegramBotToken?: string;
+    telegramChatId?: string;
+    telegramNotificationsEnabled?: boolean;
     // Localized fields for UI
     museumName?: string;
     address?: string;

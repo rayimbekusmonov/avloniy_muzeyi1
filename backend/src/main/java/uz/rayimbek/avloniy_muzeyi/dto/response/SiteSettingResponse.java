@@ -63,6 +63,11 @@ public class SiteSettingResponse {
 
     private String footerLinksJson;
 
+    // Telegram Bot
+    private String telegramBotToken;
+    private String telegramChatId;
+    private Boolean telegramNotificationsEnabled;
+
     // Localized fields for convenience
     private String museumName;
     private String address;

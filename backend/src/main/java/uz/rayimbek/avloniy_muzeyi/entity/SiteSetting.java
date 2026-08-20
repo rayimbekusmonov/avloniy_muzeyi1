@@ -91,6 +91,12 @@ public class SiteSetting {
     @Column(columnDefinition = "TEXT")
     private String footerLinksJson;
 
+    // Telegram Bot orqali murojaatlarni guruhga yuborish sozlamalari
+    private String telegramBotToken;
+    private String telegramChatId;
+    @Builder.Default
+    private Boolean telegramNotificationsEnabled = true;
+
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 

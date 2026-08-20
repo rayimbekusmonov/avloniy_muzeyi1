@@ -64,7 +64,7 @@ export default function AdminSettingsPage() {
     const [translating, setTranslating] = useState(false)
     const [translateSuccess, setTranslateSuccess] = useState('')
     const [activeLang, setActiveLang] = useState<'uz' | 'ru' | 'en'>('uz')
-    const [activeTab, setActiveTab] = useState<'contact' | 'social' | 'hero' | 'quotes' | 'footer'>('contact')
+    const [activeTab, setActiveTab] = useState<'contact' | 'social' | 'telegram' | 'footer' | 'hero' | 'quotes'>('contact')
     const [message, setMessage] = useState('')
     const [error, setError] = useState('')
 
@@ -280,6 +280,9 @@ export default function AdminSettingsPage() {
                                 <button type="button" onClick={() => setActiveTab('social')} style={{ padding: '10px 18px', borderRadius: '8px', border: 'none', cursor: 'pointer', background: activeTab === 'social' ? 'var(--gold)' : 'var(--bg-secondary)', color: activeTab === 'social' ? '#061d15' : 'var(--text-main)', fontWeight: '600', fontSize: '13px' }}>
                                     🌐 Ijtimoiy tarmoqlar
                                 </button>
+                                <button type="button" onClick={() => setActiveTab('telegram')} style={{ padding: '10px 18px', borderRadius: '8px', border: 'none', cursor: 'pointer', background: activeTab === 'telegram' ? 'var(--gold)' : 'var(--bg-secondary)', color: activeTab === 'telegram' ? '#061d15' : 'var(--text-main)', fontWeight: '600', fontSize: '13px' }}>
+                                    🤖 Telegram Guruh
+                                </button>
                                 <button type="button" onClick={() => setActiveTab('footer')} style={{ padding: '10px 18px', borderRadius: '8px', border: 'none', cursor: 'pointer', background: activeTab === 'footer' ? 'var(--gold)' : 'var(--bg-secondary)', color: activeTab === 'footer' ? '#061d15' : 'var(--text-main)', fontWeight: '600', fontSize: '13px' }}>
                                     🦶 Footer Boshqaruvi
                                 </button>
@@ -382,11 +385,11 @@ export default function AdminSettingsPage() {
                             </div>
                         )}
 
-                        {/* TAB 2: Social Media Links */}
+                        {/* TAB 2: Social Media Links & Telegram Bot */}
                         {activeTab === 'social' && (
                             <div>
                                 <h3 style={{ fontSize: '15px', color: 'var(--gold)', marginBottom: '16px' }}>Rasmiy ijtimoiy tarmoq havolalari</h3>
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginBottom: '32px' }}>
                                     <div>
                                         <label style={labelStyle}>Telegram kanal URL</label>
                                         <input type="url" value={settings.telegramUrl || ''} onChange={e => setSettings({ ...settings, telegramUrl: e.target.value })} style={inputStyle} placeholder="https://t.me/avloniy_muzey" />
@@ -403,6 +406,94 @@ export default function AdminSettingsPage() {
                                         <label style={labelStyle}>Facebook sahifa URL</label>
                                         <input type="url" value={settings.facebookUrl || ''} onChange={e => setSettings({ ...settings, facebookUrl: e.target.value })} style={inputStyle} placeholder="https://facebook.com/avloniy_muzey" />
                                     </div>
+                                </div>
+
+                                <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '24px' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                                        <div>
+                                            <h3 style={{ fontSize: '15px', color: 'var(--gold)', marginBottom: '4px' }}>🤖 Telegram Guruhiga Murojaatlarni Yuborish (Bot)</h3>
+                                            <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Saytdan yuborilgan yangi murojaatlar ushbu Telegram guruhga avtomatik boradi</p>
+                                        </div>
+                                        <button type="button" onClick={() => setActiveTab('telegram')} style={{ padding: '6px 12px', background: 'rgba(201,168,76,0.15)', border: '1px solid var(--gold)', color: 'var(--gold)', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', fontWeight: '600' }}>
+                                            To'liq yo'riqnoma →
+                                        </button>
+                                    </div>
+
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
+                                        <div>
+                                            <label style={labelStyle}>Telegram Bot Token</label>
+                                            <input type="text" value={settings.telegramBotToken || ''} onChange={e => setSettings({ ...settings, telegramBotToken: e.target.value })} style={inputStyle} placeholder="7123456789:AAHk1_..." />
+                                        </div>
+                                        <div>
+                                            <label style={labelStyle}>Telegram Guruh Chat ID</label>
+                                            <input type="text" value={settings.telegramChatId || ''} onChange={e => setSettings({ ...settings, telegramChatId: e.target.value })} style={inputStyle} placeholder="-1001234567890" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* TAB: Telegram Notifications */}
+                        {activeTab === 'telegram' && (
+                            <div>
+                                <div style={{ marginBottom: '24px' }}>
+                                    <h3 style={{ fontSize: '16px', color: 'var(--gold)', marginBottom: '4px' }}>🤖 Telegram Guruhiga Murojaatlarni Avtomatik Yuborish</h3>
+                                    <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Foydalanuvchilar sayt orqali xabar yuborganida, xabarni to'g'ridan-to'g'ri Telegram guruhingizga yetkazib berish sozlamalari</p>
+                                </div>
+
+                                <div style={{ background: 'var(--bg-secondary)', padding: '24px', borderRadius: '12px', border: '1px solid var(--border-subtle)', marginBottom: '24px' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid var(--border-subtle)' }}>
+                                        <input
+                                            type="checkbox"
+                                            id="telegramEnabled"
+                                            checked={settings.telegramNotificationsEnabled ?? true}
+                                            onChange={e => setSettings({ ...settings, telegramNotificationsEnabled: e.target.checked })}
+                                            style={{ width: '20px', height: '20px', cursor: 'pointer', accentColor: 'var(--gold)' }}
+                                        />
+                                        <label htmlFor="telegramEnabled" style={{ fontSize: '15px', fontWeight: '600', color: 'var(--text-heading)', cursor: 'pointer' }}>
+                                            Telegram guruhiga avtomatik bildirishnoma yuborishni faollashtirish
+                                        </label>
+                                    </div>
+
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px', marginBottom: '20px' }}>
+                                        <div>
+                                            <label style={labelStyle}>🤖 Telegram Bot Token *</label>
+                                            <input
+                                                type="text"
+                                                value={settings.telegramBotToken || ''}
+                                                onChange={e => setSettings({ ...settings, telegramBotToken: e.target.value })}
+                                                style={inputStyle}
+                                                placeholder="7123456789:AAHk1_xyzABCDEF123456789..."
+                                            />
+                                            <span style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px', display: 'block' }}>@BotFather orqali yaratilgan bot tokeni</span>
+                                        </div>
+                                        <div>
+                                            <label style={labelStyle}>👥 Telegram Guruh Chat ID *</label>
+                                            <input
+                                                type="text"
+                                                value={settings.telegramChatId || ''}
+                                                onChange={e => setSettings({ ...settings, telegramChatId: e.target.value })}
+                                                style={inputStyle}
+                                                placeholder="-1001234567890 yoki @kanal_nomi"
+                                            />
+                                            <span style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px', display: 'block' }}>Guruh ID raqami (odatda -100 bilan boshlanadi)</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Step by step guide card */}
+                                <div style={{ background: 'rgba(201,168,76,0.06)', border: '1px solid rgba(201,168,76,0.25)', borderRadius: '12px', padding: '20px 24px' }}>
+                                    <h4 style={{ fontSize: '14px', color: 'var(--gold)', fontWeight: '700', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <span>💡</span>
+                                        <span>Bot yaratish va Guruh Chat ID sini olish bo'yicha yo'riqnoma:</span>
+                                    </h4>
+                                    <ol style={{ paddingLeft: '20px', fontSize: '13px', lineHeight: '1.8', color: 'var(--text-main)', margin: 0 }}>
+                                        <li>Telegramda <strong>@BotFather</strong> botiga kiring va <code>/newbot</code> buyrug'i orqali yangi bot oching.</li>
+                                        <li>BotFather sizga bergan <strong>HTTP API Token</strong> ni nusxalab, yuqoridagi <strong>"Telegram Bot Token"</strong> maydoniga kiriting.</li>
+                                        <li>Botingizni Telegram guruhingizga a'zo qilib qo'shing va unga guruhga xabar yuborish (admin) huquqini bering.</li>
+                                        <li>Guruhning <strong>Chat ID</strong> sini aniqlash uchun <strong>@userinfobot</strong> ni guruhga qo'shing yoki guruhdan biron xabarni botga forward qiling (guruh ID raqami <code>-100...</code> ko'rinishida bo'ladi).</li>
+                                        <li>Guruh Chat ID sini yuqoridagi <strong>"Guruh Chat ID"</strong> maydoniga kiriting va pastdagi <strong>"Sozlamalarni Saqlash"</strong> tugmasini bosing.</li>
+                                    </ol>
                                 </div>
                             </div>
                         )}

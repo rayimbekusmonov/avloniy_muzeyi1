@@ -15,6 +15,7 @@ import uz.rayimbek.avloniy_muzeyi.repository.ContactRepository;
 public class ContactService {
 
     private final ContactRepository contactRepository;
+    private final TelegramService telegramService;
 
     public void send(ContactRequest request) {
         Contact contact = Contact.builder()
@@ -25,7 +26,10 @@ public class ContactService {
                 .message(request.getMessage())
                 .read(false)
                 .build();
-        contactRepository.save(contact);
+        Contact saved = contactRepository.save(contact);
+
+        // Telegram guruhiga bildirishnoma yuborish
+        telegramService.sendContactNotification(saved);
     }
 
     public Page<ContactResponse> getAll(int page, int size) {

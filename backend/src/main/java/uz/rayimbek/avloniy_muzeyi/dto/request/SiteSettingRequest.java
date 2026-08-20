@@ -57,4 +57,9 @@ public class SiteSettingRequest {
     private String footerCopyrightEn;
 
     private String footerLinksJson;
+
+    // Telegram Bot
+    private String telegramBotToken;
+    private String telegramChatId;
+    private Boolean telegramNotificationsEnabled;
 }

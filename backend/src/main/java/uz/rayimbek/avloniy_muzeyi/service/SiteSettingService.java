@@ -120,6 +120,12 @@ public class SiteSettingService {
             setting.setFooterLinksJson(request.getFooterLinksJson());
         }
 
+        setting.setTelegramBotToken(request.getTelegramBotToken());
+        setting.setTelegramChatId(request.getTelegramChatId());
+        if (request.getTelegramNotificationsEnabled() != null) {
+            setting.setTelegramNotificationsEnabled(request.getTelegramNotificationsEnabled());
+        }
+
         SiteSetting saved = repository.save(setting);
         return toResponse(saved, "uz");
     }
@@ -195,6 +201,9 @@ public class SiteSettingService {
                 .footerCopyrightRu(s.getFooterCopyrightRu())
                 .footerCopyrightEn(s.getFooterCopyrightEn())
                 .footerLinksJson(s.getFooterLinksJson())
+                .telegramBotToken(s.getTelegramBotToken())
+                .telegramChatId(s.getTelegramChatId())
+                .telegramNotificationsEnabled(s.getTelegramNotificationsEnabled())
                 .museumName(museumName)
                 .address(address)
                 .workingHours(workingHours)
